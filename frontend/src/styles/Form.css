@@ -23,7 +23,7 @@
     width: 95%;
     padding: 10px;
     margin: 20px 0;
-    background-color: #007bff;
+    background-color: #593b8b;
     color: white;
     border: none;
     border-radius: 4px;
@@ -32,7 +32,7 @@
   }
   
   .form-button:hover {
-    background-color: #0056b3;
+    background-color: #4a3174;
   }
 
   .error-message {

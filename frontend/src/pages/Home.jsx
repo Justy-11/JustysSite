@@ -1,5 +1,20 @@
-function Home(){
-    return <div>Home</div>
-}
+import Navbar from "../components/NavBar"
 
-export default Home
+const Home = () => {
+    const navLinks = [
+        { href: "/", label: "Home" },
+        { href: "/", label: "About" },
+        { href: "/", label: "Services" },
+        { href: "/", label: "Contact" },
+        { href: "/logout", label: "Logout" }
+    ];
+
+    return (
+        <div>
+            <Navbar links={navLinks} />
+            <h1>Welcome to the Home Page !!!</h1>
+        </div>
+    );
+};
+
+export default Home;

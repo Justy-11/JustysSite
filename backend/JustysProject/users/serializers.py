@@ -1,11 +1,13 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from users.models import CustomUser as User
 import re
+from django.core.mail import send_mail
+from decouple import config
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "password"]
+        fields = ["id", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate_username(self, value):
@@ -27,6 +29,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        print(validated_data)
-        user = User.objects.create_user(**validated_data)
+        email = validated_data.pop('email')
+        user = User.objects.create_user(**validated_data, email=email, is_active = False)
+
+        profile = user.profile
+        plain_otp = profile.generate_otp()
+
+        # sending OTP email
+        send_mail(
+            subject='Your verification code',
+            message=f'Your OTP is {plain_otp}',
+            from_email=config('EMAIL_HOST_USER'),
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
         return user

@@ -77,6 +77,15 @@ function Login() {
             <button className="form-button" type="submit" disabled={loading}>
                 {loading ? "Processing..." : "Login"}
             </button>
+
+            <div className="login-links">
+                <p onClick={() => navigate("/register")} className="resend-link">
+                    Don’t have an account? <strong>Sign up</strong>
+                </p>
+                <p onClick={() => navigate("/forgot-password")} className="resend-link">
+                    <strong>Forgot password?</strong>
+                </p>
+            </div>
         </form>
     );
 }

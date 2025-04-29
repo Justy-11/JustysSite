@@ -13,6 +13,10 @@ from datetime import timedelta
 import re
 from django.core.mail import send_mail
 from decouple import config
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +165,54 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
+
+class ForgotPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
             
+            
+            frontend_url = config('FRONTEND_URL')
+            reset_url = f"{frontend_url}/reset-password?token={token}&uid={uid}"
+            
+            send_mail(
+                subject="Reset Your Password",
+                message=f"Click the link to reset your password: {reset_url}",
+                from_email=config('EMAIL_HOST_USER'),
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+            return Response({"message": "Reset email sent."})
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist."}, status=400)
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = request.data.get("token")
+        uidb64 = request.data.get("uid")
+        password = request.data.get("password")
+
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+            if default_token_generator.check_token(user, token):
+                user.set_password(password)
+                user.save()
+                return Response({"message": "Password has been reset."})
+            else:
+                return Response({"error": "Invalid or expired token."}, status=400)
+        except (User.DoesNotExist, ValueError, TypeError):
+            return Response({"error": "Invalid request."}, status=400)
+
+
 class LogoutView(generics.GenericAPIView):
     def post(self, request):
         return Response({"message": "Logged out"}, status=status.HTTP_200_OK)

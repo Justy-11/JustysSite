@@ -42,7 +42,16 @@
 }
 
 .resend-link {
+  font-size: smaller;
   cursor: pointer;
-  color: blue;
+  color: #4a3174;
   text-decoration: none;
+}
+
+.login-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
 }

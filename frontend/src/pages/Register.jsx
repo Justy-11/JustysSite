@@ -131,6 +131,11 @@ function Register() {
             <button className="form-button" type="submit" disabled={loading}>
                 {loading ? "Processing..." : name}
             </button>
+
+            <p onClick={() => navigate("/login")} className="resend-link">
+                Already have an account? <strong>Sign in</strong>
+            </p>
+
         </form>
     );
 }

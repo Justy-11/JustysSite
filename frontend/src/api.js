@@ -1,12 +1,13 @@
+// src/utils/api.js
 import axios from "axios";
-import { ACCESS_TOKEN } from "./constants";
+import { ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "./constants";
 
-// const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
+const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
 
 console.log("API Base URL:", import.meta.env.VITE_API_URL);
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
+  baseURL: import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : apiUrl,
 });
 
 api.interceptors.request.use(
@@ -14,6 +15,11 @@ api.interceptors.request.use(
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    const googleAccessToken = localStorage.getItem(GOOGLE_ACCESS_TOKEN);
+    if (googleAccessToken) {
+      config.headers["X-Google-Access-Token"] = googleAccessToken;
     }
     return config;
   },

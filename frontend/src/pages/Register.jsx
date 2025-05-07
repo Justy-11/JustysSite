@@ -1,111 +1,59 @@
 import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import "../styles/Form.css"
-// import LoadingIndicator from "./LoadingIndicator";
-import { showSuccessToast, showErrorToast } from '../utils/toastUtils';
+import "../styles/Form.css";
+import { showErrorToast, showInfoToast } from '../utils/toastUtils';
 
 function Register() {
-    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState({}); // To store validation errors
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const name = "Register";
-
-    // Username validation
-    const validateUsername = () => {
-        // if (!username.trim()) {
-        //     setErrors({ ...errors, username: "Username is required." });
-        //     return false;
-        // }
-        if (username.length < 3) {
-            setErrors({ ...errors, username: "Username must be at least 3 characters long." });
-            return false;
-        }
-        if (username.length > 30) {
-            setErrors({ ...errors, username: "Username cannot be longer than 30 characters." });
-            return false;
-        }
-        return true;
-    };
-
-    // Password validation
-    const validatePassword = () => {
-        // if (!password.trim()) {
-        //     setErrors({ ...errors, password: "Password is required." });
-        //     return false;
-        // }
-        if (password.length < 8) {
-            setErrors({ ...errors, password: "Password must be at 2 least 8 characters long." });
-            return false;
-        }
-        if (!/[A-Z]/.test(password)) {
-            setErrors({ ...errors, password: "Password must contain at least one uppercase letter." });
-            return false;
-        }
-        if (!/[a-z]/.test(password)) {
-            setErrors({ ...errors, password: "Password must contain at least one lowercase letter." });
-            return false;
-        }
-        if (!/\d/.test(password)) {
-            setErrors({ ...errors, password: "Password must contain at least one number." });
-            return false;
-        }
-        return true;
-    };
-
     const handleSubmit = async (e) => {
-        setLoading(true);
         e.preventDefault();
-        setErrors({}); // Clear previous errors
+        setErrors({});
+        setLoading(true);
 
-        // const isUsernameValid = validateUsername();
-        // const isPasswordValid = validatePassword();
-
-        // If validation fails, stop the form submission
-        // if (!isUsernameValid || !isPasswordValid) return;
-        //setLoading(true);
+        if (password !== confirmPassword) {
+            setErrors({ confirmPassword: "Passwords do not match" });
+            setLoading(false);
+            return;
+        }
 
         try {
-            const res = await api.post("/api/user/register/", { username, email, password })
-            showSuccessToast("Successfully registered! Check your email.");
-            setTimeout(() => {
-                navigate("/verify-otp", { state: { username } })
-            }, 2000);
-            
+            const res = await api.post("/api/user/register/", {
+                email,
+                username,
+                password,
+            });
+            console.log('Register response:', res.data);
+            showInfoToast("Registration successful! Please verify your email.");
+            navigate("/verify-otp", { state: { username } });
         } catch (error) {
-            // alert(error)
+            console.error('Register error:', error.response?.data || error.message);
             if (error.response) {
-                // Handle backend validation errors
-                showErrorToast(error.response?.data?.error || "Registration failed!");
+                showErrorToast(error.response.data.error || "Registration failed!");
             } else {
-                showErrorToast("Something went wrong. Please try again.")
+                showErrorToast("Something went wrong. Please try again.");
             }
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
+    };
+
+    const googleRegister = () => {
+        console.log('Initiating Google registration');
+        window.location.href = 'http://localhost:8000/accounts/google/login/';
     };
 
     return (
         <form onSubmit={handleSubmit} className="form-container">
-            <h1>{name}</h1>
-            {/* Display general errors (if any) */}
+            <h1>Register</h1>
             {errors.general && <p className="error-message">{errors.general}</p>}
-
-            {/* Username field */}
-            <input
-                className="form-input"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-                required
-            />
-            {/* Show username error (if any) */}
-            {errors.username && <p className="error-message">{errors.username}</p>}
 
             <input
                 className="form-input"
@@ -115,8 +63,18 @@ function Register() {
                 placeholder="Email"
                 required
             />
+            {errors.email && <p className="error-message">{errors.email}</p>}
 
-            {/* Password field */}
+            <input
+                className="form-input"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+                required
+            />
+            {errors.username && <p className="error-message">{errors.username}</p>}
+
             <input
                 className="form-input"
                 type="password"
@@ -125,19 +83,38 @@ function Register() {
                 placeholder="Password"
                 required
             />
-            {/* Show password error (if any) */}
             {errors.password && <p className="error-message">{errors.password}</p>}
 
+            <input
+                className="form-input"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                required
+            />
+            {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
+
             <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Processing..." : name}
+                {loading ? "Processing..." : "Register"}
             </button>
 
-            <p onClick={() => navigate("/login")} className="resend-link">
-                Already have an account? <strong>Sign in</strong>
-            </p>
+            <button
+                className="form-button google-button"
+                type="button"
+                onClick={googleRegister}
+                disabled={loading}
+            >
+                Sign up with Google
+            </button>
 
+            <div className="login-links">
+                <p onClick={() => navigate("/login")} className="resend-link">
+                    Already have an account? <strong>Login</strong>
+                </p>
+            </div>
         </form>
     );
 }
 
-export default Register
+export default Register;

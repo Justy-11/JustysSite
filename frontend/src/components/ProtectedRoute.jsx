@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
-import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 
 
@@ -32,18 +32,43 @@ function ProtectedRoute({ children }) {
 
     const auth = async () => {
         const token = localStorage.getItem(ACCESS_TOKEN);
-        if (!token) {
-            setIsAuthorized(false);
-            return;
-        }
-        const decoded = jwtDecode(token);
-        const tokenExpiration = decoded.exp;
-        const now = Date.now() / 1000;
-
-        if (tokenExpiration < now) {
-            await refreshToken();
+        const googleAccessToken = localStorage.getItem(GOOGLE_ACCESS_TOKEN);
+    
+        console.log("ACCESS_TOKEN", token);
+        console.log("GOOGLE_ACCESS_TOKEN", googleAccessToken);
+    
+        if (token) {
+            const decoded = jwtDecode(token);
+            const tokenExpiration = decoded.exp;
+            const now = Date.now() / 1000;
+    
+            if (tokenExpiration < now) {
+                await refreshToken();
+            } else {
+                setIsAuthorized(true);
+            }
+        } else if (googleAccessToken) {
+            const isValid = await validateGoogleToken(googleAccessToken);
+            setIsAuthorized(isValid);
         } else {
-            setIsAuthorized(true);
+            setIsAuthorized(false);
+        }
+    };
+
+    const validateGoogleToken = async (googleAccessToken) => {
+        try {
+            const res = await api.post('/api/google/validate_token/', {
+                access_token: googleAccessToken,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log("Validated response: ", res.data);
+            return res.data.valid;
+        } catch (error) {
+            console.error('Google token validation failed:', error.response ? error.response.data : error.message);
+            return false;
         }
     };
 

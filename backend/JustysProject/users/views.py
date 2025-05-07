@@ -2,10 +2,11 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from users.models import CustomUser as User
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 import logging
 from django.utils import timezone
@@ -16,9 +17,28 @@ from decouple import config
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
-from django.urls import reverse
+from allauth.socialaccount.models import SocialAccount
+from django.shortcuts import redirect
+from rest_framework.permissions import IsAuthenticated
+from django.http import HttpResponseRedirect
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+import json
+from allauth.socialaccount.models import SocialAccount, SocialToken
+from django.http import JsonResponse
+from rest_framework_simplejwt.tokens import AccessToken
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
+
+class UserDetailView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -124,8 +144,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             except User.DoesNotExist:
                 raise AuthenticationFailed('User with this username/email does not exist.')
 
-        if not user.check_password(password):
-            raise AuthenticationFailed('Invalid credentials')
+        # check if user is a social login user
+        if user.has_usable_password():
+            if not user.check_password(password):
+                raise AuthenticationFailed('Invalid credentials')
+        else:
+            # social login users don't need password
+            if password:
+                raise AuthenticationFailed('This account uses social login.')
 
         if not hasattr(user, 'profile') or not user.profile.is_verified:
             profile = user.profile
@@ -211,6 +237,58 @@ class ResetPasswordView(APIView):
                 return Response({"error": "Invalid or expired token."}, status=400)
         except (User.DoesNotExist, ValueError, TypeError):
             return Response({"error": "Invalid request."}, status=400)
+
+
+@login_required
+def google_login_callback(request):
+    user = request.user
+
+    social_accounts = SocialAccount.objects.filter(user=user)
+    print("Social Account for user:", social_accounts)
+
+    social_account = social_accounts.first()
+
+    if not social_account:
+        print("No social account for user:", user)
+        return redirect('http://localhost:5173/login/callback/?error=NoSocialAccount')
+    
+    token = SocialToken.objects.filter(account=social_account, account__provider='google').first()
+
+    if token:
+        print('Google token found:', token.token)
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        return redirect(f'http://localhost:5173/login/callback/?access_token={access_token}')
+    else:
+        print('No Google token found for user', user)
+        return redirect(f'http://localhost:5173/login/callback/?error=NoGoogleToken')
+
+
+@csrf_exempt
+def validate_google_token(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            google_access_token = data.get('access_token')
+            print(f"Received Google access token: {google_access_token}")
+
+            if not google_access_token:
+                return JsonResponse({'detail': 'Access token is missing.'}, status=400)
+
+            # Verify the JWT token
+            try:
+                token = AccessToken(google_access_token)
+                user_id = token['user_id']
+                user = User.objects.get(id=user_id)
+                print(f"Token validated for user: {user.username}")
+                return JsonResponse({'valid': True, 'user': {'id': user.id, 'username': user.username}})
+            except Exception as e:
+                print(f"Token validation failed: {str(e)}")
+                return JsonResponse({'detail': 'Invalid token.', 'error': str(e)}, status=401)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'detail': 'Invalid JSON.'}, status=400)
+    return JsonResponse({'detail': 'Method not allowed.'}, status=405)
 
 
 class LogoutView(generics.GenericAPIView):

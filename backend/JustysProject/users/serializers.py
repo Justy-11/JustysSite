@@ -4,6 +4,17 @@ import re
 from django.core.mail import send_mail
 from decouple import config
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password')
+        extra_kwargs = { 'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
+        
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

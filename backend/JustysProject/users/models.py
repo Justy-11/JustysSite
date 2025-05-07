@@ -9,6 +9,13 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True) 
 
+    def __str__(self):
+        return self.username
+
+    # Allow users without passwords (for social login)
+    def set_unusable_password(self):
+        super().set_unusable_password()
+
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

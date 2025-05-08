@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
+import AnonymousRoute from './components/AnonymousRoute';
 import VerifyOtp from './pages/VerifyOtp';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -34,9 +35,23 @@ function App() {
                     }
                 />
                 <Route path="/login/callback" element={<RedirectGoogleAuth />} />
-                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/login"
+                    element={
+                        <AnonymousRoute>
+                            <Login />
+                        </AnonymousRoute>
+                    }
+                />
                 <Route path="/logout" element={<Logout />} />
-                <Route path="/register" element={<RegisterAndLogout />} />
+                <Route
+                    path="/register"
+                    element={
+                        <AnonymousRoute>
+                            <RegisterAndLogout />
+                        </AnonymousRoute>
+                    }
+                />
                 <Route path="/verify-otp" element={<VerifyOtp />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />

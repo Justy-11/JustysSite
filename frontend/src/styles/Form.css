@@ -38,7 +38,11 @@
   .google-button {
     background-color: #4285f4;
     color: white;
-    margin-top: 10px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
   
   .google-button:hover {
@@ -58,10 +62,46 @@
   text-decoration: none;
 }
 
+.resend-link-forgot-password{
+  font-size: smaller;
+  cursor: pointer;
+  color: #4a3174;
+  text-decoration: none;
+  margin-top: -20px;
+  margin-bottom: 10px;
+}
+
 .login-links {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 1rem;
   gap: 0.5rem;
+}
+
+.line-separator {
+  border-bottom: 1px solid #838383;
+  margin: 10px 0;
+  width: 150%;
+  height: 1px;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  color: #838383;
+  width: 90%;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #838383;
+  margin: 0 10px;
+}
+
+.separator span {
+  padding: 0 10px;
 }

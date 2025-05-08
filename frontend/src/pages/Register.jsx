@@ -3,6 +3,7 @@ import api from "../api";
 import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
+import { FcGoogle } from 'react-icons/fc';
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -53,6 +54,21 @@ function Register() {
     return (
         <form onSubmit={handleSubmit} className="form-container">
             <h1>Register</h1>
+
+            <button
+                className="form-button google-button"
+                type="button"
+                onClick={googleRegister}
+                disabled={loading}
+            >
+                <FcGoogle size={20} />
+                Sign up with Google
+            </button>
+
+            <div className="separator">
+                <span>OR</span>
+            </div>
+
             {errors.general && <p className="error-message">{errors.general}</p>}
 
             <input
@@ -97,15 +113,6 @@ function Register() {
 
             <button className="form-button" type="submit" disabled={loading}>
                 {loading ? "Processing..." : "Register"}
-            </button>
-
-            <button
-                className="form-button google-button"
-                type="button"
-                onClick={googleRegister}
-                disabled={loading}
-            >
-                Sign up with Google
             </button>
 
             <div className="login-links">

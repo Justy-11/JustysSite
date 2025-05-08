@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
+import { FcGoogle } from 'react-icons/fc';
 
 function Login() {
     const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -55,6 +56,21 @@ function Login() {
     return (
         <form onSubmit={handleSubmit} className="form-container">
             <h1>Login</h1>
+
+            <button
+                className="form-button google-button"
+                type="button"
+                onClick={googleLogin}
+                disabled={loading}
+            >
+                <FcGoogle size={20} />
+                Sign in with Google
+            </button>
+            
+            <div className="separator">
+                <span>OR</span>
+            </div>
+
             {errors.general && <p className="error-message">{errors.general}</p>}
 
             <input
@@ -81,21 +97,15 @@ function Login() {
                 {loading ? "Processing..." : "Login"}
             </button>
 
-            <button
-                className="form-button google-button"
-                type="button"
-                onClick={googleLogin}
-                disabled={loading}
-            >
-                Sign in with Google
-            </button>
-
             <div className="login-links">
+                <p onClick={() => navigate("/forgot-password")} className="resend-link-forgot-password">
+                    Forgot password?
+                </p>
+
+                <div className="line-separator" />
+
                 <p onClick={() => navigate("/register")} className="resend-link">
                     Don’t have an account? <strong>Sign up</strong>
-                </p>
-                <p onClick={() => navigate("/forgot-password")} className="resend-link">
-                    <strong>Forgot password?</strong>
                 </p>
             </div>
         </form>

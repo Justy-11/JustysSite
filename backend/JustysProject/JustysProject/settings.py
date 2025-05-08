@@ -210,4 +210,5 @@ SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 
 LOGIN_REDIRECT_URL = '/callback/'
 
+SOCIALACCOUNT_LOGIN_ON_GET = True  # to get in without continue button page of google
 SOCIALACCOUNT_STORE_TOKENS = True

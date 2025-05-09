@@ -43,23 +43,23 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
         return user
 
-    def get_app(self, request, provider):
-        site_id = getattr(settings, 'SITE_ID', None)
-        if not site_id:
-            raise ValueError("SITE_ID is not defined in settings.py")
+    # def get_app(self, request, provider):
+    #     site_id = getattr(settings, 'SITE_ID', None)
+    #     if not site_id:
+    #         raise ValueError("SITE_ID is not defined in settings.py")
 
-        try:
-            site = Site.objects.get(id=site_id)
-        except Site.DoesNotExist:
-            raise ValueError(f"Site with ID {site_id} does not exist in the database")
+    #     try:
+    #         site = Site.objects.get(id=site_id)
+    #     except Site.DoesNotExist:
+    #         raise ValueError(f"Site with ID {site_id} does not exist in the database")
 
-        print(f"Fetching SocialApp for provider: {provider}, SITE_ID: {site_id}")
-        apps = SocialApp.objects.filter(provider=provider, sites=site)
-        print(f"Found apps: {list(apps)}")
-        if len(apps) > 1:
-            print(f"Multiple SocialApps found for provider {provider}: {list(apps)}")
-            raise Exception(f"Multiple SocialApps found: {list(apps)}")
-        elif len(apps) == 0:
-            print(f"No SocialApp found for provider {provider} and site {site_id}")
-            raise Exception(f"No SocialApp found for provider {provider}")
-        return apps[0]
+    #     print(f"Fetching SocialApp for provider: {provider}, SITE_ID: {site_id}")
+    #     apps = SocialApp.objects.filter(provider=provider, sites=site)
+    #     print(f"Found apps: {list(apps)}")
+    #     if len(apps) > 1:
+    #         print(f"Multiple SocialApps found for provider {provider}: {list(apps)}")
+    #         raise Exception(f"Multiple SocialApps found: {list(apps)}")
+    #     elif len(apps) == 0:
+    #         print(f"No SocialApp found for provider {provider} and site {site_id}")
+    #         raise Exception(f"No SocialApp found for provider {provider}")
+    #     return apps[0]

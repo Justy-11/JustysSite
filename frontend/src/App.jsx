@@ -26,14 +26,20 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route
+                {/* <Route
                     path="/"
                     element={
                         <ProtectedRoute>
                             <Home />
                         </ProtectedRoute>
                     }
-                />
+                /> */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/" element={<Home />} />
+                    {/* Protected routes here */}
+                </Route>
+
+                {/* Public Routes here*/}
                 <Route path="/login/callback" element={<RedirectGoogleAuth />} />
                 <Route
                     path="/login"

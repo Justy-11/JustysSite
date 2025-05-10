@@ -49,7 +49,7 @@
     GOOGLE_CLIENT_ID=YourClientID
     GOOGLE_CLIENT_SECRET=YourClientSecret
 
-    ## ✉️ Email Verification with Gmail
+## ✉️ Email Verification with Gmail
     To use Gmail SMTP, you need to generate an App Password:
 
     Steps:

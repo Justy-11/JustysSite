@@ -1,4 +1,4 @@
-# JustysProject – Fullstack Setup Guide
+# JustysSite
 
 ## ⚙️ Requirements
 
@@ -26,6 +26,7 @@
     pip install -r requirements.txt
 
 4. **Create a .env file inside backend/**
+    ```bash
     SECRET_KEY=your-secret-key-here
     DEBUG=True
 
@@ -55,15 +56,11 @@
     Enable 2-Step Verification in your Google Account:
     https://myaccount.google.com/security
 
-    Go to: https://myaccount.google.com/apppasswords
-
-    App: Mail
-
-    Device: Django (or anything)
-
-    Google will generate a 16-digit App Password
-
-    Use this as EMAIL_HOST_PASSWORD in your .env file.
+    - Go to: https://myaccount.google.com/apppasswords
+    - App: Mail
+    - Device: Django (or anything)
+    - Google will generate a 16-digit App Password
+    - Use this as EMAIL_HOST_PASSWORD in your .env file.
 
 5. **Run database migrations:**
    ```bash
@@ -110,6 +107,7 @@ Add a Social Application:
    npm install
 
 3. **Create a .env file inside frontend/:**
+   ```bash
    VITE_API_URL="http://127.0.0.1:8000"
    VITE_GOOGLE_CLIENT_ID=YourClientID
 

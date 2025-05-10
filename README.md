@@ -50,17 +50,16 @@
     GOOGLE_CLIENT_SECRET=YourClientSecret
 
 ## ✉️ Email Verification with Gmail
-    To use Gmail SMTP, you need to generate an App Password:
+To use Gmail SMTP, you need to generate an App Password:
 
-    Steps:
-    Enable 2-Step Verification in your Google Account:
-    https://myaccount.google.com/security
-
-    - Go to: https://myaccount.google.com/apppasswords
-    - App: Mail
-    - Device: Django (or anything)
-    - Google will generate a 16-digit App Password
-    - Use this as EMAIL_HOST_PASSWORD in your .env file.
+Steps:
+- Enable 2-Step Verification in your Google Account:
+https://myaccount.google.com/security
+- Go to: https://myaccount.google.com/apppasswords
+- App: Mail
+- Device: Django (or anything)
+- Google will generate a 16-digit App Password
+- Use this as EMAIL_HOST_PASSWORD in your .env file.
 
 5. **Run database migrations:**
    ```bash

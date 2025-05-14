@@ -22,13 +22,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate_username(self, value):
-        """Check if username is already taken."""
         if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username is already taken.")
         return value
 
     def validate_password(self, value):
-        """Check for strong password."""
         if len(value) < 8:
             raise serializers.ValidationError("Password must be at least 8 characters long.")
         if not re.search(r"[A-Z]", value):
@@ -46,7 +44,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         profile = user.profile
         plain_otp = profile.generate_otp()
 
-        # sending OTP email
         send_mail(
             subject='Your verification code',
             message=f'Your OTP is {plain_otp}',

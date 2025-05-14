@@ -26,14 +26,6 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute>
-                            <Home />
-                        </ProtectedRoute>
-                    }
-                /> */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Home />} />
                     {/* Protected routes here */}

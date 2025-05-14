@@ -12,7 +12,7 @@ function VerifyOtp() {
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const username = location.state?.username; // Retrieve username from state
+    const username = location.state?.username; // retrieve username from state
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,7 +65,6 @@ function VerifyOtp() {
                 required
             />
 
-             {/* Resend OTP link */}
              <p 
                 onClick={resendOTP}
                 className="resend-link"

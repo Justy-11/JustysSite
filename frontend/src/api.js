@@ -1,4 +1,3 @@
-// src/utils/api.js
 import axios from "axios";
 import { ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "./constants";
 

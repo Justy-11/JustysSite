@@ -1,4 +1,3 @@
-// src/utils/toastUtils.js
 import { toast } from 'react-toastify';
 
 // Common options for all toasts

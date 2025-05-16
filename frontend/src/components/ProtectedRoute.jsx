@@ -3,6 +3,8 @@ import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 
 function ProtectedRoute() {
@@ -73,7 +75,24 @@ function ProtectedRoute() {
     };
 
     if (isAuthorized === null) {
-        return <div>Loading...</div>;
+        // return <div>Loading...</div>;
+        return (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+                width: "100vw",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          );
     }
 
     // return isAuthorized ? children : <Navigate to="/login" />;

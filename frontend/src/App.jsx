@@ -8,6 +8,7 @@ import AnonymousRoute from './components/AnonymousRoute';
 import VerifyOtp from './pages/VerifyOtp';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import AboutUs from './pages/AboutUs';
 import RedirectGoogleAuth from "./components/GoogleRedirectHandler"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,6 +29,7 @@ function App() {
             <Routes>
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<AboutUs />} />
                     {/* Protected routes here */}
                 </Route>
 

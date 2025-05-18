@@ -1,0 +1,149 @@
+.about-page {
+    min-height: 100vh;
+    font-family: "Poppins", sans-serif; /* Match the font from NavBar.css */
+  }
+  
+  /* Top Section with Diagonal Pattern */
+  .who-we-are-section {
+    background: linear-gradient(135deg, #3b2667, #2d1b4e); /* Dark purple gradient */
+    position: relative;
+    color: #ffffff; /* White text */
+    padding: 100px 0 40px; /* Space for navbar and bottom padding */
+    min-height: 50vh; /* Roughly half the viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Diagonal Pattern */
+  .who-we-are-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.05) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    z-index: 0;
+  }
+  
+  /* Bottom Section (Founders) with Plain Background */
+  .founders-section {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text for contrast */
+    padding: 40px 0;
+  }
+  
+  /* Content Container */
+  .content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Who We Are Section */
+  .who-we-are-section h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .who-we-are-section p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .vision {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+  
+  .vision-line {
+    display: block;
+    width: 4px;
+    height: 60px;
+    background-color: #663399; /* Purple line */
+    margin-right: 20px;
+  }
+  
+  .vision-text {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  .vision-text strong {
+    color: #ffcc00; /* Yellow-orange for emphasis */
+  }
+  
+  /* Founders Section */
+  .founders-section h2 {
+    font-size: 28px;
+    margin-bottom: 40px;
+    color: #2d1b4e; /* Dark purple heading to tie in with the theme */
+  }
+  
+  .founder-container {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .founder {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+  }
+  
+  .founder-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+  }
+  
+  .founder-placeholder {
+    background-color: #ccc; /* Placeholder for images */
+  }
+  
+  .founder h3 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #333333;
+  }
+  
+  .founder h4 {
+    font-size: 18px;
+    color : #ffcc00; /* Yellow-orange for titles */
+    margin-bottom: 10px;
+  }
+  
+  .founder p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #666666; /* Slightly lighter text for descriptions */
+  }
+  
+  .read-more {
+    background-color: #663399; /* Purple button */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .read-more:hover {
+    background-color: #ffcc00; /* Yellow-orange on hover */
+    color: #2d1b4e;
+  }

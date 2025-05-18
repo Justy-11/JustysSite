@@ -15,9 +15,9 @@ body {
     /* background: url('D:\JATHURSH\DJango_projects\Justys website\frontend\src\assets\background.png') no-repeat; */
     background-size: cover;
     background-position: center;
-    min-height: 100vh;
+    /* min-height: 100vh;
     padding-top: 100px;
-    padding-left: 20px;
+    padding-left: 20px; */
 }
 
 .header {
@@ -25,7 +25,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 20px 10%;
+    padding: 15px 10%;
     background: #593b8b;
     /* background: transparent; */
     display: flex;
@@ -35,15 +35,15 @@ body {
 }
 
 .logo {
-    font-size: 32px;
-    /* color: #fcb349; */
-    color: #fff;
-    font-weight: 700;
+    font-size: 25px;
+    color: #ffcc00;
+    /* color: #fff; */
+    font-weight: 600;
 }
 
 .navbar a {
     position: relative;
-    font-size: 18px;
+    font-size: 15px;
     color: #fff;
     font-weight: 500;
     margin-left: 40px;

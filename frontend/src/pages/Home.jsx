@@ -3,9 +3,8 @@ import Navbar from "../components/NavBar"
 const Home = () => {
     const navLinks = [
         { href: "/", label: "Home" },
-        { href: "/about", label: "About" },
-        { href: "/", label: "Services" },
-        { href: "/", label: "Contact" },
+        { href: "/about", label: "About Us" },
+        { href: "/", label: "Support" },
         { href: "/logout", label: "Logout" }
     ];
 

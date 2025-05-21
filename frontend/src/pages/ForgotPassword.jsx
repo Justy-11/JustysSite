@@ -2,11 +2,18 @@ import { useState } from "react";
 import api from "../api";
 import "../styles/Form.css";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
+import Navbar from "../components/NavBar";
 
 function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const navLinks = [
+        { href: "/landingpage", label: "Home" },
+        { href: "/about", label: "About" },
+        { href: "/support", label: "Support" },
+    ];
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -21,20 +28,24 @@ function ForgotPassword() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Forgot Password</h1>
-            <input
-                className="form-input"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Sending..." : "Send Reset Link"}
-            </button>
-        </form>
+        <>
+            <Navbar links={navLinks} />
+
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1>Forgot Password</h1>
+                <input
+                    className="form-input"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <button className="form-button" type="submit" disabled={loading}>
+                    {loading ? "Sending..." : "Send Reset Link"}
+                </button>
+            </form>
+        </>
     );
 }
 

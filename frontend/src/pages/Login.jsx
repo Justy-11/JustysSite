@@ -5,6 +5,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
 import { FcGoogle } from 'react-icons/fc';
+import Navbar from "../components/NavBar";
 
 function Login() {
     const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -12,6 +13,12 @@ function Login() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const navLinks = [
+        { href: "/landingpage", label: "Home" },
+        { href: "/about", label: "About" },
+        { href: "/support", label: "Support" },
+    ];
 
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -54,61 +61,65 @@ function Login() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Login</h1>
+        <>
+            <Navbar links={navLinks} />
 
-            <button
-                className="form-button google-button"
-                type="button"
-                onClick={googleLogin}
-                disabled={loading}
-            >
-                <FcGoogle size={20} />
-                Sign in with Google
-            </button>
-            
-            <div className="separator">
-                <span>OR</span>
-            </div>
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1>Login</h1>
 
-            {errors.general && <p className="error-message">{errors.general}</p>}
+                <button
+                    className="form-button google-button"
+                    type="button"
+                    onClick={googleLogin}
+                    disabled={loading}
+                >
+                    <FcGoogle size={20} />
+                    Sign in with Google
+                </button>
+                
+                <div className="separator">
+                    <span>OR</span>
+                </div>
 
-            <input
-                className="form-input"
-                type="text"
-                value={usernameOrEmail}
-                onChange={(e) => setUsernameOrEmail(e.target.value)}
-                placeholder="Username or Email"
-                required
-            />
+                {errors.general && <p className="error-message">{errors.general}</p>}
 
-            <input
-                className="form-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-            />
+                <input
+                    className="form-input"
+                    type="text"
+                    value={usernameOrEmail}
+                    onChange={(e) => setUsernameOrEmail(e.target.value)}
+                    placeholder="Username or Email"
+                    required
+                />
 
-            {errors.password && <p className="error-message">{errors.password}</p>}
+                <input
+                    className="form-input"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
 
-            <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Processing..." : "Login"}
-            </button>
+                {errors.password && <p className="error-message">{errors.password}</p>}
 
-            <div className="login-links">
-                <p onClick={() => navigate("/forgot-password")} className="resend-link-forgot-password">
-                    Forgot password?
-                </p>
+                <button className="form-button" type="submit" disabled={loading}>
+                    {loading ? "Processing..." : "Login"}
+                </button>
 
-                <div className="line-separator" />
+                <div className="login-links">
+                    <p onClick={() => navigate("/forgot-password")} className="resend-link-forgot-password">
+                        Forgot password?
+                    </p>
 
-                <p onClick={() => navigate("/register")} className="resend-link">
-                    Don’t have an account? <strong>Sign up</strong>
-                </p>
-            </div>
-        </form>
+                    <div className="line-separator" />
+
+                    <p onClick={() => navigate("/register")} className="resend-link">
+                        Don’t have an account? <strong>Sign up</strong>
+                    </p>
+                </div>
+            </form>
+        </>
     );
 }
 

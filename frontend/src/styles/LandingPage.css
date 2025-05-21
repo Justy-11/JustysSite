@@ -1,0 +1,116 @@
+  .hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 10%;
+    background-color: #593b8b;
+    color: white;
+    width: 100%;
+    flex-wrap: wrap; /* enables responsiveness */
+    gap: 40px;
+  }
+
+  .hero-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 40px;
+  }  
+  
+  .hero-content {
+    max-width: 600px;
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .hero-section h1 {
+    font-weight: 500;
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    color: #fff;
+    text-align: left;
+  }
+  
+  /* Buttons side by side on large screens */
+  .hero-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  /* Make buttons full width and stacked on small screens */
+  @media (max-width: 768px) {
+    .hero-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .hero-buttons .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
+  .hero-image {
+    flex: 1;
+    text-align: right;
+    min-width: 300px;
+    margin-top: 20px;
+  }
+  
+  .hero-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Move image below content on smaller screens */
+  @media (max-width: 768px) {
+    .hero-section {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .hero-image {
+      text-align: center;
+    }
+  
+    .hero-section h1 {
+      text-align: center;
+    }
+  }
+  
+  .btn {
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  
+  .btn-primary {
+    background-color: #7c54bb;
+    color: #fff;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #7a57c2;
+  }
+  
+  .btn-secondary {
+    background-color: #ffcc00;
+    color: #593b8b;
+    border: none;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #e6b800;
+  }

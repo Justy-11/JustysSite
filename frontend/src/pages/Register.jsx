@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
 import { FcGoogle } from 'react-icons/fc';
+import Navbar from "../components/NavBar";
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -14,6 +15,12 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    const navLinks = [
+        { href: "/landingpage", label: "Home" },
+        { href: "/about", label: "About" },
+        { href: "/support", label: "Support" },
+    ];
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
@@ -52,75 +59,79 @@ function Register() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Register</h1>
+        <>
+            <Navbar links={navLinks} />
 
-            <button
-                className="form-button google-button"
-                type="button"
-                onClick={googleRegister}
-                disabled={loading}
-            >
-                <FcGoogle size={20} />
-                Sign up with Google
-            </button>
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1>Register</h1>
 
-            <div className="separator">
-                <span>OR</span>
-            </div>
+                <button
+                    className="form-button google-button"
+                    type="button"
+                    onClick={googleRegister}
+                    disabled={loading}
+                >
+                    <FcGoogle size={20} />
+                    Sign up with Google
+                </button>
 
-            {errors.general && <p className="error-message">{errors.general}</p>}
+                <div className="separator">
+                    <span>OR</span>
+                </div>
 
-            <input
-                className="form-input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required
-            />
-            {errors.email && <p className="error-message">{errors.email}</p>}
+                {errors.general && <p className="error-message">{errors.general}</p>}
 
-            <input
-                className="form-input"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-                required
-            />
-            {errors.username && <p className="error-message">{errors.username}</p>}
+                <input
+                    className="form-input"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                />
+                {errors.email && <p className="error-message">{errors.email}</p>}
 
-            <input
-                className="form-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-            />
-            {errors.password && <p className="error-message">{errors.password}</p>}
+                <input
+                    className="form-input"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Username"
+                    required
+                />
+                {errors.username && <p className="error-message">{errors.username}</p>}
 
-            <input
-                className="form-input"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm Password"
-                required
-            />
-            {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
+                <input
+                    className="form-input"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
+                {errors.password && <p className="error-message">{errors.password}</p>}
 
-            <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Processing..." : "Register"}
-            </button>
+                <input
+                    className="form-input"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                    required
+                />
+                {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
 
-            <div className="login-links">
-                <p onClick={() => navigate("/login")} className="resend-link">
-                    Already have an account? <strong>Login</strong>
-                </p>
-            </div>
-        </form>
+                <button className="form-button" type="submit" disabled={loading}>
+                    {loading ? "Processing..." : "Register"}
+                </button>
+
+                <div className="login-links">
+                    <p onClick={() => navigate("/login")} className="resend-link">
+                        Already have an account? <strong>Login</strong>
+                    </p>
+                </div>
+            </form>
+        </>
     );
 }
 

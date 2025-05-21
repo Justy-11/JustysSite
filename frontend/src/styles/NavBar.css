@@ -25,13 +25,19 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 15px 10%;
+    padding: 15px 15%;
     background: #593b8b;
     /* background: transparent; */
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 100;
+}
+
+@media (max-width: 1200px) {
+    .header {
+        padding: 15px 10%; /* on smaller screens */
+    }
 }
 
 .logo {

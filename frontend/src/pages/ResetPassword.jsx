@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../api";
 import "../styles/Form.css";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
+import Navbar from "../components/NavBar";
 
 function ResetPassword() {
     const [password, setPassword] = useState("");
@@ -13,6 +14,12 @@ function ResetPassword() {
     const token = new URLSearchParams(search).get("token");
     const uid = new URLSearchParams(search).get("uid");
 
+    const navLinks = [
+        { href: "/landingpage", label: "Home" },
+        { href: "/about", label: "About" },
+        { href: "/support", label: "Support" },
+    ];
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
@@ -37,28 +44,32 @@ function ResetPassword() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Reset Password</h1>
-            <input
-                className="form-input"
-                type="password"
-                placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            <input
-                className="form-input"
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-            />
-            <button className="form-button" type="submit" disabled={loading}>
-                {loading ? "Resetting..." : "Reset Password"}
-            </button>
-        </form>
+        <>
+            <Navbar links={navLinks} />
+            
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1>Reset Password</h1>
+                <input
+                    className="form-input"
+                    type="password"
+                    placeholder="New Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <input
+                    className="form-input"
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                />
+                <button className="form-button" type="submit" disabled={loading}>
+                    {loading ? "Resetting..." : "Reset Password"}
+                </button>
+            </form>
+        </>
     );
 }
 

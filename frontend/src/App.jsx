@@ -12,6 +12,7 @@ import AboutUs from './pages/AboutUs';
 import RedirectGoogleAuth from "./components/GoogleRedirectHandler"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LandingPage from './pages/LandingPage';
 
 function Logout() {
     localStorage.clear();
@@ -52,6 +53,7 @@ function App() {
                         </AnonymousRoute>
                     }
                 />
+                <Route path="/landingpage" element={<LandingPage />} />
                 <Route path="/verify-otp" element={<VerifyOtp />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />

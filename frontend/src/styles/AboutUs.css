@@ -5,7 +5,7 @@
   
   /* Top Section with Diagonal Pattern */
   .who-we-are-section {
-    background: linear-gradient(135deg, #3b2667, #2d1b4e); /* Dark purple gradient */
+    background: #593b8b; /* Dark purple gradient */
     position: relative;
     color: #ffffff; /* White text */
     padding: 100px 0 40px; /* Space for navbar and bottom padding */
@@ -15,29 +15,12 @@
     justify-content: center;
   }
   
-  /* Diagonal Pattern */
-  .who-we-are-section::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.05) 10px,
-      transparent 10px,
-      transparent 20px
-    );
-    z-index: 0;
-  }
-  
   /* Bottom Section (Founders) with Plain Background */
   .founders-section {
     background-color: #ffffff; /* White background */
     color: #333333; /* Dark text for contrast */
     padding: 40px 0;
+    text-align: center;
   }
   
   /* Content Container */
@@ -60,6 +43,13 @@
     line-height: 1.6;
     margin-bottom: 20px;
   }
+
+  @media (max-width: 768px) {  
+    .who-we-are-section{
+      text-align: center;
+    }
+  }
+  
   
   .vision {
     display: flex;

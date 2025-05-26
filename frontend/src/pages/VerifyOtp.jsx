@@ -3,7 +3,7 @@ import api from "../api";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/Form.css"
 import { showErrorToast, showInfoToast, showLoadingToast, updateToast } from '../utils/toastUtils';
-
+import Navbar from "../components/NavBar";
 
 function VerifyOtp() {
     const location = useLocation();
@@ -13,6 +13,12 @@ function VerifyOtp() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const username = location.state?.username; // retrieve username from state
+
+    const navLinks = [
+        { href: "/landingpage", label: "Home" },
+        { href: "/about", label: "About Us" },
+        { href: "/support", label: "Support" },
+    ];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,31 +57,34 @@ function VerifyOtp() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>Verify OTP</h1>
+        <>
+            <Navbar links={navLinks} />
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1>Verify OTP</h1>
 
-            {error && <p className="error-message">{error}</p>}
+                {error && <p className="error-message">{error}</p>}
 
-            <input
-                className="form-input"
-                type="text"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter OTP"
-                required
-            />
+                <input
+                    className="form-input"
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                    required
+                />
 
-             <p 
-                onClick={resendOTP}
-                className="resend-link"
-            >
-                Resend OTP
-            </p>
-            
-            <button className="form-button" type="submit">
-                Verify
-            </button>
-        </form>
+                <p 
+                    onClick={resendOTP}
+                    className="resend-link"
+                >
+                    Resend OTP
+                </p>
+                
+                <button className="form-button" type="submit">
+                    Verify
+                </button>
+            </form>
+        </>
     );
 }
 

@@ -1,29 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
+import { FaHome, FaInfoCircle, FaHeadset, FaSignOutAlt } from "react-icons/fa";
 import "../styles/NavBar.css"
 
+
 const Navbar = ({ links }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-
+    const iconMap = {
+        "Home": <FaHome />,
+        "About Us": <FaInfoCircle />,
+        "Support": <FaHeadset />,
+        "Logout": <FaSignOutAlt />,
+      };
+      
     return (
         <header className="header">
-            <a href="/" className="logo">Justys' Site</a>
-
-            <div className="menu-icon" onClick={toggleMenu}>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-
-            <nav className={`navbar ${isOpen ? "open" : ""}`}>
-                {links.map((link, index) => (
-                    <a key={index} href={link.href}>{link.label}</a>
-                ))}
-            </nav>
+          <a href="/" className="logo">CreatiMate</a>
+    
+          <nav className="navbar">
+            {links.map((link, index) => (
+              <a key={index} href={link.href}>
+                {iconMap[link.label]} <span>{link.label}</span>
+              </a>
+            ))}
+          </nav>
         </header>
-    )
+      );
 }
 export default Navbar;

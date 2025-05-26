@@ -18,7 +18,7 @@ const LandingPage = () => {
       <section className="hero-section">
         <div class="hero-wrapper">
         <div className="hero-content">
-          
+
           <h1 className="hero-main-title">
             WE EMPOWER CREATORS BEFORE WE BUILD PRODUCTS
           </h1>
@@ -28,7 +28,6 @@ const LandingPage = () => {
           <div className="hero-taglines">
             <p>Crafting your digital vision into reality</p>
             <p>Smart ideas deserve smart tools</p>
-            <p>Customize every page, your way</p>
             <p>Build your own websites – without a single line of code</p>
             <p>Create your business, your store, your world – powered by us</p>
           </div>

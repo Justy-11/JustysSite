@@ -16,7 +16,7 @@ function ResetPassword() {
 
     const navLinks = [
         { href: "/landingpage", label: "Home" },
-        { href: "/about", label: "About" },
+        { href: "/about", label: "About Us" },
         { href: "/support", label: "Support" },
     ];
     

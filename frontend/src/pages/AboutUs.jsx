@@ -3,7 +3,7 @@ import Navbar from "../components/NavBar";
 import "../styles/AboutUs.css";
 
 const navLinks = [
-  { href: "/", label: "Dashboard" },
+  { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/", label: "Support" },
   { href: "/logout", label: "Logout" },
@@ -17,7 +17,7 @@ const AboutUs = () => {
         <div className="content">
           <h1>Who We Are</h1>
           <p>
-            At Justys' Site, we're on a mission to make launching your online presence effortless.
+            At CreatiMate, we're on a mission to make launching your online presence effortless.
             Whether you're a small business owner, freelancer, or creator, our platform lets you 
             create and share your own product or service page instantly — no coding required.
           </p>
@@ -44,7 +44,7 @@ const AboutUs = () => {
               <h3>Jathurshan Pathmarasa</h3>
               <h4>Founder & CEO</h4>
               <p>
-                Jathurshan Pathmarasa is the founder and visionary behind Justys' Site. With a background in computer engineering and a focus on data management, machine learning, and web technologies, he is passionate about creating accessible and innovative digital platforms. Through Justys' Site, Jathurshan aims to empower individuals and small businesses to establish their online presence with ease and confidence.
+                Jathurshan Pathmarasa is the founder and visionary behind CreatiMate. With a background in computer engineering and a focus on data management, machine learning, and web technologies, he is passionate about creating accessible and innovative digital platforms. Through Justys' Site, Jathurshan aims to empower individuals and small businesses to establish their online presence with ease and confidence.
               </p>
               <button className="read-more">Read More</button>
             </div>

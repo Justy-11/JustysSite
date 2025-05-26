@@ -44,6 +44,15 @@
     background-color: #33334d;
 }
 
+.sidebar-list li.active {
+    background-color: #357ae8;
+}
+
+.sidebar-list li.active a {
+    font-weight: bold;
+    color: white;
+}
+
 /* Hamburger icon styles */
 .hamburger-icon {
     display: none;

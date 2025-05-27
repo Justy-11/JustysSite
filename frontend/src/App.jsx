@@ -9,7 +9,7 @@ import VerifyOtp from './pages/VerifyOtp';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AboutUs from './pages/AboutUs';
-import Edit from "./pages/Edit";
+import CreatePage from "./pages/CreatePage";
 import Layout from './components/Layout';
 import RedirectGoogleAuth from "./components/GoogleRedirectHandler"
 import { ToastContainer } from 'react-toastify';
@@ -33,7 +33,7 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route element={<Layout />}> {/* <-- Layout wraps the UI pages */}
                         <Route path="/" element={<Home />} />
-                        <Route path="/edit" element={<Edit />} />
+                        <Route path="/create" element={<CreatePage />} />
                     </Route>
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<AboutUs />} />

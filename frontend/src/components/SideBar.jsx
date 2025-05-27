@@ -16,7 +16,7 @@ const Sidebar = () => {
 
   const links = [
     { href: "/", icon: <FaHome />, label: "Dashboard" },
-    { href: "/edit", icon: <FaPlus />, label: "Create/Edit Page" },
+    { href: "/create", icon: <FaPlus />, label: "Create/Edit Page" },
     { href: "/collections", icon: <FaLayerGroup />, label: "Manage Collections" },
     { href: "/add-products", icon: <FaPlusSquare />, label: "Add Products" },
     { href: "/bulk-upload", icon: <FaFileUpload />, label: "Bulk Upload" },

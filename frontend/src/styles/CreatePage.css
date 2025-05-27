@@ -1,0 +1,458 @@
+/* General container for the create page */
+.create-page-container {
+    background-color: #1a2526;
+    min-height: 100vh;
+    color: #ffffff;
+    padding: 20px;
+  }
+  
+  /* Form Styles */
+  .create-form {
+    background-color: #2a3b3c;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .create-form h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group.full-width {
+    grid-column: span 2;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 8px;
+    background-color: #3a4b4c;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+  }
+  
+  .form-group input[type="file"] {
+    padding: 0;
+    background-color: transparent;
+  }
+  
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #a0a0a0;
+  }
+  
+  /* Hints and Errors */
+  .hint {
+    font-size: 12px;
+    color: #a0a0a0;
+    margin-top: 4px;
+  }
+  
+  .error {
+    font-size: 12px;
+    color: #ff4444;
+    margin-top: 4px;
+  }
+  
+  /* Character Count */
+  .char-count {
+    font-size: 12px;
+    color: #a0a0a0;
+    margin-top: 4px;
+    text-align: right;
+  }
+  
+  /* Social Links Section */
+  .social-links-section {
+    margin-top: 24px;
+  }
+  
+  .social-links-section h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .social-link-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .social-link-select {
+    padding: 8px;
+    background-color: #3a4b4c;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 14px;
+    flex: 1;
+  }
+  
+  .social-link-input {
+    padding: 8px;
+    background-color: #3a4b4c;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 14px;
+    flex: 2;
+  }
+  
+  .social-link-input::placeholder {
+    color: #a0a0a0;
+  }
+  
+  .delete-social-link-button {
+    padding: 6px 12px;
+    background-color: #ff4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+  }
+  
+  .delete-social-link-button:hover {
+    background-color: #cc3333;
+  }
+  
+  .add-social-link-button {
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .add-social-link-button:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Image Preview Area */
+  .image-preview-area {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+  }
+  
+  .image-preview-container {
+    flex: 1;
+  }
+  
+  .image-preview-container h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .image-preview-wrapper {
+    position: relative;
+  }
+  
+  .image-preview {
+    max-width: 100%;
+    max-height: 200px; /* Limit height to prevent overly large previews */
+    object-fit: contain; /* Show the full image without cropping */
+    border-radius: 4px;
+  }
+  
+  .image-placeholder {
+    width: 100%;
+    height: 150px;
+    background-color: #3a4b4c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #a0a0a0;
+  }
+  
+  .remove-button {
+    margin-top: 8px;
+    margin-left: 8px;
+    padding: 6px 12px;
+    background-color: #ff4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+  }
+  
+  .remove-button:hover {
+    background-color: #cc3333;
+  }
+  
+  /* Form Buttons */
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  
+  .create-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #3b82f6;
+    color: #ffffff;
+    transition: background-color 0.3s;
+  }
+  
+  .create-button:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Page Preview Styles */
+  .page-preview {
+    background-color: #2a3b3c;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Banner Section */
+  .banner-section {
+    margin-bottom: 24px;
+  }
+  
+  .banner-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  /* Profile Section */
+  .profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+  }
+  
+  .profile-section h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .tagline {
+    font-size: 16px;
+    color: #a0a0a0;
+  }
+  
+  /* About Section */
+  .about-section {
+    margin-bottom: 24px;
+  }
+  
+  .about-section h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .about-section p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  /* Contact Section */
+  .contact-section h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .contact-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .contact-section li {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .contact-section a {
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
+  .contact-section a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Mobile Responsiveness (for screens smaller than 768px) */
+  @media (max-width: 768px) {
+    .create-page-container {
+      padding: 16px;
+    }
+  
+    .create-form,
+    .page-preview {
+      padding: 16px;
+    }
+  
+    .create-form h2 {
+      font-size: 20px;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  
+    .form-group.full-width {
+      grid-column: span 1;
+    }
+  
+    .form-group label {
+      font-size: 12px;
+    }
+  
+    .form-group input,
+    .form-group textarea {
+      font-size: 12px;
+      padding: 6px;
+    }
+  
+    .hint,
+    .error,
+    .char-count {
+      font-size: 10px;
+    }
+  
+    /* Social Links on Mobile */
+    .social-links-section h4 {
+      font-size: 14px;
+    }
+  
+    .social-link-entry {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+  
+    .social-link-select,
+    .social-link-input {
+      font-size: 12px;
+      padding: 6px;
+    }
+  
+    .delete-social-link-button {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+  
+    .add-social-link-button {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+  
+    /* Image Preview Area on Mobile */
+    .image-preview-area {
+      flex-direction: column;
+      gap: 12px;
+    }
+  
+    .image-preview-container h4 {
+      font-size: 14px;
+    }
+  
+    .image-preview {
+      max-height: 150px;
+    }
+  
+    .image-placeholder {
+      height: 100px;
+      font-size: 12px;
+    }
+  
+    .remove-button {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+  
+    .form-buttons {
+      justify-content: center;
+    }
+  
+    .create-button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    /* Preview Section Adjustments */
+    .banner-image {
+      height: 150px;
+    }
+  
+    .profile-image {
+      width: 80px;
+      height: 80px;
+    }
+  
+    .profile-section h2 {
+      font-size: 20px;
+    }
+  
+    .tagline {
+      font-size: 14px;
+    }
+  
+    .about-section h3,
+    .contact-section h3 {
+      font-size: 18px;
+    }
+  
+    .about-section p,
+    .contact-section li {
+      font-size: 12px;
+    }
+  }

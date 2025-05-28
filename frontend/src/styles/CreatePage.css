@@ -456,3 +456,43 @@
       font-size: 12px;
     }
   }
+
+  /* Preview Card Container */
+.preview-card-container {
+    background-color: #2a3b3c;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 24px;
+  }
+  
+  /* Edit Button in Preview Card */
+  .edit-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #10b981;
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.3s;
+    margin-top: 16px;
+  }
+  
+  .edit-button:hover {
+    background-color: #059669;
+  }
+  
+  /* Adjust mobile responsiveness for preview card */
+  @media (max-width: 768px) {
+    .preview-card-container {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+  
+    .edit-button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+    }
+  }

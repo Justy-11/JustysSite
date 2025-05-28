@@ -10,11 +10,13 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AboutUs from './pages/AboutUs';
 import CreatePage from "./pages/CreatePage";
+import AddProducts from './pages/AddProducts';
 import Layout from './components/Layout';
 import RedirectGoogleAuth from "./components/GoogleRedirectHandler"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
+
 
 function Logout() {
     localStorage.clear();
@@ -34,6 +36,7 @@ function App() {
                     <Route element={<Layout />}> {/* <-- Layout wraps the UI pages */}
                         <Route path="/" element={<Home />} />
                         <Route path="/create" element={<CreatePage />} />
+                        <Route path="/add-products" element={<AddProducts/>} />
                     </Route>
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<AboutUs />} />

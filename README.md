@@ -1,4 +1,4 @@
-# JustysSite
+# CreatiMate
 
 ## ⚙️ Requirements
 

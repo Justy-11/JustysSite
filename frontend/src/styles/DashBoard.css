@@ -102,15 +102,14 @@
   border-radius: 4px;
   color: #ffffff;
   font-size: 14px;
-  width: 100%; /* Ensure input fields take full width of their container */
-  box-sizing: border-box; /* Prevent padding from causing overflow */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group input::placeholder {
   color: #a0a0a0;
 }
 
-/* Form Buttons */
 .form-buttons {
   display: flex;
   justify-content: space-between;
@@ -145,9 +144,7 @@
   background-color: #2563eb;
 }
 
-/* Mobile Responsiveness (for screens smaller than 768px) */
 @media (max-width: 768px) {
-  /* Adjust padding for smaller screens */
   .dashboard-container {
     padding: 20px;
   }
@@ -177,7 +174,7 @@
 
   .step-container {
     margin-bottom: 8px;
-    width: 100%; /* Ensure the step takes full width */
+    width: 100%;
   }
 
   .step-circle {
@@ -192,7 +189,7 @@
   }
 
   .step-connector {
-    display: none; /* Hide connectors on mobile since steps are stacked */
+    display: none;
   }
 
   /* Stack form fields vertically on mobile */
@@ -214,7 +211,6 @@
     padding: 6px;
   }
 
-  /* Adjust buttons for mobile */
   .form-buttons {
     flex-direction: column;
     gap: 8px;
@@ -228,6 +224,6 @@
   }
 
   .next-button {
-    margin-left: 0; /* Remove margin since buttons are stacked */
+    margin-left: 0;
   }
 }

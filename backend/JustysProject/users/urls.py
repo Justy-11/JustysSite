@@ -1,5 +1,9 @@
-from django.urls import path, include
-from .views import RegisterView, LogoutView, VerifyOTPView, CustomTokenObtainPairView, ResendOTPView, ForgotPasswordView, ResetPasswordView
+from django.urls import path
+from .views import (
+    RegisterView, LogoutView, VerifyOTPView, CustomTokenObtainPairView,
+    ResendOTPView, ForgotPasswordView, ResetPasswordView,
+    PageDetailView, AddProductsView, AddProductsCSVView
+)
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
@@ -11,4 +15,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('page/', PageDetailView.as_view(), name='page_detail'),
+    path('products/add/', AddProductsView.as_view(), name='add_products'),
+    path('products/add-csv/', AddProductsCSVView.as_view(), name='add_products_csv'),
 ]

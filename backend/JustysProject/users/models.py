@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import AbstractUser
 import random
 import hashlib
 from django.utils import timezone
@@ -41,3 +41,53 @@ class Profile(models.Model):
             return False
         hashed_otp = hashlib.sha256(otp.encode('utf-8')).hexdigest()
         return self.otp == hashed_otp
+
+
+class Page(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='page')
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    banner_image = models.ImageField(upload_to='banner_images/', blank=True, null=True)
+    product_name = models.CharField(max_length=255, blank=True)
+    tagline = models.CharField(max_length=255, blank=True)
+    about = models.TextField(max_length=500, blank=True)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Page"
+
+
+class SocialLink(models.Model):
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='social_links')
+    platform = models.CharField(max_length=50)
+    url = models.URLField()
+
+    def __str__(self):
+        return f"{self.platform} - {self.url}"
+
+
+class Collection(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='collections')
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='products')
+    collection = models.ForeignKey(Collection, on_delete=models.SET_NULL, blank=True, null=True, related_name='products')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.IntegerField(blank=True, null=True)
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

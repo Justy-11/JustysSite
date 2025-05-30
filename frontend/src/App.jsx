@@ -33,12 +33,11 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route element={<ProtectedRoute />}>
-                    <Route element={<Layout />}> {/* <-- Layout wraps the UI pages */}
+                    <Route element={<Layout />}>
                         <Route path="/" element={<Home />} />
                         <Route path="/create" element={<CreatePage />} />
                         <Route path="/add-products" element={<AddProducts/>} />
                     </Route>
-                    <Route path="/" element={<Home />} />
                     <Route path="/about" element={<AboutUs />} />
                     {/* Protected routes here */}
                 </Route>

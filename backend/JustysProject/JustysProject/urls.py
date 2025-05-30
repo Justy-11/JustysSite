@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from users.views import google_login_callback, validate_google_token, UserDetailView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,4 +11,4 @@ urlpatterns = [
     path('callback/', google_login_callback, name='callback'),
     path('api/auth/user/', UserDetailView.as_view(), name='user_detail'),
     path('api/google/validate_token/', validate_google_token, name='validate_token'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

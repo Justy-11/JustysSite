@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
-import { REFRESH_TOKEN, ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -34,48 +34,46 @@ function ProtectedRoute() {
 
     const auth = async () => {
         const token = localStorage.getItem(ACCESS_TOKEN);
-        const googleAccessToken = localStorage.getItem(GOOGLE_ACCESS_TOKEN);
     
         console.log("ACCESS_TOKEN", token);
-        console.log("GOOGLE_ACCESS_TOKEN", googleAccessToken);
     
         if (token) {
-            const decoded = jwtDecode(token);
-            const tokenExpiration = decoded.exp;
-            const now = Date.now() / 1000;
+          const decoded = jwtDecode(token);
+          const tokenExpiration = decoded.exp;
+          const now = Date.now() / 1000;
     
-            if (tokenExpiration < now) {
-                await refreshToken();
-            } else {
-                setIsAuthorized(true);
-            }
-        } else if (googleAccessToken) {
-            const isValid = await validateGoogleToken(googleAccessToken);
-            setIsAuthorized(isValid);
+          if (tokenExpiration < now) {
+            await refreshToken();
+          } else {
+            setIsAuthorized(true);
+          }
         } else {
-            setIsAuthorized(false);
+          setIsAuthorized(false);
         }
-    };
+      };
 
-    const validateGoogleToken = async (googleAccessToken) => {
-        try {
-            const res = await api.post('/api/google/validate_token/', {
-                access_token: googleAccessToken,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            console.log("Validated response: ", res.data);
-            return res.data.valid;
-        } catch (error) {
-            console.error('Google token validation failed:', error.response ? error.response.data : error.message);
-            return false;
-        }
-    };
+    // const validateGoogleToken = async (googleAccessToken) => {
+    //     try {
+    //         const res = await api.post('/api/google/validate_token/', {
+    //             access_token: googleAccessToken,
+    //         }, {
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         });
+    //         console.log("Validated response: ", res.data);
+    //         return {
+    //             valid: res.data.valid,
+    //             access_token: res.data.access_token, // Expect the backend to return the JWT access_token
+    //             refresh_token: res.data.refresh_token, // Expect the backend to return the refresh_token
+    //           };
+    //     } catch (error) {
+    //         console.error('Google token validation failed:', error.response ? error.response.data : error.message);
+    //         return false;
+    //     }
+    // };
 
     if (isAuthorized === null) {
-        // return <div>Loading...</div>;
         return (
             <Box
               sx={{
@@ -95,7 +93,6 @@ function ProtectedRoute() {
           );
     }
 
-    // return isAuthorized ? children : <Navigate to="/login" />;
     return isAuthorized ? <Outlet /> : <Navigate to="/login" replace />;
 }
 

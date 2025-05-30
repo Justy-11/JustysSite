@@ -17,12 +17,9 @@ const Sidebar = () => {
   const links = [
     { href: "/", icon: <FaHome />, label: "Dashboard" },
     { href: "/create", icon: <FaPlus />, label: "Create/Edit Page" },
-    { href: "/collections", icon: <FaLayerGroup />, label: "Manage Collections" },
     { href: "/add-products", icon: <FaPlusSquare />, label: "Add Products" },
-    { href: "/bulk-upload", icon: <FaFileUpload />, label: "Bulk Upload" },
     { href: "/preview", icon: <FaEye />, label: "Preview Page" },
     { href: "/publish", icon: <FaGlobe />, label: "Publish Page" },
-    { href: "/analytics", icon: <FaChartBar />, label: "Analytics" },
     { href: "/settings", icon: <FaCog />, label: "Settings" },
     { href: "/help", icon: <FaQuestionCircle />, label: "Help" },
   ];

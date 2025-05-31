@@ -59,15 +59,6 @@ class Page(models.Model):
         return f"{self.user.username}'s Page"
 
 
-class SocialLink(models.Model):
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='social_links')
-    platform = models.CharField(max_length=50)
-    url = models.URLField()
-
-    def __str__(self):
-        return f"{self.platform} - {self.url}"
-
-
 class Collection(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='collections')
     name = models.CharField(max_length=255, unique=True)

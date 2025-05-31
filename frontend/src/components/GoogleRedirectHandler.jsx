@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { GOOGLE_ACCESS_TOKEN, ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -8,8 +8,11 @@ import { showErrorToast, showInfoToast } from "../utils/toastUtils";
 
 function RedirectGoogleAuth() {
     const navigate = useNavigate();
+    const hasRun = useRef(false);
 
     useEffect(() => {
+        if (hasRun.current) return; // Prevent running twice in Strict Mode
+        hasRun.current = true;
         console.log("RedirectHandler mounted successfully");
 
         const queryParams = new URLSearchParams(window.location.search);
@@ -57,6 +60,10 @@ function RedirectGoogleAuth() {
           showErrorToast("Google login failed: No access token provided");
           navigate("/login");
         }
+        
+        return () => {
+          hasRun.current = false;
+        };
     }, [navigate])
 
     return (

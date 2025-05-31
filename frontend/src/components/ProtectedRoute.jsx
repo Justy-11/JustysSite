@@ -2,16 +2,24 @@ import { Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
 
 function ProtectedRoute() {
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const hasRun = useRef(false);
 
     useEffect(() => {
+        if (hasRun.current) return; // Prevent running twice in Strict Mode
+        hasRun.current = true;
+
         auth().catch(() => setIsAuthorized(false))
+
+        return () => {
+          hasRun.current = false;
+        };
     }, [])
 
     const refreshToken = async () => {

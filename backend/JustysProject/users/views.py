@@ -33,7 +33,9 @@ from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import AccessToken
 import csv
 from io import TextIOWrapper
+from django.http import QueryDict
 
+logger = logging.getLogger(__name__)
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
@@ -310,21 +312,22 @@ class PageDetailView(generics.RetrieveUpdateAPIView):
     def get(self, request, *args, **kwargs):
         page = self.get_object()
         if page is None:
-            return Response({}, status=status.HTTP_200_OK)  # Return empty response if no page exists
+            return Response({}, status=status.HTTP_200_OK)
         serializer = self.get_serializer(page)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         page = self.get_object()
+        mutable_data = request.data.copy()
+        logger.debug("Raw request data: %s", mutable_data)
+
         if page is None:
-            # Create a new page
-            serializer = self.get_serializer(data=request.data)
+            serializer = self.get_serializer(data=mutable_data)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            # Update existing page
-            serializer = self.get_serializer(page, data=request.data, partial=True)
+            serializer = self.get_serializer(page, data=mutable_data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

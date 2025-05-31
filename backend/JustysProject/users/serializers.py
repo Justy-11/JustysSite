@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import CustomUser as User, Page, SocialLink, Collection, Product
+from users.models import CustomUser as User, Page, Collection, Product
 import re
 from django.core.mail import send_mail
 from decouple import config
@@ -57,59 +57,43 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class SocialLinkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SocialLink
-        fields = ['id', 'platform', 'url']
-
-
 class PageSerializer(serializers.ModelSerializer):
-    social_links = SocialLinkSerializer(many=True, required=False)
-    profile_image = serializers.ImageField(required=False)
-    banner_image = serializers.ImageField(required=False)
+    profile_image = serializers.ImageField(required=False, allow_null=True)
+    banner_image = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Page
-        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'social_links', 'created_at', 'updated_at']
+        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def create(self, validated_data):
-        social_links_data = validated_data.pop('social_links', [])
         user = self.context['request'].user
         page = Page.objects.create(user=user, **validated_data)
-        for link_data in social_links_data:
-            SocialLink.objects.create(page=page, **link_data)
         return page
 
     def update(self, instance, validated_data):
-        social_links_data = validated_data.pop('social_links', None)
-
-        # Handle image updates and deletions
         for field in ['profile_image', 'banner_image']:
             if field in validated_data:
                 old_image = getattr(instance, field)
-                new_image = validated_data[field]
-                # If a new image is uploaded, delete the old one
-                if old_image and new_image and old_image != new_image:
-                    if default_storage.exists(old_image.path):
+                new_image_value = validated_data[field]
+                if new_image_value and hasattr(new_image_value, 'file'):
+                    if old_image and default_storage.exists(old_image.path) and old_image != new_image_value:
                         default_storage.delete(old_image.path)
-                # If the field is being cleared (set to None), delete the old image
-                if old_image and new_image is None:
-                    if default_storage.exists(old_image.path):
+                    setattr(instance, field, new_image_value)
+                elif new_image_value is None or new_image_value == '':
+                    if old_image and default_storage.exists(old_image.path):
                         default_storage.delete(old_image.path)
+                    setattr(instance, field, None)
 
-        # Update scalar fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
         instance.save()
-
-        # Update social links if provided
-        if social_links_data is not None:
-            instance.social_links.all().delete()
-            for link_data in social_links_data:
-                SocialLink.objects.create(page=instance, **link_data)
-
         return instance
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation
 
 
 class CollectionSerializer(serializers.ModelSerializer):

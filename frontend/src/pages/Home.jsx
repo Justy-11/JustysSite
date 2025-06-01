@@ -1,45 +1,79 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/Dashboard.css";
+import api from "../api";
+import { showSuccessToast, showErrorToast } from '../utils/toastUtils';
 
 function Home() {
-  // Mock username from backend
-  const username = "Justy";
-
-  // State for the wizard form
+  const [username, setUsername] = useState("");
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     phoneNumber: "",
-    address: { street: "", city: "", state: "", zip: "" },
-    socialLinks: { twitter: "", instagram: "", linkedin: "" },
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+    socialLinks: "",
   });
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get("/api/profile/");
+        const data = response.data;
+        setUsername(data.username || "");
+        setFormData({
+          username: data.username || "",
+          email: data.email || "",
+          phoneNumber: data.phone_number || "",
+          street: data.street || "",
+          city: data.city || "",
+          state: data.state || "",
+          zip: data.zip_code || "",
+          socialLinks: data.social_links || "",
+        });
+      } catch (error) {
+        console.error("Error fetching profile:", error.response?.data || error.message);
+        alert("Failed to load profile data. Please try again.");
+      }
+    };
+    fetchProfile();
+  }, []);
+
   const handleNext = () => {
-    if (step < 3) setStep(step + 1);
+    if (step < 2) setStep(step + 1);
   };
 
   const handlePrev = () => {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleChange = (e, section = null) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    if (section) {
-      setFormData({
-        ...formData,
-        [section]: { ...formData[section], [name]: value },
-      });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (step === 3) {
-      console.log("Form submitted:", formData);
-      // Submit form data to backend here
+    if (step === 2) {
+      try {
+        const response = await api.put("/api/profile/", {
+          username: formData.username,
+          phone_number: formData.phoneNumber,
+          street: formData.street,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zip,
+          social_links: formData.socialLinks,
+        });
+        console.log("Profile updated:", response.data);
+        setUsername(response.data.username || '');
+        showSuccessToast("Profile updated successfully!");
+      } catch (error) {
+        console.error("Error updating profile:", error.response?.data || error.message);
+        showErrorToast(error.response?.data?.detail || "Failed to update profile.");
+      }
     } else {
       handleNext();
     }
@@ -47,26 +81,22 @@ function Home() {
 
   return (
     <div className="dashboard-container">
-      {/* Greeting Card */}
       <div className="greeting-card">
-        <h2>Good evening, {username}</h2>
+        <h2>Good evening, {username || 'User'}</h2>
         <p>Welcome to CreatiMate...</p>
       </div>
 
-      {/* Horizontal Wizard Form */}
       <div className="wizard-form">
         <div className="wizard-steps">
-          {[1, 2, 3].map((s) => (
+          {[1, 2].map((s) => (
             <div key={s} className="step-container">
-              <div
-                className={`step-circle ${step >= s ? "active" : ""}`}
-              >
+              <div className={`step-circle ${step >= s ? "active" : ""}`}>
                 {s}
               </div>
               <span className="step-label">
-                {s === 1 ? "Account Details" : s === 2 ? "Address" : "Social Links"}
+                {s === 1 ? "Account Details" : "Address & Social Links"}
               </span>
-              {s < 3 && <div className="step-connector" />}
+              {s < 2 && <div className="step-connector" />}
             </div>
           ))}
         </div>
@@ -87,22 +117,12 @@ function Home() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Full Name</label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName || ""}
-                    onChange={handleChange}
-                    placeholder="Full name"
-                  />
-                </div>
-                <div className="form-group">
                   <label>Email</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
+                    disabled
                     placeholder="Type your email"
                   />
                 </div>
@@ -122,15 +142,15 @@ function Home() {
 
           {step === 2 && (
             <div className="form-section">
-              <h3>Enter Your Address</h3>
+              <h3>Enter Your Address & Social Links</h3>
               <div className="form-grid">
                 <div className="form-group">
                   <label>Street</label>
                   <input
                     type="text"
                     name="street"
-                    value={formData.address.street}
-                    onChange={(e) => handleChange(e, "address")}
+                    value={formData.street}
+                    onChange={handleChange}
                     placeholder="Street"
                   />
                 </div>
@@ -139,8 +159,8 @@ function Home() {
                   <input
                     type="text"
                     name="city"
-                    value={formData.address.city}
-                    onChange={(e) => handleChange(e, "address")}
+                    value={formData.city}
+                    onChange={handleChange}
                     placeholder="City"
                   />
                 </div>
@@ -149,8 +169,8 @@ function Home() {
                   <input
                     type="text"
                     name="state"
-                    value={formData.address.state}
-                    onChange={(e) => handleChange(e, "address")}
+                    value={formData.state}
+                    onChange={handleChange}
                     placeholder="State"
                   />
                 </div>
@@ -159,47 +179,19 @@ function Home() {
                   <input
                     type="text"
                     name="zip"
-                    value={formData.address.zip}
-                    onChange={(e) => handleChange(e, "address")}
+                    value={formData.zip}
+                    onChange={handleChange}
                     placeholder="ZIP Code"
                   />
                 </div>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="form-section">
-              <h3>Enter Your Social Links</h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Twitter</label>
+                <div className="form-group full-width">
+                  <label>Social Links (comma-separated URLs)</label>
                   <input
                     type="text"
-                    name="twitter"
-                    value={formData.socialLinks.twitter}
-                    onChange={(e) => handleChange(e, "socialLinks")}
-                    placeholder="Twitter URL"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Instagram</label>
-                  <input
-                    type="text"
-                    name="instagram"
-                    value={formData.socialLinks.instagram}
-                    onChange={(e) => handleChange(e, "socialLinks")}
-                    placeholder="Instagram URL"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>LinkedIn</label>
-                  <input
-                    type="text"
-                    name="linkedin"
-                    value={formData.socialLinks.linkedin}
-                    onChange={(e) => handleChange(e, "socialLinks")}
-                    placeholder="LinkedIn URL"
+                    name="socialLinks"
+                    value={formData.socialLinks}
+                    onChange={handleChange}
+                    placeholder="e.g., https://www.twitter.com/yourbrand,https://www.instagram.com/yourbrand,https://www.linkedin.com/company/yourbrand,https://www.facebook.com/yourbrand,https://www.youtube.com/@yourbrand"
                   />
                 </div>
               </div>
@@ -208,16 +200,12 @@ function Home() {
 
           <div className="form-buttons">
             {step > 1 && (
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="prev-button"
-              >
+              <button type="button" onClick={handlePrev} className="prev-button">
                 Previous
               </button>
             )}
             <button type="submit" className="next-button">
-              {step === 3 ? "Submit" : "Next"}
+              {step === 2 ? "Submit" : "Next"}
             </button>
           </div>
         </form>

@@ -22,6 +22,12 @@ class Profile(models.Model):
     otp = models.CharField(max_length=64, blank=True, null=True)  # increase max_length for the hashed OTP
     otp_created_at = models.DateTimeField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=20, blank=True)
+    street = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    zip_code = models.CharField(max_length=20, blank=True)
+    social_links = models.TextField(blank=True)  # Comma-separated URLs
 
     def generate_otp(self):
         # 6-digit OTP
@@ -41,7 +47,10 @@ class Profile(models.Model):
             return False
         hashed_otp = hashlib.sha256(otp.encode('utf-8')).hexdigest()
         return self.otp == hashed_otp
-
+    
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+        
 
 class Page(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='page')

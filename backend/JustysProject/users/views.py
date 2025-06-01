@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from users.models import CustomUser as User, Page, Collection, Product
 from .serializers import (
     RegisterSerializer, UserSerializer, PageSerializer,
-    CollectionSerializer, ProductSerializer
+    CollectionSerializer, ProductSerializer, ProfileSerializer
 )
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -44,6 +44,26 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class ProfileDetailView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
+
+    def get(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        profile = self.get_object()
+        serializer = self.get_serializer(profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class RegisterView(generics.CreateAPIView):

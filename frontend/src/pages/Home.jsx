@@ -35,7 +35,7 @@ function Home() {
         });
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data || error.message);
-        alert("Failed to load profile data. Please try again.");
+        showErrorToast("Failed to load profile data. Please try again.");
       }
     };
     fetchProfile();
@@ -81,9 +81,27 @@ function Home() {
 
   return (
     <div className="dashboard-container">
-      <div className="greeting-card">
-        <h2>Good evening, {username || 'User'}</h2>
-        <p>Welcome to CreatiMate...</p>
+      <div className="cards-container">
+        <div className="greeting-card">
+          <h2>Good evening, {username || 'User'}</h2>
+          <p>Welcome to CreatiMate...</p>
+        </div>
+        {/* CHANGED: Added status-card */}
+        <div className="status-card">
+          <h3>Progress Status</h3>
+          <div className="status-item">
+            <span>Page Created</span>
+            <span className="status-tick">✅</span>
+          </div>
+          <div className="status-item">
+            <span>Products Added</span>
+            <span className="status-tick">✅</span>
+          </div>
+          <div className="status-item">
+            <span>Published</span>
+            <span className="status-tick">✅</span>
+          </div>
+        </div>
       </div>
 
       <div className="wizard-form">

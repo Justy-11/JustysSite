@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import "../styles/AddProducts.css";
+import api from "../api";
+import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 
 function AddProducts() {
   // State for collection toggle and name
@@ -14,9 +16,11 @@ function AddProducts() {
   // State for bulk CSV upload
   const [csvFile, setCsvFile] = useState(null);
 
+  const [zipFile, setZipFile] = useState(null);
   // Ref for file inputs
   const bulkImageInputRef = useRef(null);
   const csvInputRef = useRef(null);
+  const zipInputRef = useRef(null);
 
   // Handle bulk image upload and pre-fill title with image name
   const handleBulkImageUpload = (e) => {
@@ -67,26 +71,34 @@ function AddProducts() {
   // Handle adding bulk products to the database
   const handleAddBulkProducts = async () => {
     if (createCollection && !collectionName) {
-      alert("Please enter a collection name.");
+      showErrorToast("Please enter a collection name.");
       return;
     }
 
     if (bulkProductDetails.some((detail) => !detail.title || !detail.price)) {
-      alert("Please fill in all required fields (Title and Price) for each product.");
+      showErrorToast("Please fill in all required fields (Title and Price) for each product.");
       return;
     }
 
-    const products = bulkProductDetails.map((detail, index) => ({
-      image: bulkImages[index],
-      title: detail.title,
-      description: detail.description,
-      price: parseFloat(detail.price),
-      stock: detail.stock ? parseInt(detail.stock) : null,
-      collection: createCollection ? collectionName : null,
-    }));
+    const formData = new FormData();
+    if (createCollection) {
+      formData.append("collection", collectionName);
+    }
+    bulkProductDetails.forEach((detail, index) => {
+      formData.append(`products[${index}].title`, detail.title);
+      formData.append(`products[${index}].description`, detail.description || "");
+      formData.append(`products[${index}].price`, detail.price);
+      formData.append(`products[${index}].stock`, detail.stock || "");
+      if (bulkImages[index]) {
+        formData.append(`products[${index}].image`, bulkImages[index]);
+      }
+    });
 
     try {
-      console.log("Saving products to database:", products);
+      await api.post("/api/products/add/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      showSuccessToast("Products added successfully!");
       setBulkImages([]);
       setBulkImagePreviews([]);
       setBulkProductDetails([]);
@@ -96,8 +108,16 @@ function AddProducts() {
       setCollectionName("");
       setCreateCollection(false);
     } catch (error) {
-      console.error("Error saving products:", error);
-      alert("Failed to save products. Please try again.");
+      console.error("Error saving products:", {
+        response: error.response?.data,
+        status: error.response?.status,
+        message: error.message,
+      });
+      showErrorToast(
+        error.response?.data?.error || 
+        error.response?.data?.details?.join(", ") ||
+        "Failed to add products. Check console for details."
+      );
     }
   };
 
@@ -106,36 +126,57 @@ function AddProducts() {
     const file = e.target.files[0];
     if (file) {
       setCsvFile(file);
-      console.log("CSV File Uploaded:", file);
     }
   };
 
-  // Handle bulk CSV upload to database
+  const handleZipUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setZipFile(file);
+    }
+  };
+
   const handleCsvUploadSubmit = async () => {
     if (createCollection && !collectionName) {
-      alert("Please enter a collection name.");
+      showErrorToast("Please enter a collection name.");
       return;
     }
 
     if (!csvFile) {
-      alert("Please upload a CSV file.");
+      showErrorToast("Please upload a CSV file.");
       return;
     }
 
+    if (!zipFile) {
+      showErrorToast("Please upload a ZIP file containing product images.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("csv_file", csvFile);
+    formData.append("zip_file", zipFile);
+    if (createCollection) {
+      formData.append("collection", collectionName);
+    }
+
     try {
-      console.log("Saving CSV products to database:", {
-        csvFile,
-        collection: createCollection ? collectionName : null,
+      await api.post("/api/products/add-csv/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+      showSuccessToast("Products added successfully from CSV!");
       setCsvFile(null);
+      setZipFile(null);
       if (csvInputRef.current) {
         csvInputRef.current.value = "";
+      }
+      if (zipInputRef.current) {
+        zipInputRef.current.value = "";
       }
       setCollectionName("");
       setCreateCollection(false);
     } catch (error) {
-      console.error("Error uploading CSV:", error);
-      alert("Failed to upload CSV. Please try again.");
+      console.error("Error uploading CSV:", error.response?.data || error);
+      showErrorToast(error.response?.data?.error || "Failed to upload CSV.");
     }
   };
 
@@ -293,8 +334,22 @@ function AddProducts() {
               {csvFile ? csvFile.name : "No file chosen"}
             </span>
           </div>
+          <div className="form-group">
+            <label>Upload ZIP File (Product Images)</label>
+            <div className="file-input-wrapper">
+              <input
+                type="file"
+                accept=".zip"
+                ref={zipInputRef}
+                onChange={handleZipUpload}
+              />
+              <span className="file-input-label">
+                {zipFile ? zipFile.name : "No file chosen"}
+              </span>
+            </div>
+          </div>
           <p className="hint">
-            Upload a .csv with: Title, Description, Price, Stock, and Image File Name (images should be in a ZIP file). Example format:
+            Upload a .csv with: Title, Description, Price, Stock, and Image File Name. Include a ZIP file containing the images referenced in the CSV. Example format:
             <br />
             "Title","Description","Price","Stock","Image File Name"<br />
             "Smartphone","A high-end smartphone","699.99","50","smartphone.jpg"
@@ -307,7 +362,7 @@ function AddProducts() {
             Download Example CSV
           </button>
         </div>
-        {csvFile && (
+        {csvFile && zipFile && (
           <div className="form-buttons">
             <button
               type="button"

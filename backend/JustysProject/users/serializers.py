@@ -113,6 +113,7 @@ class PageSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context['request'].user
+        validated_data.pop('user', None)
         page = Page.objects.create(user=user, **validated_data)
         return page
 
@@ -155,9 +156,59 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False)
+    image = serializers.FileField(required=False, allow_null=True)
+    collection = serializers.PrimaryKeyRelatedField(
+        queryset=Collection.objects.all(), allow_null=True, required=False
+    )
 
     class Meta:
         model = Product
         fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'collection', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def validate(self, data):
+        price = data.get('price')
+        if price is not None:
+            try:
+                price = float(price)
+                if price < 0:
+                    raise serializers.ValidationError({"price": "Price cannot be negative."})
+                data['price'] = price
+            except (ValueError, TypeError):
+                raise serializers.ValidationError({"price": "Invalid price format."})
+
+        stock = data.get('stock')
+        if stock is not None:
+            try:
+                stock = int(stock)
+                if stock < 0:
+                    raise serializers.ValidationError({"stock": "Stock cannot be negative."})
+                data['stock'] = stock
+            except (ValueError, TypeError):
+                raise serializers.ValidationError({"stock": "Invalid stock format."})
+
+        return data
+
+    def validate_image(self, value):
+        if isinstance(value, str):
+            if not default_storage.exists(value):
+                raise serializers.ValidationError("Image file does not exist.")
+            return value
+        elif value:
+            ext = os.path.splitext(value.name)[1].lower()
+            if ext not in ['.jpg', '.jpeg', '.png', '.gif']:
+                raise serializers.ValidationError("Invalid image format. Supported formats: jpg, jpeg, png, gif.")
+        return value
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        product = Product.objects.create(
+            user=user,
+            title=validated_data['title'],
+            description=validated_data.get('description', ''),
+            price=validated_data['price'],
+            stock=validated_data.get('stock'),
+            image=validated_data.get('image'),
+            collection=validated_data.get('collection')
+        )
+        return product

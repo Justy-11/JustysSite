@@ -34,6 +34,11 @@ from rest_framework_simplejwt.tokens import AccessToken
 import csv
 from io import TextIOWrapper
 from django.http import QueryDict
+import zipfile
+import os
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -361,30 +366,70 @@ class AddProductsView(APIView):
         products_data = request.data.get('products', [])
         user = request.user
 
-        # Handle collection if provided
+        logger.debug("Received products data: %s", products_data)
+
+        if not products_data:
+            return Response({"error": "No products provided"}, status=status.HTTP_400_BAD_REQUEST)
+
         collection = None
         if collection_name:
-            collection, created = Collection.objects.get_or_create(user=user, name=collection_name)
-            if not created:
-                # If collection exists, update its updated_at timestamp
-                collection.updated_at = timezone.now()
-                collection.save()
+            try:
+                collection, created = Collection.objects.get_or_create(user=user, name=collection_name)
+                if not created:
+                    collection.updated_at = timezone.now()
+                    collection.save()
+            except Exception as e:
+                logger.error("Failed to create/update collection: %s", str(e))
+                return Response({"error": f"Failed to process collection: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Process products
-        for product_data in products_data:
-            image = product_data.get('image')
-            serializer = ProductSerializer(data={
-                'title': product_data.get('title'),
-                'description': product_data.get('description', ''),
-                'price': product_data.get('price'),
-                'stock': product_data.get('stock', None),
-                'image': image if image else None,
-                'collection': collection.id if collection else None
-            }, context={'request': request})
-            serializer.is_valid(raise_exception=True)
-            serializer.save(user=user)
+        errors = []
+        created_products = []
 
-        return Response({"message": "Products added successfully"}, status=status.HTTP_201_CREATED)
+        for index, product_data in enumerate(products_data):
+            try:
+                # Ensure price is a float
+                price = product_data.get('price')
+                if isinstance(price, str):
+                    try:
+                        price = float(price)
+                    except ValueError:
+                        raise ValidationError(f"Invalid price format for product {index + 1}")
+
+                # Handle stock
+                stock = product_data.get('stock')
+                stock = int(stock) if stock and stock.strip() else None
+
+                serializer = ProductSerializer(data={
+                    'title': product_data.get('title'),
+                    'description': product_data.get('description', ''),
+                    'price': price,
+                    'stock': stock,
+                    'image': product_data.get('image'),
+                    'collection': collection.id if collection else None
+                }, context={'request': request})
+
+                if serializer.is_valid():
+                    product = serializer.save(user=user)
+                    created_products.append(product.title)
+                else:
+                    errors.append(f"Product {index + 1}: {serializer.errors}")
+                    logger.error("Serializer errors for product %d: %s", index + 1, serializer.errors)
+
+            except Exception as e:
+                errors.append(f"Product {index + 1}: {str(e)}")
+                logger.error("Error processing product %d: %s", index + 1, str(e))
+
+        if errors:
+            return Response({
+                "error": "Some products failed to save",
+                "details": errors,
+                "created": created_products
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "message": "Products added successfully",
+            "created": created_products
+        }, status=status.HTTP_201_CREATED)
 
 
 class AddProductsCSVView(APIView):
@@ -393,10 +438,11 @@ class AddProductsCSVView(APIView):
     def post(self, request):
         collection_name = request.data.get('collection', None)
         csv_file = request.FILES.get('csv_file')
+        zip_file = request.FILES.get('zip_file')
         user = request.user
 
-        if not csv_file:
-            return Response({"error": "CSV file is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not csv_file or not zip_file:
+            return Response({"error": "Both CSV and ZIP files are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Handle collection if provided
         collection = None
@@ -406,22 +452,45 @@ class AddProductsCSVView(APIView):
                 collection.updated_at = timezone.now()
                 collection.save()
 
+        # Process ZIP file
+        image_files = {}
+        try:
+            with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+                for file_name in zip_ref.namelist():
+                    if file_name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                        with zip_ref.open(file_name) as file:
+                            content = file.read()
+                            # Save image to storage
+                            path = f'product_images/{os.path.basename(file_name)}'
+                            default_storage.save(path, ContentFile(content))
+                            image_files[os.path.basename(file_name)] = path
+        except zipfile.BadZipFile:
+            return Response({"error": "Invalid ZIP file"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": f"Failed to process ZIP: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
         # Process CSV file
         try:
             text_io = TextIOWrapper(csv_file.file, encoding='utf-8')
             reader = csv.DictReader(text_io)
             for row in reader:
+                image_filename = row.get('Image File Name')
+                image_path = image_files.get(image_filename) if image_filename else None
                 serializer = ProductSerializer(data={
                     'title': row.get('Title'),
                     'description': row.get('Description', ''),
                     'price': row.get('Price'),
                     'stock': int(row.get('Stock')) if row.get('Stock') else None,
-                    'image': None,  # CSV upload doesn't handle images in this implementation
+                    'image': image_path,  # CHANGED: Use path from ZIP
                     'collection': collection.id if collection else None
                 }, context={'request': request})
                 serializer.is_valid(raise_exception=True)
                 serializer.save(user=user)
         except Exception as e:
+            # CHANGED: Clean up uploaded images on error
+            for path in image_files.values():
+                if default_storage.exists(path):
+                    default_storage.delete(path)
             return Response({"error": f"Failed to process CSV: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"message": "Products added successfully from CSV"}, status=status.HTTP_201_CREATED)

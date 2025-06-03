@@ -363,10 +363,30 @@ class AddProductsView(APIView):
 
     def post(self, request):
         collection_name = request.data.get('collection', None)
-        products_data = request.data.get('products', [])
         user = request.user
 
-        logger.debug("Received products data: %s", products_data)
+        logger.debug("Received request.data: %s", dict(request.data))
+
+        products_data = []
+        product_indices = set()
+        
+        for key in request.data:
+            match = re.match(r'products\[(\d+)\]\[(\w+)\]', key)
+            if match:
+                index = int(match.group(1))
+                product_indices.add(index)
+
+        for index in sorted(product_indices):
+            product = {
+                'title': request.data.get(f'products[{index}][title]'),
+                'description': request.data.get(f'products[{index}][description]', ''),
+                'price': request.data.get(f'products[{index}][price]'),
+                'stock': request.data.get(f'products[{index}][stock]', ''),
+                'image': request.FILES.get(f'products[{index}][image]')
+            }
+            products_data.append(product)
+
+        logger.debug("Parsed products_data: %s", products_data)
 
         if not products_data:
             return Response({"error": "No products provided"}, status=status.HTTP_400_BAD_REQUEST)
@@ -387,7 +407,6 @@ class AddProductsView(APIView):
 
         for index, product_data in enumerate(products_data):
             try:
-                # Ensure price is a float
                 price = product_data.get('price')
                 if isinstance(price, str):
                     try:
@@ -395,9 +414,8 @@ class AddProductsView(APIView):
                     except ValueError:
                         raise ValidationError(f"Invalid price format for product {index + 1}")
 
-                # Handle stock
                 stock = product_data.get('stock')
-                stock = int(stock) if stock and stock.strip() else None
+                stock = int(stock) if stock and str(stock).strip() else None
 
                 serializer = ProductSerializer(data={
                     'title': product_data.get('title'),
@@ -412,14 +430,15 @@ class AddProductsView(APIView):
                     product = serializer.save(user=user)
                     created_products.append(product.title)
                 else:
-                    errors.append(f"Product {index + 1}: {serializer.errors}")
                     logger.error("Serializer errors for product %d: %s", index + 1, serializer.errors)
+                    errors.append(f"Product {index + 1}: {serializer.errors}")
 
             except Exception as e:
-                errors.append(f"Product {index + 1}: {str(e)}")
                 logger.error("Error processing product %d: %s", index + 1, str(e))
+                errors.append(f"Product {index + 1}: {str(e)}")
 
         if errors:
+            logger.debug("Errors encountered: %s", errors)
             return Response({
                 "error": "Some products failed to save",
                 "details": errors,

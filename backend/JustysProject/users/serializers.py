@@ -5,6 +5,11 @@ from django.core.mail import send_mail
 from decouple import config
 import os
 from django.core.files.storage import default_storage
+from decimal import Decimal
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -156,21 +161,37 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.FileField(required=False, allow_null=True)
+    image = serializers.ImageField(required=False, allow_null=True)
     collection = serializers.PrimaryKeyRelatedField(
-        queryset=Collection.objects.all(), allow_null=True, required=False
+        queryset=Collection.objects.none(),
+        allow_null=True,
+        required=False
     )
 
     class Meta:
         model = Product
         fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'collection', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
+        extra_kwargs = {
+            'user': {'write_only': True}
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'context' in kwargs and 'request' in kwargs['context']:
+            self.fields['collection'].queryset = Collection.objects.filter(user=kwargs['context']['request'].user)
 
     def validate(self, data):
+        logger.debug("ProductSerializer validate data: %s", data)
+        
+        if not data.get('title'):
+            raise serializers.ValidationError({"title": "Title is required."})
+
         price = data.get('price')
         if price is not None:
             try:
-                price = float(price)
+                # Convert to Decimal
+                price = Decimal(str(price))
                 if price < 0:
                     raise serializers.ValidationError({"price": "Price cannot be negative."})
                 data['price'] = price
@@ -190,25 +211,31 @@ class ProductSerializer(serializers.ModelSerializer):
         return data
 
     def validate_image(self, value):
+        logger.debug("Validating image: %s", value)
         if isinstance(value, str):
+            logger.warning("Image provided as string: %s", value)
             if not default_storage.exists(value):
                 raise serializers.ValidationError("Image file does not exist.")
             return value
         elif value:
-            ext = os.path.splitext(value.name)[1].lower()
-            if ext not in ['.jpg', '.jpeg', '.png', '.gif']:
-                raise serializers.ValidationError("Invalid image format. Supported formats: jpg, jpeg, png, gif.")
+            return value
         return value
 
     def create(self, validated_data):
         user = self.context['request'].user
-        product = Product.objects.create(
-            user=user,
-            title=validated_data['title'],
-            description=validated_data.get('description', ''),
-            price=validated_data['price'],
-            stock=validated_data.get('stock'),
-            image=validated_data.get('image'),
-            collection=validated_data.get('collection')
-        )
-        return product
+        logger.debug("ProductSerializer create validated_data: %s, user: %s", validated_data, user)
+        try:
+            product = Product.objects.create(
+                user=user,
+                title=validated_data['title'],
+                description=validated_data.get('description', ''),
+                price=validated_data['price'],
+                stock=validated_data.get('stock'),
+                image=validated_data.get('image'),
+                collection=validated_data.get('collection')
+            )
+            logger.debug("Product created: %s", product)
+            return product
+        except Exception as e:
+            logger.error("Error creating product: %s", str(e))
+            raise serializers.ValidationError(f"Failed to create product: {str(e)}")

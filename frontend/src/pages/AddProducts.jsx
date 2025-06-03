@@ -85,14 +85,25 @@ function AddProducts() {
       formData.append("collection", collectionName);
     }
     bulkProductDetails.forEach((detail, index) => {
-      formData.append(`products[${index}].title`, detail.title);
-      formData.append(`products[${index}].description`, detail.description || "");
-      formData.append(`products[${index}].price`, detail.price);
-      formData.append(`products[${index}].stock`, detail.stock || "");
+      formData.append(`products[${index}][title]`, detail.title);
+      formData.append(`products[${index}][description]`, detail.description || "");
+      formData.append(`products[${index}][price]`, detail.price);
+      formData.append(`products[${index}][stock]`, detail.stock || "");
       if (bulkImages[index]) {
-        formData.append(`products[${index}].image`, bulkImages[index]);
+        formData.append(`products[${index}][image]`, bulkImages[index]);
       }
+      
+      console.log(`Product ${index}:`, {
+        title: detail.title,
+        description: detail.description,
+        price: detail.price,
+        stock: detail.stock,
+        image: bulkImages[index]?.name || "No image"
+      });
     });
+
+    
+    console.log("FormData entries:", Object.fromEntries(formData.entries()));
 
     try {
       await api.post("/api/products/add/", formData, {
@@ -201,7 +212,7 @@ function AddProducts() {
       {/* Collection Toggle */}
       <div className="collection-toggle-section">
         <label className="toggle-label">
-          Create a Collection for These Products
+          Create a New Collection OR Existing collection name
           <input
             type="checkbox"
             checked={createCollection}

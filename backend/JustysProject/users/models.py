@@ -70,10 +70,13 @@ class Page(models.Model):
 
 class Collection(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='collections')
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ('user', 'name')
+        
     def __str__(self):
         return self.name
 

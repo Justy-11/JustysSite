@@ -6,9 +6,6 @@ from decouple import config
 import os
 from django.core.files.storage import default_storage
 from decimal import Decimal
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -182,15 +179,12 @@ class ProductSerializer(serializers.ModelSerializer):
             self.fields['collection'].queryset = Collection.objects.filter(user=kwargs['context']['request'].user)
 
     def validate(self, data):
-        logger.debug("ProductSerializer validate data: %s", data)
-        
         if not data.get('title'):
             raise serializers.ValidationError({"title": "Title is required."})
 
         price = data.get('price')
         if price is not None:
             try:
-                # Convert to Decimal
                 price = Decimal(str(price))
                 if price < 0:
                     raise serializers.ValidationError({"price": "Price cannot be negative."})
@@ -211,19 +205,14 @@ class ProductSerializer(serializers.ModelSerializer):
         return data
 
     def validate_image(self, value):
-        logger.debug("Validating image: %s", value)
-        if isinstance(value, str):
-            logger.warning("Image provided as string: %s", value)
-            if not default_storage.exists(value):
-                raise serializers.ValidationError("Image file does not exist.")
-            return value
-        elif value:
-            return value
+        if value:
+            max_size = 5 * 1024 * 1024  # 5MB in bytes
+            if value.size > max_size:
+                raise serializers.ValidationError(f"Image file size exceeds limit of {max_size / (1024 * 1024)}MB.")
         return value
 
     def create(self, validated_data):
         user = self.context['request'].user
-        logger.debug("ProductSerializer create validated_data: %s, user: %s", validated_data, user)
         try:
             product = Product.objects.create(
                 user=user,
@@ -234,8 +223,6 @@ class ProductSerializer(serializers.ModelSerializer):
                 image=validated_data.get('image'),
                 collection=validated_data.get('collection')
             )
-            logger.debug("Product created: %s", product)
             return product
         except Exception as e:
-            logger.error("Error creating product: %s", str(e))
             raise serializers.ValidationError(f"Failed to create product: {str(e)}")

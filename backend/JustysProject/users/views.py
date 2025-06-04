@@ -11,7 +11,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
-import logging
 from django.utils import timezone
 from datetime import timedelta
 import re
@@ -39,8 +38,8 @@ import os
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from rest_framework.exceptions import ValidationError
+from decimal import Decimal
 
-logger = logging.getLogger(__name__)
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
@@ -344,7 +343,6 @@ class PageDetailView(generics.RetrieveUpdateAPIView):
     def post(self, request, *args, **kwargs):
         page = self.get_object()
         mutable_data = request.data.copy()
-        logger.debug("Raw request data: %s", mutable_data)
 
         if page is None:
             serializer = self.get_serializer(data=mutable_data)
@@ -365,8 +363,6 @@ class AddProductsView(APIView):
         collection_name = request.data.get('collection', None)
         user = request.user
 
-        logger.debug("Received request.data: %s", dict(request.data))
-
         products_data = []
         product_indices = set()
         
@@ -386,8 +382,6 @@ class AddProductsView(APIView):
             }
             products_data.append(product)
 
-        logger.debug("Parsed products_data: %s", products_data)
-
         if not products_data:
             return Response({"error": "No products provided"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -399,7 +393,6 @@ class AddProductsView(APIView):
                     collection.updated_at = timezone.now()
                     collection.save()
             except Exception as e:
-                logger.error("Failed to create/update collection: %s", str(e))
                 return Response({"error": f"Failed to process collection: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
         errors = []
@@ -430,15 +423,12 @@ class AddProductsView(APIView):
                     product = serializer.save(user=user)
                     created_products.append(product.title)
                 else:
-                    logger.error("Serializer errors for product %d: %s", index + 1, serializer.errors)
                     errors.append(f"Product {index + 1}: {serializer.errors}")
 
             except Exception as e:
-                logger.error("Error processing product %d: %s", index + 1, str(e))
                 errors.append(f"Product {index + 1}: {str(e)}")
 
         if errors:
-            logger.debug("Errors encountered: %s", errors)
             return Response({
                 "error": "Some products failed to save",
                 "details": errors,
@@ -463,7 +453,6 @@ class AddProductsCSVView(APIView):
         if not csv_file or not zip_file:
             return Response({"error": "Both CSV and ZIP files are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Handle collection if provided
         collection = None
         if collection_name:
             collection, created = Collection.objects.get_or_create(user=user, name=collection_name)
@@ -471,7 +460,6 @@ class AddProductsCSVView(APIView):
                 collection.updated_at = timezone.now()
                 collection.save()
 
-        # Process ZIP file
         image_files = {}
         try:
             with zipfile.ZipFile(zip_file, 'r') as zip_ref:
@@ -479,37 +467,61 @@ class AddProductsCSVView(APIView):
                     if file_name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
                         with zip_ref.open(file_name) as file:
                             content = file.read()
-                            # Save image to storage
-                            path = f'product_images/{os.path.basename(file_name)}'
-                            default_storage.save(path, ContentFile(content))
-                            image_files[os.path.basename(file_name)] = path
+                            # Save image with original filename
+                            filename = os.path.basename(file_name)
+                            path = f'product_images/{filename}'
+                            if not default_storage.exists(path):
+                                default_storage.save(path, ContentFile(content))
+                            image_files[filename] = path
         except zipfile.BadZipFile:
             return Response({"error": "Invalid ZIP file"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": f"Failed to process ZIP: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Process CSV file
+        errors = []
+        created_products = []
         try:
             text_io = TextIOWrapper(csv_file.file, encoding='utf-8')
             reader = csv.DictReader(text_io)
-            for row in reader:
-                image_filename = row.get('Image File Name')
-                image_path = image_files.get(image_filename) if image_filename else None
-                serializer = ProductSerializer(data={
-                    'title': row.get('Title'),
-                    'description': row.get('Description', ''),
-                    'price': row.get('Price'),
-                    'stock': int(row.get('Stock')) if row.get('Stock') else None,
-                    'image': image_path,  # CHANGED: Use path from ZIP
-                    'collection': collection.id if collection else None
-                }, context={'request': request})
-                serializer.is_valid(raise_exception=True)
-                serializer.save(user=user)
-        except Exception as e:
-            # CHANGED: Clean up uploaded images on error
-            for path in image_files.values():
-                if default_storage.exists(path):
-                    default_storage.delete(path)
-            return Response({"error": f"Failed to process CSV: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+            required_columns = {'Title', 'Description', 'Price', 'Stock', 'Image File Name'}
+            if not all(col in reader.fieldnames for col in required_columns):
+                missing = required_columns - set(reader.fieldnames)
+                return Response({"error": f"Missing required columns: {', '.join(missing)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"message": "Products added successfully from CSV"}, status=status.HTTP_201_CREATED)
+            for row_number, row in enumerate(reader, start=1):
+                try:
+                    image_filename = row.get('Image File Name')
+                    image_path = None
+                    if image_filename:
+                        image_path = image_files.get(image_filename)
+                        if not image_path or not default_storage.exists(image_path):
+                            errors.append(f"Row {row_number}: Image file '{image_filename}' not found in ZIP.")
+                            continue
+
+                    product = Product(
+                        user=user,
+                        title=row.get('Title'),
+                        description=row.get('Description', ''),
+                        price=Decimal(row.get('Price')),
+                        stock=int(row.get('Stock')) if row.get('Stock') else None,
+                        image=image_path if image_path else None,
+                        collection=collection
+                    )
+                    product.save()
+                    created_products.append(product.title)
+
+                except (ValueError, TypeError) as e:
+                    errors.append(f"Row {row_number}: Invalid data format: {str(e)}")
+                except Exception as e:
+                    errors.append(f"Row {row_number}: Failed to process product: {str(e)}")
+
+        except Exception as e:
+            errors.append(f"Failed to process CSV: {str(e)}")
+        finally:
+            if errors:
+                for path in image_files.values():
+                    if default_storage.exists(path) and path not in [getattr(p, 'image', None) for p in Product.objects.filter(title__in=created_products)]:
+                        default_storage.delete(path)
+                return Response({"error": "Failed to process CSV", "details": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Products added successfully from CSV", "created": created_products}, status=status.HTTP_201_CREATED)

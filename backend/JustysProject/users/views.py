@@ -525,3 +525,44 @@ class AddProductsCSVView(APIView):
                 return Response({"error": "Failed to process CSV", "details": errors}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"message": "Products added successfully from CSV", "created": created_products}, status=status.HTTP_201_CREATED)
+
+
+class ProductListView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user)
+
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user)
+
+    def perform_destroy(self, instance):
+        if instance.image and default_storage.exists(instance.image.path):
+            default_storage.delete(instance.image.path)
+        instance.delete()
+
+
+class CollectionListView(generics.ListAPIView):
+    serializer_class = CollectionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Collection.objects.filter(user=self.request.user)
+
+
+class CollectionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CollectionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Collection.objects.filter(user=self.request.user)
+
+    def perform_destroy(self, instance):
+        # Products will have collection set to null due to SET_NULL
+        instance.delete()

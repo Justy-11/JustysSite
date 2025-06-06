@@ -144,19 +144,6 @@ class PageSerializer(serializers.ModelSerializer):
         return representation
 
 
-class CollectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Collection
-        fields = ['id', 'name', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
-
-    def validate_name(self, value):
-        user = self.context['request'].user
-        if Collection.objects.filter(user=user, name=value).exists():
-            raise serializers.ValidationError("A collection with this name already exists for this user.")
-        return value
-
-
 class ProductSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False, allow_null=True)
     collection = serializers.PrimaryKeyRelatedField(
@@ -164,11 +151,12 @@ class ProductSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    collection_name = serializers.CharField(source='collection.name', read_only=True)
 
     class Meta:
         model = Product
-        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'collection', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'collection', 'collection_name', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'collection_name']
         extra_kwargs = {
             'user': {'write_only': True}
         }
@@ -226,3 +214,31 @@ class ProductSerializer(serializers.ModelSerializer):
             return product
         except Exception as e:
             raise serializers.ValidationError(f"Failed to create product: {str(e)}")
+
+    def update(self, instance, validated_data):
+        old_image = instance.image
+        new_image = validated_data.get('image')
+        if new_image and old_image and old_image != new_image:
+            if default_storage.exists(old_image.path):
+                default_storage.delete(old_image.path)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Collection
+        fields = ['id', 'name', 'products', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'products', 'created_at', 'updated_at']
+
+    def validate_name(self, value):
+        user = self.context['request'].user
+        if self.instance and self.instance.name == value:
+            return value
+        if Collection.objects.filter(user=user, name=value).exists():
+            raise serializers.ValidationError("A collection with this name already exists for this user.")
+        return value

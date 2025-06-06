@@ -4,12 +4,138 @@
   min-height: 100vh;
   color: #ffffff;
   padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.add-products-container h2 {
+.add-products-container h2,
+.add-products-container h3 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
+}
+
+.add-products-container h3 {
+  font-size: 20px;
+}
+
+/* Preview Card Container */
+.preview-card-container {
+  background-color: #2a3b3c;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 24px;
+}
+
+/* Back Button for Collection View */
+.back-button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #2563eb;
+}
+
+/* Products and Collections Grids */
+.products-grid,
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Preview Product Card (distinct from upload product card) */
+.preview-product-card {
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.preview-product-card img.product-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.preview-product-card h4 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.preview-product-card p {
+  font-size: 14px;
+  color: #a0a0a0;
+  margin: 4px 0;
+}
+
+/* Collection Card */
+.collection-card {
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.collection-card:hover {
+  background-color: #4a5b5c;
+}
+
+.collection-card h4 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.collection-card p {
+  font-size: 14px;
+  color: #a0a0a0;
+}
+
+/* Action Buttons for Preview Cards */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.action-buttons button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.action-buttons button:first-child {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.action-buttons button:first-child:hover {
+  background-color: #2563eb;
+}
+
+.action-buttons button:last-child {
+  background-color: #ff4444;
+  color: #ffffff;
+}
+
+.action-buttons button:last-child:hover {
+  background-color: #cc3333;
 }
 
 /* Collection Toggle Section */
@@ -76,16 +202,11 @@
   margin-bottom: 24px;
 }
 
-.section h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-
 /* Form Styles */
 .form-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .form-group label {
@@ -94,7 +215,8 @@
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   padding: 8px;
   background-color: #3a4b4c;
   border: none;
@@ -126,10 +248,9 @@
   align-items: center;
 }
 
-/* Hide the browser's default file input label */
 .file-input-wrapper input[type="file"] {
-  width: 110px; /* Adjust width to fit the "Choose Files" button */
-  color: transparent; /* Hide the default text */
+  width: 110px;
+  color: transparent;
 }
 
 .file-input-wrapper input[type="file"]::-webkit-file-upload-button {
@@ -162,15 +283,6 @@
   background-color: #4a5b5c;
 }
 
-/* Mobile Responsiveness Adjustments */
-@media (max-width: 768px) {
-  .file-input-wrapper input[type="file"]::-webkit-file-upload-button,
-  .file-input-wrapper input[type="file"]::-ms-browse {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-}
-
 .file-input-label {
   margin-left: 12px;
   font-size: 14px;
@@ -192,7 +304,8 @@
   margin-top: 24px;
 }
 
-.product-card {
+/* Upload Product Card (distinct from preview product card) */
+.upload-product-card {
   background-color: #3a4b4c;
   padding: 16px;
   border-radius: 8px;
@@ -261,53 +374,127 @@
   margin-top: 24px;
 }
 
-.remove-all-button {
+.remove-all-button,
+.create-button,
+.download-example-button {
   padding: 8px 16px;
-  background-color: #ff4444;
-  color: #ffffff;
-  border: none;
   border-radius: 4px;
+  font-weight: bold;
   cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
+  border: none;
   transition: background-color 0.3s;
+}
+
+.remove-all-button {
+  background-color: #ff4444;
+  color: #ffffff;
 }
 
 .remove-all-button:hover {
   background-color: #cc3333;
 }
 
-.create-button {
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  background-color: #3b82f6;
-  color: #ffffff;
-  transition: background-color 0.3s;
-}
-
-.create-button:hover {
-  background-color: #2563eb;
-}
-
+.create-button,
 .download-example-button {
-  margin-top: 8px;
-  padding: 8px 16px;
   background-color: #3b82f6;
   color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
 }
 
+.create-button:hover,
 .download-example-button:hover {
   background-color: #2563eb;
 }
 
-/* Mobile Responsiveness (for screens smaller than 768px) */
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #2a3b3c;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.modal-content p {
+  font-size: 14px;
+  color: #a0a0a0;
+  margin-bottom: 16px;
+}
+
+.modal-content .form-group label {
+  font-size: 14px;
+}
+
+.modal-content .form-group input,
+.modal-content .form-group textarea,
+.modal-content .form-group select {
+  background-color: #4a5b5c;
+  color: #ffffff;
+}
+
+.modal-content .form-group input[type="file"] {
+  background-color: transparent;
+}
+
+.modal-content .form-group input::placeholder,
+.modal-content .form-group textarea::placeholder {
+  color: #a0a0a0;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.modal-buttons button:first-child {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #2563eb;
+}
+
+.modal-buttons button:last-child {
+  background-color: #ff4444;
+  color: #ffffff;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #cc3333;
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .add-products-container {
     padding: 16px;
@@ -315,6 +502,38 @@
 
   .add-products-container h2 {
     font-size: 20px;
+  }
+
+  .add-products-container h3 {
+    font-size: 18px;
+  }
+
+  .preview-card-container {
+    padding: 16px;
+  }
+
+  .products-grid,
+  .collections-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-product-card,
+  .collection-card {
+    padding: 12px;
+  }
+
+  .preview-product-card img.product-image {
+    max-height: 120px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .action-buttons button {
+    width: 100%;
+    padding: 8px;
   }
 
   .collection-toggle-section {
@@ -345,18 +564,21 @@
     padding: 16px;
   }
 
-  .section h3 {
-    font-size: 18px;
-  }
-
   .form-group label {
     font-size: 12px;
   }
 
   .form-group input,
-  .form-group textarea {
+  .form-group textarea,
+  .form-group select {
     font-size: 12px;
     padding: 6px;
+  }
+
+  .file-input-wrapper input[type="file"]::-webkit-file-upload-button,
+  .file-input-wrapper input[type="file"]::-ms-browse {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .file-input-label {
@@ -372,7 +594,7 @@
     gap: 12px;
   }
 
-  .product-card {
+  .upload-product-card {
     padding: 12px;
   }
 
@@ -408,5 +630,28 @@
     width: 100%;
     padding: 10px;
     font-size: 14px;
+  }
+
+  .modal-content {
+    padding: 16px;
+    width: 95%;
+  }
+
+  .modal-content h3 {
+    font-size: 18px;
+  }
+
+  .modal-content p {
+    font-size: 12px;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-buttons button {
+    width: 100%;
+    padding: 10px;
   }
 }

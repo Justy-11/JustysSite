@@ -16,6 +16,7 @@ import RedirectGoogleAuth from "./components/GoogleRedirectHandler"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
+import Publish from './pages/Publish';
 
 
 function Logout() {
@@ -37,6 +38,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/create" element={<CreatePage />} />
                         <Route path="/add-products" element={<AddProducts/>} />
+                        <Route path="/publish" element={<Publish/>} />
                     </Route>
                     <Route path="/about" element={<AboutUs />} />
                     {/* Protected routes here */}

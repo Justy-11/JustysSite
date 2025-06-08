@@ -4,14 +4,13 @@ import api from "../api";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 
 function Publish() {
-  // State for page data
-  const [page, setPage] = useState(null);
-  // State for products and collections
+  const [pageData, setPageData] = useState(null);
   const [products, setProducts] = useState([]);
   const [collections, setCollections] = useState([]);
+  const [shareableLink, setShareableLink] = useState("");
+  const [isPublished, setIsPublished] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
 
-  // Fetch page, products, and collections on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,181 +19,187 @@ function Publish() {
           api.get("/api/products/"),
           api.get("/api/collections/"),
         ]);
-        setPage(pageRes.data);
+        setPageData(pageRes.data || null);
         setProducts(productsRes.data || []);
         setCollections(collectionsRes.data || []);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        showErrorToast("Failed to load page data.");
+        console.error("Error fetching data:", error.response?.data || error.message);
+        showErrorToast("Failed to load page data. Please try again.");
       }
     };
     fetchData();
   }, []);
 
-  // Handle publish/unpublish
   const handlePublish = async () => {
     try {
-      const response = await api.post("/api/page/publish/");
-      showSuccessToast(response.data.message);
-      setPage(response.data.data); // Update page state with new published status
+      const response = await api.post("/api/page/publish/", {});
+      setShareableLink(response.data.shareable_link || `${window.location.origin}/public/${pageData?.id}`);
+      setIsPublished(true);
+      showSuccessToast("Page published successfully!");
     } catch (error) {
-      console.error("Error publishing page:", error.response?.data);
-      showErrorToast(error.response?.data?.error || "Failed to publish page.");
+      console.error("Error publishing page:", error.response?.data || error.message);
+      showErrorToast(error.response?.data?.detail || "Failed to publish page.");
     }
   };
 
-  if (!page) {
-    return <div className="publish-container">Loading...</div>;
-  }
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shareableLink);
+    showSuccessToast("Link copied to clipboard!");
+  };
+
+  const renderSocialLinks = () => {
+    if (!pageData?.profile?.social_links) return null;
+    const urls = pageData.profile.social_links.split(",").filter((url) => url.trim());
+    return (
+      <div className="publish-social-links">
+        {urls.map((url, index) => (
+          <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="publish-social-link">
+            {new URL(url).hostname}
+          </a>
+        ))}
+      </div>
+    );
+  };
+
+  const handleCollectionClick = (collection) => {
+    setSelectedCollection(collection);
+  };
+
+  const handleBack = () => {
+    setSelectedCollection(null);
+  };
 
   return (
     <div className="publish-container">
-      {/* Publish Button */}
-      <div className="publish-button-container">
-        <button className="publish-button" onClick={handlePublish}>
-          {page.published ? "Unpublish" : "Publish"}
+      <div className="publish-header">
+        <h2>Preview & Publish Your Page</h2>
+        <button className="publish-button" onClick={handlePublish} disabled={isPublished}>
+          {isPublished ? "Published" : "Publish"}
         </button>
       </div>
 
-      {/* Page Preview */}
-      <div className="publish-page-preview">
-        {/* Banner */}
-        {page.banner && (
-          <div className="publish-banner-container">
-            <img src={page.banner} alt="Store Banner" className="publish-banner-image" />
-          </div>
-        )}
-
-        {/* Profile Section */}
-        <div className="publish-profile-section">
-          {page.profile_image && (
-            <img
-              src={page.profile_image}
-              alt="Profile"
-              className="publish-profile-image"
-            />
-          )}
-          <div className="publish-profile-details">
-            <h1>{page.store_name}</h1>
-            <p className="publish-short-description">{page.short_description}</p>
+      {isPublished && shareableLink && (
+        <div className="publish-shareable-link">
+          <p>Your shareable link:</p>
+          <div className="publish-link-container">
+            <input type="text" value={shareableLink} readOnly className="publish-link-input" />
+            <button className="publish-copy-button" onClick={copyToClipboard}>
+              Copy
+            </button>
           </div>
         </div>
+      )}
 
-        {/* Long Description */}
-        {page.long_description && (
-          <div className="publish-description-section">
-            <h3>About Us</h3>
-            <p>{page.long_description}</p>
-          </div>
-        )}
-
-        {/* Contact Links */}
-        {(page.social_media_linkedin ||
-          page.social_media_instagram ||
-          page.social_media_facebook ||
-          page.email ||
-          page.phone) && (
-          <div className="publish-contact-section">
-            <h3>Contact Us</h3>
-            <div className="publish-contact-links">
-              {page.social_media_linkedin && (
-                <a href={page.social_media_linkedin} target="_blank" rel="noopener noreferrer">
-                  LinkedIn
-                </a>
-              )}
-              {page.social_media_instagram && (
-                <a href={page.social_media_instagram} target="_blank" rel="noopener noreferrer">
-                  Instagram
-                </a>
-              )}
-              {page.social_media_facebook && (
-                <a href={page.social_media_facebook} target="_blank" rel="noopener noreferrer">
-                  Facebook
-                </a>
-              )}
-              {page.email && (
-                <a href={`mailto:${page.email}`}>{page.email}</a>
-              )}
-              {page.phone && (
-                <a href={`tel:${page.phone}`}>{page.phone}</a>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Products and Collections Preview */}
-      <div className="publish-preview-card-container">
-        {selectedCollection ? (
+      <div className="publish-preview-container">
+        {pageData ? (
           <>
-            <button
-              className="publish-back-button"
-              onClick={() => setSelectedCollection(null)}
-            >
-              Back to All Products
-            </button>
-            <h3>Collection: {selectedCollection.name}</h3>
-            <div className="publish-products-grid">
-              {selectedCollection.products.map((product) => (
-                <div key={product.id} className="publish-preview-product-card">
-                  {product.image && (
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="publish-product-image"
-                    />
-                  )}
-                  <h4>{product.title}</h4>
-                  <p>{product.description}</p>
-                  <p>Price: ${product.price}</p>
-                  <p>Stock: {product.stock || "N/A"}</p>
+            <div className="publish-top-section">
+              <div className="publish-banner-section" style={{ backgroundImage: pageData.banner_image ? `url(${pageData.banner_image})` : 'none' }}></div>
+              <div className="publish-profile-section">
+                {pageData.profile_image && (
+                  <img src={pageData.profile_image} alt="Profile" className="publish-profile-image" />
+                )}
+              </div>
+              <div className="publish-about-details-container">
+                <h3>{pageData.product_name || "Your Product Name"}</h3>
+                <p className="publish-tagline">{pageData.tagline || "Your Tagline"}</p>
+                {renderSocialLinks()}
+                <div className="publish-about-section">
+                  <p>{pageData.about || "Describe your product or service here."}</p>
                 </div>
-              ))}
-              {selectedCollection.products.length === 0 && (
-                <p>No products in this collection.</p>
-              )}
+                <div className="publish-contact-section">
+                  <ul>
+                    {pageData.email && (
+                      <li>
+                        Email: <a href={`mailto:${pageData.email}`}>{pageData.email}</a>
+                      </li>
+                    )}
+                    {pageData.phone && (
+                      <li>
+                        Phone: <a href={`tel:${pageData.phone}`}>{pageData.phone}</a>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              </div>
             </div>
+            <hr className="publish-divider" />
+            {selectedCollection ? (
+              <div className="publish-collection-view">
+                <button className="publish-back-button" onClick={handleBack}>
+                  ← Back
+                </button>
+                <h4>Collection: {selectedCollection.name}</h4>
+                <div className="publish-products-grid">
+                  {selectedCollection.products.length > 0 ? (
+                    selectedCollection.products.map((product) => (
+                      <div key={product.id} className="publish-product-card">
+                        {product.image && (
+                          <img
+                            src={product.image}
+                            alt={product.title}
+                            className="publish-product-image"
+                          />
+                        )}
+                        <h5>{product.title}</h5>
+                        <p>{product.description}</p>
+                        <p>Price: ${product.price}</p>
+                        <p>Stock: {product.stock || "N/A"}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No products in this collection.</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="publish-products-section">
+                  <h4>Your Products</h4>
+                  <div className="publish-products-grid">
+                    {products
+                      .filter((product) => !product.collection_name)
+                      .map((product) => (
+                        <div key={product.id} className="publish-product-card">
+                          {product.image && (
+                            <img
+                              src={product.image}
+                              alt={product.title}
+                              className="publish-product-image"
+                            />
+                          )}
+                          <h5>{product.title}</h5>
+                          <p>{product.description}</p>
+                          <p>Price: ${product.price}</p>
+                          <p>Stock: {product.stock || "N/A"}</p>
+                        </div>
+                      ))}
+                    {products.filter((product) => !product.collection_name).length === 0 && (
+                      <p>No standalone products added yet.</p>
+                    )}
+                  </div>
+                </div>
+                <div className="publish-collections-section">
+                  <h4>Your Collections</h4>
+                  <div className="publish-collections-grid">
+                    {collections.map((collection) => (
+                      <div
+                        key={collection.id}
+                        className="publish-collection-card"
+                        onClick={() => handleCollectionClick(collection)}
+                      >
+                        <h5>{collection.name}</h5>
+                        <p>{collection.products.length} product(s)</p>
+                      </div>
+                    ))}
+                    {collections.length === 0 && <p>No collections added yet.</p>}
+                  </div>
+                </div>
+              </>
+            )}
           </>
         ) : (
-          <>
-            <h3>Products</h3>
-            <div className="publish-products-grid">
-              {products
-                .filter((product) => !product.collection_name) // Only show standalone products
-                .map((product) => (
-                  <div key={product.id} className="publish-preview-product-card">
-                    {product.image && (
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="publish-product-image"
-                      />
-                    )}
-                    <h4>{product.title}</h4>
-                    <p>{product.description}</p>
-                    <p>Price: ${product.price}</p>
-                    <p>Stock: {product.stock || "N/A"}</p>
-                  </div>
-                ))}
-              {products.filter((product) => !product.collection_name).length === 0 && (
-                <p>No standalone products added yet.</p>
-              )}
-            </div>
-            <h3>Collections</h3>
-            <div className="publish-collections-grid">
-              {collections.map((collection) => (
-                <div
-                  key={collection.id}
-                  className="publish-collection-card"
-                  onClick={() => setSelectedCollection(collection)}
-                >
-                  <h4>{collection.name}</h4>
-                  <p>{collection.products.length} product(s)</p>
-                </div>
-              ))}
-              {collections.length === 0 && <p>No collections added yet.</p>}
-            </div>
-          </>
+          <p>No page data available. Please create a page first.</p>
         )}
       </div>
     </div>

@@ -1,366 +1,414 @@
 /* General container for the publish page */
 .publish-container {
-    background-color: #1a2526;
-    min-height: 100vh;
-    color: #ffffff;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    position: relative;
-  }
+  background-color: #1a2526;
+  min-height: 100vh;
+  color: #ffffff;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Header section with title and publish button */
+.publish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.publish-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.publish-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #10b981;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.publish-button:hover {
+  background-color: #059669;
+}
+
+.publish-button:disabled {
+  background-color: #4a5b5c;
+  cursor: not-allowed;
+}
+
+/* Shareable link section */
+.publish-shareable-link {
+  background-color: #2a3b3c;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.publish-shareable-link p {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.publish-link-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.publish-link-input {
+  padding: 8px;
+  background-color: #3a4b4c;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 14px;
+  flex: 1;
+}
+
+.publish-copy-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.publish-copy-button:hover {
+  background-color: #2563eb;
+}
+
+/* Preview container */
+.publish-preview-container {
+  background-color: #2a3b3c;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Top section with banner and profile */
+.publish-top-section {
+  margin-bottom: 24px;
+}
+
+.publish-banner-section {
+  position: relative;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  background-color: #3a4b4c;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.publish-profile-section {
+  position: relative;
+  margin-left: 15px;
+  margin-top: -70px; /* Half of profile image height to overlap banner */
+  z-index: 1;
+}
+
+.publish-profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  position: relative; /* Positions half of image inside banner */
+}
+
+.publish-about-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.publish-about-details-container h3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.publish-tagline {
+  font-size: 14px;
+  color: #a0a0a0;
   
-  .publish-button-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+}
+
+.publish-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.publish-social-link {
+  padding: 4px 8px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.publish-social-link:hover {
+  background-color: #2563eb;
+}
+
+/* About section */
+.publish-about-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.publish-about-section p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Contact section */
+.publish-contact-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.publish-contact-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.publish-contact-section li {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.publish-contact-section a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.publish-contact-section a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.publish-divider {
+  border: 0;
+  border-top: 1px solid #4a5b5c;
+  margin: 24px 0;
+}
+
+/* Collection view with back button */
+.publish-collection-view {
+  margin-top: 16px;
+}
+
+.publish-back-button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s;
+}
+
+.publish-back-button:hover {
+  background-color: #2563eb;
+}
+
+/* Products section */
+.publish-products-section {
+  margin-bottom: 24px;
+}
+
+.publish-products-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.publish-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.publish-product-card {
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.publish-product-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.publish-product-card h5 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.publish-product-card p {
+  font-size: 14px;
+  color: #a0a0a0;
+  margin: 4px 0;
+}
+
+/* Collections section */
+.publish-collections-section {
+  margin-bottom: 24px;
+}
+
+.publish-collections-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.publish-collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.publish-collection-card {
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.publish-collection-card:hover {
+  background-color: #4a5b5c;
+}
+
+.publish-collection-card h5 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.publish-collection-card p {
+  font-size: 14px;
+  color: #a0a0a0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .publish-container {
+    padding: 16px;
   }
-  
+
+  .publish-header h2 {
+    font-size: 20px;
+  }
+
   .publish-button {
-    padding: 8px 16px;
-    background-color: #3b82f6;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 8px 12px;
     font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s;
   }
-  
-  .publish-button:hover {
-    background-color: #2563eb;
+
+  .publish-shareable-link {
+    padding: 12px;
   }
-  
-  /* Page Preview */
-  .publish-page-preview {
-    margin-bottom: 40px;
+
+  .publish-shareable-link p {
+    font-size: 14px;
   }
-  
-  /* Banner */
-  .publish-banner-container {
-    width: 100%;
-    max-height: 300px;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-bottom: 24px;
+
+  .publish-link-input {
+    font-size: 12px;
+    padding: 6px;
   }
-  
-  .publish-banner-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+
+  .publish-copy-button {
+    padding: 6px 12px;
+    font-size: 12px;
   }
-  
-  /* Profile Section */
+
+  .publish-preview-container {
+    padding: 16px;
+  }
+
+  .publish-banner-section {
+    height: 150px;
+  }
+
   .publish-profile-section {
-    display: flex;
-    align-items: center;
-    background-color: #2a3b3c;
-    padding: 24px;
-    border-radius: 8px;
-    margin-bottom: 24px;
+    margin-top: -50px;
+    margin-left: 10px;
   }
-  
+
   .publish-profile-image {
     width: 100px;
     height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 24px;
   }
-  
-  .publish-profile-details {
-    flex: 1;
-  }
-  
-  .publish-profile-details h1 {
-    font-size: 28px;
-    margin: 0 0 8px 0;
-  }
-  
-  .publish-short-description {
+
+  .publish-about-details-container h3 {
     font-size: 16px;
-    color: #a0a0a0;
   }
-  
-  /* Description Section */
-  .publish-description-section {
-    background-color: #2a3b3c;
-    padding: 24px;
-    border-radius: 8px;
-    margin-bottom: 24px;
+
+  .publish-tagline {
+    font-size: 12px;
   }
-  
-  .publish-description-section h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 16px;
+
+  .publish-social-link {
+    font-size: 10px;
+    padding: 3px 6px;
   }
-  
-  .publish-description-section p {
+
+  .publish-about-details-container {
+    gap: 12px;
+  }
+
+  .publish-about-section h4,
+  .publish-contact-section h4,
+  .publish-products-section h4,
+  .publish-collections-section h4 {
     font-size: 16px;
-    line-height: 1.5;
   }
-  
-  /* Contact Section */
-  .publish-contact-section {
-    background-color: #2a3b3c;
-    padding: 24px;
-    border-radius: 8px;
-    margin-bottom: 24px;
+
+  .publish-about-section p,
+  .publish-contact-section li,
+  .publish-product-card p,
+  .publish-collection-card p {
+    font-size: 12px;
   }
-  
-  .publish-contact-section h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-  
-  .publish-contact-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  
-  .publish-contact-links a {
-    color: #3b82f6;
-    font-size: 16px;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .publish-contact-links a:hover {
-    color: #2563eb;
-  }
-  
-  /* Preview Card Container */
-  .publish-preview-card-container {
-    background-color: #2a3b3c;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .publish-preview-card-container h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-  
-  /* Back Button for Collection View */
+
   .publish-back-button {
-    background-color: #3b82f6;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-bottom: 16px;
-    transition: background-color 0.3s;
+    padding: 6px 12px;
+    font-size: 12px;
   }
-  
-  .publish-back-button:hover {
-    background-color: #2563eb;
-  }
-  
-  /* Products and Collections Grids */
+
   .publish-products-grid,
   .publish-collections-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    margin-top: 16px;
+    grid-template-columns: 1fr;
   }
-  
-  /* Preview Product Card */
-  .publish-preview-product-card {
-    background-color: #3a4b4c;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #4a5b5c;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+
+  .publish-product-card h5,
+  .publish-collection-card h5 {
+    font-size: 14px;
   }
-  
-  .publish-preview-product-card img.publish-product-image {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 8px;
+
+  .publish-product-image {
+    max-height: 120px;
   }
-  
-  .publish-preview-product-card h4 {
-    font-size: 15px;
-    margin: 6px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .publish-preview-product-card p {
-    font-size: 13px;
-    color: #a0a0a0;
-    margin: 3px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  /* Collection Card */
-  .publish-collection-card {
-    background-color: #3a4b4c;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #4a5b5c;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background-color 0.3s;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
-  }
-  
-  .publish-collection-card:hover {
-    background-color: #4a5b5c;
-  }
-  
-  .publish-collection-card h4 {
-    font-size: 15px;
-    margin: 6px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .publish-collection-card p {
-    font-size: 13px;
-    color: #a0a0a0;
-    margin: 3px 0;
-  }
-  
-  /* Mobile Responsiveness */
-  @media (max-width: 768px) {
-    .publish-container {
-      padding: 16px;
-    }
-  
-    .publish-button-container {
-      top: 16px;
-      right: 16px;
-    }
-  
-    .publish-button {
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-  
-    .publish-banner-container {
-      max-height: 200px;
-    }
-  
-    .publish-profile-section {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 16px;
-    }
-  
-    .publish-profile-image {
-      width: 80px;
-      height: 80px;
-      margin-right: 0;
-      margin-bottom: 16px;
-    }
-  
-    .publish-profile-details h1 {
-      font-size: 24px;
-    }
-  
-    .publish-short-description {
-      font-size: 14px;
-    }
-  
-    .publish-description-section {
-      padding: 16px;
-    }
-  
-    .publish-description-section h3 {
-      font-size: 18px;
-    }
-  
-    .publish-description-section p {
-      font-size: 14px;
-    }
-  
-    .publish-contact-section {
-      padding: 16px;
-    }
-  
-    .publish-contact-section h3 {
-      font-size: 18px;
-    }
-  
-    .publish-contact-links {
-      flex-direction: column;
-      gap: 8px;
-    }
-  
-    .publish-contact-links a {
-      font-size: 14px;
-    }
-  
-    .publish-preview-card-container {
-      padding: 16px;
-    }
-  
-    .publish-preview-card-container h3 {
-      font-size: 18px;
-    }
-  
-    .publish-products-grid,
-    .publish-collections-grid {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
-    }
-  
-    .publish-preview-product-card {
-      height: 260px;
-      padding: 10px;
-    }
-  
-    .publish-preview-product-card img.publish-product-image {
-      height: 120px;
-    }
-  
-    .publish-preview-product-card h4 {
-      font-size: 14px;
-    }
-  
-    .publish-preview-product-card p {
-      font-size: 12px;
-    }
-  
-    .publish-collection-card {
-      height: 90px;
-      padding: 10px;
-    }
-  
-    .publish-collection-card h4 {
-      font-size: 14px;
-    }
-  
-    .publish-collection-card p {
-      font-size: 12px;
-    }
-  
-    .publish-back-button {
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-  }
+}

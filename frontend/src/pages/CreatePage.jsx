@@ -223,15 +223,13 @@ function CreatePage() {
             {previewProfileImage && (
               <img src={previewProfileImage} alt="Profile" className="profile-image" />
             )}
-            <h2>{formData.productName || "Your Product Name"}</h2>
-            <p className="tagline">{formData.tagline || "Your Tagline"}</p>
           </div>
           <div className="about-section">
-            <h3>About</h3>
+            <h2>{formData.productName || "Your Product Name"}</h2>
+            <p className="tagline">{formData.tagline || "Your Tagline"}</p>
             <p>{formData.about || "Describe your product or service here."}</p>
           </div>
           <div className="contact-section">
-            <h3>Contact Information</h3>
             <ul>
               {formData.contactLinks.email && (
                 <li>

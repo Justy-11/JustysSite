@@ -269,7 +269,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 2px solid #ffffff;
+    border: 5px solid #2a3b3c;
     object-fit: cover;
     margin-bottom: 16px;
   }

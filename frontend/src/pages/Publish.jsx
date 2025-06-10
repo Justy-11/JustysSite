@@ -81,6 +81,15 @@ function Publish() {
     return words.join(" ") + (words.length < description.split(" ").length ? "..." : "");
   };
 
+  const getCollectionImages = (products) => {
+    const imageUrls = products.map((product) => product.image).filter((img) => img);
+    const placeholderCount = 6 - imageUrls.length;
+    return [
+      ...imageUrls.slice(0, 6), // Take top 6 images
+      ...Array(placeholderCount).fill(null), // Fill remaining with null for placeholders
+    ];
+  };
+
   return (
     <div className="publish-container">
       <div className="publish-header">
@@ -221,6 +230,20 @@ function Publish() {
                         className="publish-collection-card"
                         onClick={() => handleCollectionClick(collection)}
                       >
+                        <div className="publish-collection-image-grid">
+                          {getCollectionImages(collection.products).map((image, index) =>
+                            image ? (
+                              <img
+                                key={index}
+                                src={image}
+                                alt={`${collection.name} image ${index + 1}`}
+                                className="publish-collection-image"
+                              />
+                            ) : (
+                              <div key={index} className="publish-collection-placeholder"></div>
+                            )
+                          )}
+                        </div>
                         <h5>{collection.name}</h5>
                         <p>{collection.products.length} product(s)</p>
                       </div>

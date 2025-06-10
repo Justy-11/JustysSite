@@ -413,6 +413,30 @@
   }
 }
 
+/* Collection Card Image Grid */
+.publish-collection-image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  margin-bottom: 8px;
+}
+
+.publish-collection-image {
+  width: 100%;
+  height: 100%; /* Ensure square by matching height to width */
+  object-fit: cover; /* Zoom and fill the square, cropping if necessary */
+  border: 1px solid #4a5b5c;
+  border-radius: 4px;
+}
+
+.publish-collection-placeholder {
+  width: 100%;
+  height: 100%; /* Ensure square by matching height to width */
+  background-color: #3a4b4c;
+  border: 1px solid #4a5b5c;
+  border-radius: 4px;
+}
+
 /* Product Detail View */
 .publish-product-detail-view {
   margin-top: 16px;
@@ -436,7 +460,7 @@
 .publish-product-image-large {
   max-width: 100%;
   max-height: 400px;
-  object-fit: contain;
+  object-fit: contain; /* Keep original behavior for product detail view */
   border-radius: 4px;
 }
 
@@ -488,4 +512,13 @@
     margin-top: 16px;
   }
 
+  .publish-collection-image-grid {
+    grid-template-columns: 1fr; /* Stack placeholders vertically on mobile */
+    grid-template-rows: repeat(6, auto);
+  }
+
+  .publish-collection-image,
+  .publish-collection-placeholder {
+    height: 60px; /* Adjusted to maintain square on mobile */
+  }
 }

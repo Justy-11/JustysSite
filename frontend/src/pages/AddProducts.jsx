@@ -108,7 +108,7 @@ function AddProducts() {
     bulkProductDetails.forEach((detail, index) => {
       formData.append(`products[${index}][title]`, detail.title);
       formData.append(`products[${index}][description]`, detail.description || "");
-      formData.append(`products[${index}][price]`, detail.price);
+      formData.append(`products[${index}][price]`, detail.price || "");
       formData.append(`products[${index}][stock]`, detail.stock || "");
       if (bulkImages[index]) {
         formData.append(`products[${index}][image]`, bulkImages[index]);
@@ -232,14 +232,14 @@ function AddProducts() {
 
   // Handle edit product
   const handleEditProduct = async () => {
-    if (!modalData.title || !modalData.price) {
-      showErrorToast("Title and Price are required.");
+    if (!modalData.title) {
+      showErrorToast("Title is required.");
       return;
     }
     const formData = new FormData();
     formData.append("title", modalData.title);
     formData.append("description", modalData.description || "");
-    formData.append("price", modalData.price);
+    formData.append("price", modalData.price || "");
     formData.append("stock", modalData.stock || "");
     if (modalData.image instanceof File) {
       formData.append("image", modalData.image);
@@ -247,7 +247,7 @@ function AddProducts() {
     if (modalData.collection) {
       formData.append("collection", modalData.collection);
     } else {
-      formData.append("collection", ""); // Ensure null collection is sent
+      formData.append("collection", "");
     }
     try {
       await api.put(`/api/products/${modalData.id}/`, formData, {
@@ -359,7 +359,7 @@ function AddProducts() {
                   )}
                   <h4>{product.title}</h4>
                   <p>{product.description}</p>
-                  <p>Price: ${product.price}</p>
+                  <p>Price: {product.price ? `$${product.price}` : "N/A"}</p>
                   <p>Stock: {product.stock || "N/A"}</p>
                   <div className="action-buttons">
                     <button
@@ -369,8 +369,8 @@ function AddProducts() {
                           id: product.id,
                           title: product.title,
                           description: product.description,
-                          price: product.price,
-                          stock: product.stock,
+                          price: product.price || "",
+                          stock: product.stock || "",
                           image: null,
                           collection: product.collection,
                         })
@@ -411,7 +411,7 @@ function AddProducts() {
                     )}
                     <h4>{product.title}</h4>
                     <p>{product.description}</p>
-                    <p>Price: ${product.price}</p>
+                    <p>Price: {product.price ? `$${product.price}` : "N/A"}</p>
                     <p>Stock: {product.stock || "N/A"}</p>
                     <p>Collection: {product.collection_name || "None"}</p>
                     <div className="action-buttons">
@@ -422,8 +422,8 @@ function AddProducts() {
                             id: product.id,
                             title: product.title,
                             description: product.description,
-                            price: product.price,
-                            stock: product.stock,
+                            price: product.price || "",
+                            stock: product.stock || "",
                             image: null,
                             collection: product.collection,
                           })
@@ -518,7 +518,7 @@ function AddProducts() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Price *</label>
+                    <label>Price</label>
                     <input
                       type="number"
                       value={modalData.price}
@@ -726,7 +726,7 @@ function AddProducts() {
                     />
                     <input
                       type="number"
-                      placeholder="Price *"
+                      placeholder="Price"
                       value={bulkProductDetails[index].price}
                       onChange={(e) =>
                         handleBulkProductChange(index, "price", e.target.value)

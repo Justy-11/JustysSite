@@ -376,7 +376,7 @@ class AddProductsView(APIView):
             product = {
                 'title': request.data.get(f'products[{index}][title]'),
                 'description': request.data.get(f'products[{index}][description]', ''),
-                'price': request.data.get(f'products[{index}][price]'),
+                'price': request.data.get(f'products[{index}][price]', ''),
                 'stock': request.data.get(f'products[{index}][stock]', ''),
                 'image': request.FILES.get(f'products[{index}][image]')
             }
@@ -401,20 +401,26 @@ class AddProductsView(APIView):
         for index, product_data in enumerate(products_data):
             try:
                 price = product_data.get('price')
-                if isinstance(price, str):
+                price_decimal = None
+                if price and price.strip(): # CHANGE: Only process price if provided
                     try:
-                        price = float(price)
+                        price_decimal = float(price)
                     except ValueError:
                         raise ValidationError(f"Invalid price format for product {index + 1}")
 
                 stock = product_data.get('stock')
-                stock = int(stock) if stock and str(stock).strip() else None
+                stock_int = None
+                if stock and stock.strip(): # CHANGE: Only process stock if provided
+                    try:
+                        stock_int = int(stock)
+                    except ValueError:
+                        raise ValidationError(f"Invalid stock format for product {index + 1}")
 
                 serializer = ProductSerializer(data={
                     'title': product_data.get('title'),
                     'description': product_data.get('description', ''),
-                    'price': price,
-                    'stock': stock,
+                    'price': price_decimal,
+                    'stock': stock_int,
                     'image': product_data.get('image'),
                     'collection': collection.id if collection else None
                 }, context={'request': request})
@@ -483,7 +489,7 @@ class AddProductsCSVView(APIView):
         try:
             text_io = TextIOWrapper(csv_file.file, encoding='utf-8')
             reader = csv.DictReader(text_io)
-            required_columns = {'Title', 'Description', 'Price', 'Stock', 'Image File Name'}
+            required_columns = {'Title', 'Image File Name'}
             if not all(col in reader.fieldnames for col in required_columns):
                 missing = required_columns - set(reader.fieldnames)
                 return Response({"error": f"Missing required columns: {', '.join(missing)}"}, status=status.HTTP_400_BAD_REQUEST)
@@ -497,13 +503,31 @@ class AddProductsCSVView(APIView):
                         if not image_path or not default_storage.exists(image_path):
                             errors.append(f"Row {row_number}: Image file '{image_filename}' not found in ZIP.")
                             continue
+                    
+                    price = row.get('Price')
+                    price_decimal = None
+                    if price and price.strip():
+                        try:
+                            price_decimal = Decimal(price)
+                        except (ValueError, TypeError):
+                            errors.append(f"Row {row_number}: Invalid price format")
+                            continue
+
+                    stock = row.get('Stock')
+                    stock_int = None
+                    if stock and stock.strip():
+                        try:
+                            stock_int = int(stock)
+                        except (ValueError, TypeError):
+                            errors.append(f"Row {row_number}: Invalid stock format")
+                            continue
 
                     product = Product(
                         user=user,
                         title=row.get('Title'),
                         description=row.get('Description', ''),
-                        price=Decimal(row.get('Price')),
-                        stock=int(row.get('Stock')) if row.get('Stock') else None,
+                        price=price_decimal,
+                        stock=stock_int,
                         image=image_path if image_path else None,
                         collection=collection
                     )

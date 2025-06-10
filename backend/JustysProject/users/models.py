@@ -86,7 +86,7 @@ class Product(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.SET_NULL, blank=True, null=True, related_name='products')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     stock = models.IntegerField(blank=True, null=True)
     
     def upload_to_original(instance, filename):

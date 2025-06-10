@@ -158,7 +158,11 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'collection', 'collection_name', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at', 'collection_name']
         extra_kwargs = {
-            'user': {'write_only': True}
+            'user': {'write_only': True},
+            'price': {'required': False, 'allow_null': True},
+            'description': {'required': False, 'allow_blank': True},
+            'stock': {'required': False, 'allow_null': True}
+
         }
 
     def __init__(self, *args, **kwargs):
@@ -206,7 +210,7 @@ class ProductSerializer(serializers.ModelSerializer):
                 user=user,
                 title=validated_data['title'],
                 description=validated_data.get('description', ''),
-                price=validated_data['price'],
+                price=validated_data.get('price'),
                 stock=validated_data.get('stock'),
                 image=validated_data.get('image'),
                 collection=validated_data.get('collection')

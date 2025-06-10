@@ -10,6 +10,7 @@ function Publish() {
   const [shareableLink, setShareableLink] = useState("");
   const [isPublished, setIsPublished] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +68,17 @@ function Publish() {
 
   const handleBack = () => {
     setSelectedCollection(null);
+    setSelectedProduct(null);
+  };
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const getShortDescription = (description) => {
+    if (!description) return "";
+    const words = description.split(" ").slice(0, 3);
+    return words.join(" ") + (words.length < description.split(" ").length ? "..." : "");
   };
 
   return (
@@ -124,7 +136,30 @@ function Publish() {
               </div>
             </div>
             <hr className="publish-divider" />
-            {selectedCollection ? (
+            {selectedProduct ? (
+              <div className="publish-product-detail-view">
+                <button className="publish-back-button" onClick={handleBack}>
+                  ← Back
+                </button>
+                <div className="publish-product-detail">
+                  <div className="publish-product-image-container">
+                    {selectedProduct.image && (
+                      <img
+                        src={selectedProduct.image}
+                        alt={selectedProduct.title}
+                        className="publish-product-image-large"
+                      />
+                    )}
+                  </div>
+                  <div className="publish-product-info">
+                    <h4>{selectedProduct.title}</h4>
+                    {selectedProduct.description && <p>{selectedProduct.description}</p>}
+                    {selectedProduct.price && <p>Price: ${selectedProduct.price}</p>}
+                    {selectedProduct.stock && <p>Stock: {selectedProduct.stock}</p>}
+                  </div>
+                </div>
+              </div>
+            ) : selectedCollection ? (
               <div className="publish-collection-view">
                 <button className="publish-back-button" onClick={handleBack}>
                   ← Back
@@ -133,7 +168,7 @@ function Publish() {
                 <div className="publish-products-grid">
                   {selectedCollection.products.length > 0 ? (
                     selectedCollection.products.map((product) => (
-                      <div key={product.id} className="publish-product-card">
+                      <div key={product.id} className="publish-product-card" onClick={() => handleProductClick(product)}>
                         {product.image && (
                           <img
                             src={product.image}
@@ -142,9 +177,8 @@ function Publish() {
                           />
                         )}
                         <h5>{product.title}</h5>
-                        <p>{product.description}</p>
-                        <p>Price: ${product.price}</p>
-                        <p>Stock: {product.stock || "N/A"}</p>
+                        {product.description && <p>{getShortDescription(product.description)}</p>}
+                        {product.price && <p>Price: ${product.price}</p>}
                       </div>
                     ))
                   ) : (
@@ -160,7 +194,7 @@ function Publish() {
                     {products
                       .filter((product) => !product.collection_name)
                       .map((product) => (
-                        <div key={product.id} className="publish-product-card">
+                        <div key={product.id} className="publish-product-card" onClick={() => handleProductClick(product)}>
                           {product.image && (
                             <img
                               src={product.image}
@@ -169,9 +203,8 @@ function Publish() {
                             />
                           )}
                           <h5>{product.title}</h5>
-                          <p>{product.description}</p>
-                          <p>Price: ${product.price}</p>
-                          <p>Stock: {product.stock || "N/A"}</p>
+                          {product.description && <p>{getShortDescription(product.description)}</p>}
+                          {product.price && <p>Price: ${product.price}</p>}
                         </div>
                       ))}
                     {products.filter((product) => !product.collection_name).length === 0 && (

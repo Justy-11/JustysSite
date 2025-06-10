@@ -412,3 +412,80 @@
     max-height: 120px;
   }
 }
+
+/* Product Detail View */
+.publish-product-detail-view {
+  margin-top: 16px;
+}
+
+.publish-product-detail {
+  display: flex;
+  gap: 20px;
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.publish-product-image-container {
+  flex: 0 0 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.publish-product-image-large {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.publish-product-info {
+  flex: 1;
+  text-align: left;
+}
+
+.publish-product-info h4 {
+  font-size: 20px;
+  margin: 0 0 16px 0;
+}
+
+.publish-product-info p {
+  font-size: 14px;
+  color: #a0a0a0;
+  margin: 8px 0;
+}
+
+/* Ensure product card clickability */
+.publish-product-card {
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.publish-product-card:hover {
+  background-color: #4a5b5c;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .publish-product-detail {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .publish-product-image-container {
+    flex: 0 0 100%;
+    margin-bottom: 16px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .publish-product-image-large {
+    max-height: 250px;
+  }
+
+  .publish-product-info h4 {
+    margin-top: 16px;
+  }
+
+}

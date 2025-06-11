@@ -426,7 +426,6 @@
   height: 100%; /* Ensure square by matching height to width */
   object-fit: cover; /* Zoom and fill the square, cropping if necessary */
   border: 1px solid #4a5b5c;
-  border-radius: 4px;
 }
 
 .publish-collection-placeholder {
@@ -435,6 +434,43 @@
   background-color: #3a4b4c;
   border: 1px solid #4a5b5c;
   border-radius: 4px;
+}
+
+/* Product Cards */
+.publish-products-grid,
+.publish-collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+/* Product Card */
+.publish-product-card {
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.publish-product-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.publish-product-card h5 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.publish-product-card p {
+  font-size: 14px;
+  color: #a0a0a0;
+  margin: 4px 0;
 }
 
 /* Product Detail View */
@@ -481,13 +517,32 @@
 }
 
 /* Ensure product card clickability */
-.publish-product-card {
+.publish-product-card:hover {
+  background-color: #4a5b5c;
+}
+
+/* Collection Card */
+.publish-collection-card {
+  background-color: #3a4b4c;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.publish-product-card:hover {
+.publish-collection-card:hover {
   background-color: #4a5b5c;
+}
+
+.publish-collection-card h5 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.publish-collection-card p {
+  font-size: 14px;
+  color: #a0a0a0;
 }
 
 /* Mobile Responsiveness */
@@ -512,13 +567,30 @@
     margin-top: 16px;
   }
 
+  /* Adjust grids to 2 columns on mobile */
+  .publish-products-grid,
+  .publish-collections-grid {
+    grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
+    gap: 8px; /* Reduced gap for mobile */
+  }
+
   .publish-collection-image-grid {
-    grid-template-columns: 1fr; /* Stack placeholders vertically on mobile */
-    grid-template-rows: repeat(6, auto);
+    grid-template-columns: repeat(3, 1fr); /* Maintain 2x3 layout */
+    grid-template-rows: repeat(2, 1fr); /* Maintain 2 rows */
+    padding: 2px; /* Minimal padding */
   }
 
   .publish-collection-image,
   .publish-collection-placeholder {
-    height: 60px; /* Adjusted to maintain square on mobile */
+    height: 30px; /* Tinier square size for mobile */
+  }
+
+  .publish-product-image {
+    max-height: 80px; /* Adjusted for smaller card size */
+  }
+
+  .publish-product-card,
+  .publish-collection-card {
+    padding: 8px; /* Reduced padding for smaller cards */
   }
 }

@@ -4,30 +4,23 @@ import api from "../api";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 
 function AddProducts() {
-  // State for collection toggle and name
   const [createCollection, setCreateCollection] = useState(false);
   const [collectionName, setCollectionName] = useState("");
-  // State for bulk image upload
   const [bulkImages, setBulkImages] = useState([]);
   const [bulkImagePreviews, setBulkImagePreviews] = useState([]);
   const [bulkProductDetails, setBulkProductDetails] = useState([]);
-  // State for bulk CSV upload
   const [csvFile, setCsvFile] = useState(null);
   const [zipFile, setZipFile] = useState(null);
-  // State for preview data
   const [products, setProducts] = useState([]);
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState(null);
-  // State for modals
-  const [modalType, setModalType] = useState(null); // 'edit-product', 'delete-product', 'edit-collection', 'delete-collection'
+  const [modalType, setModalType] = useState(null);
   const [modalData, setModalData] = useState(null);
-  // Refs
   const bulkImageInputRef = useRef(null);
   const csvInputRef = useRef(null);
   const zipInputRef = useRef(null);
   const previewRef = useRef(null);
 
-  // Fetch products and collections on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,8 +28,8 @@ function AddProducts() {
           api.get("/api/products/"),
           api.get("/api/collections/"),
         ]);
-        setProducts(productsRes.data || []); // Ensure empty array if no data
-        setCollections(collectionsRes.data || []); // Ensure empty array if no data
+        setProducts(productsRes.data || []);
+        setCollections(collectionsRes.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
         showErrorToast("Failed to load products and collections.");
@@ -45,7 +38,6 @@ function AddProducts() {
     fetchData();
   }, []);
 
-  // Handle bulk image upload
   const handleBulkImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const previews = files.map((file) => URL.createObjectURL(file));
@@ -61,14 +53,12 @@ function AddProducts() {
     );
   };
 
-  // Handle bulk product details change
   const handleBulkProductChange = (index, field, value) => {
     const updatedDetails = [...bulkProductDetails];
     updatedDetails[index] = { ...updatedDetails[index], [field]: value };
     setBulkProductDetails(updatedDetails);
   };
 
-  // Remove a bulk image
   const handleRemoveBulkImage = (index) => {
     const updatedImages = bulkImages.filter((_, i) => i !== index);
     const updatedPreviews = bulkImagePreviews.filter((_, i) => i !== index);
@@ -81,7 +71,6 @@ function AddProducts() {
     }
   };
 
-  // Remove all bulk images
   const handleRemoveAllImages = () => {
     setBulkImages([]);
     setBulkImagePreviews([]);
@@ -91,14 +80,13 @@ function AddProducts() {
     }
   };
 
-  // Handle adding bulk products
   const handleAddBulkProducts = async () => {
     if (createCollection && !collectionName) {
       showErrorToast("Please enter a collection name.");
       return;
     }
-    if (bulkProductDetails.some((detail) => !detail.title || !detail.price)) {
-      showErrorToast("Please fill in all required fields (Title and Price).");
+    if (bulkProductDetails.some((detail) => !detail.title)) {
+      showErrorToast("Please fill in all required fields (Title).");
       return;
     }
     const formData = new FormData();
@@ -127,7 +115,6 @@ function AddProducts() {
       }
       setCollectionName("");
       setCreateCollection(false);
-      // Refresh products and collections
       const [productsRes, collectionsRes] = await Promise.all([
         api.get("/api/products/"),
         api.get("/api/collections/"),
@@ -140,7 +127,6 @@ function AddProducts() {
     }
   };
 
-  // Handle CSV file upload
   const handleCsvUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -148,7 +134,6 @@ function AddProducts() {
     }
   };
 
-  // Handle ZIP file upload
   const handleZipUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -156,7 +141,6 @@ function AddProducts() {
     }
   };
 
-  // Handle CSV upload submission
   const handleCsvUploadSubmit = async () => {
     if (createCollection && !collectionName) {
       showErrorToast("Please enter a collection name.");
@@ -187,7 +171,6 @@ function AddProducts() {
       }
       setCollectionName("");
       setCreateCollection(false);
-      // Refresh products and collections
       const [productsRes, collectionsRes] = await Promise.all([
         api.get("/api/products/"),
         api.get("/api/collections/"),
@@ -200,7 +183,6 @@ function AddProducts() {
     }
   };
 
-  // Function to refresh data after updates
   const refreshData = async () => {
     try {
       const [productsRes, collectionsRes] = await Promise.all([
@@ -212,7 +194,6 @@ function AddProducts() {
       setProducts(updatedProducts);
       setCollections(updatedCollections);
 
-      // If a collection is selected, update its data
       if (selectedCollection) {
         const updatedSelectedCollection = updatedCollections.find(
           (col) => col.id === selectedCollection.id
@@ -220,7 +201,6 @@ function AddProducts() {
         if (updatedSelectedCollection) {
           setSelectedCollection(updatedSelectedCollection);
         } else {
-          // If the selected collection no longer exists (e.g., deleted), go back
           setSelectedCollection(null);
         }
       }
@@ -230,7 +210,6 @@ function AddProducts() {
     }
   };
 
-  // Handle edit product
   const handleEditProduct = async () => {
     if (!modalData.title) {
       showErrorToast("Title is required.");
@@ -254,10 +233,8 @@ function AddProducts() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       showSuccessToast("Product updated successfully!");
-      // Close modal immediately
       setModalType(null);
       setModalData(null);
-      // Refresh data
       await refreshData();
     } catch (error) {
       console.error("Error updating product:", error.response?.data);
@@ -265,15 +242,12 @@ function AddProducts() {
     }
   };
 
-  // Handle delete product
   const handleDeleteProduct = async () => {
     try {
       await api.delete(`/api/products/${modalData.id}/`);
       showSuccessToast("Product deleted successfully!");
-      // Close modal immediately
       setModalType(null);
       setModalData(null);
-      // Refresh data
       await refreshData();
     } catch (error) {
       console.error("Error deleting product:", error.response?.data);
@@ -281,7 +255,6 @@ function AddProducts() {
     }
   };
 
-  // Handle edit collection
   const handleEditCollection = async () => {
     if (!modalData.name) {
       showErrorToast("Collection name is required.");
@@ -290,10 +263,8 @@ function AddProducts() {
     try {
       await api.put(`/api/collections/${modalData.id}/`, { name: modalData.name });
       showSuccessToast("Collection updated successfully!");
-      // Close modal immediately
       setModalType(null);
       setModalData(null);
-      // Refresh data
       await refreshData();
     } catch (error) {
       console.error("Error updating collection:", error.response?.data);
@@ -301,16 +272,13 @@ function AddProducts() {
     }
   };
 
-  // Handle delete collection
   const handleDeleteCollection = async () => {
     try {
       await api.delete(`/api/collections/${modalData.id}/`);
       showSuccessToast("Collection deleted successfully!");
-      // Close modal immediately
       setModalType(null);
       setModalData(null);
       setSelectedCollection(null);
-      // Refresh data
       await refreshData();
     } catch (error) {
       console.error("Error deleting collection:", error.response?.data);
@@ -318,7 +286,6 @@ function AddProducts() {
     }
   };
 
-  // Download example CSV
   const downloadExampleCsv = () => {
     const csvContent = `Title,Description,Price,Stock,Image File Name
 "Smartphone","A high-end smartphone with 128GB storage","699.99","50","smartphone.jpg"
@@ -332,18 +299,29 @@ function AddProducts() {
     URL.revokeObjectURL(url);
   };
 
+  const getShortDescription = (description) => {
+    if (!description) return "";
+    const words = description.split(" ").slice(0, 3);
+    return words.join(" ") + (words.length < description.split(" ").length ? "..." : "");
+  };
+
+  const getCollectionImages = (products) => {
+    const imageUrls = products.map((product) => product.image).filter((img) => img);
+    const placeholderCount = 6 - imageUrls.length;
+    return [
+      ...imageUrls.slice(0, 6),
+      ...Array(placeholderCount).fill(null),
+    ];
+  };
+
   return (
     <div className="add-products-container">
       <h2>Add Products</h2>
 
-      {/* Preview Card */}
       <div className="preview-card-container" ref={previewRef}>
         {selectedCollection ? (
           <>
-            <button
-              className="back-button"
-              onClick={() => setSelectedCollection(null)}
-            >
+            <button className="back-button" onClick={() => setSelectedCollection(null)}>
               Back to All Products
             </button>
             <h3>Collection: {selectedCollection.name}</h3>
@@ -351,16 +329,12 @@ function AddProducts() {
               {selectedCollection.products.map((product) => (
                 <div key={product.id} className="preview-product-card">
                   {product.image && (
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="product-image"
-                    />
+                    <img src={product.image} alt={product.title} className="product-image" />
                   )}
                   <h4>{product.title}</h4>
-                  <p>{product.description}</p>
-                  <p>Price: {product.price ? `$${product.price}` : "N/A"}</p>
-                  <p>Stock: {product.stock || "N/A"}</p>
+                  {product.description && <p>{getShortDescription(product.description)}</p>}
+                  {product.price && <p>Price: ${product.price}</p>}
+                  {product.stock && <p>Stock: {product.stock}</p>}
                   <div className="action-buttons">
                     <button
                       onClick={() =>
@@ -389,9 +363,7 @@ function AddProducts() {
                   </div>
                 </div>
               ))}
-              {selectedCollection.products.length === 0 && (
-                <p>No products in this collection.</p>
-              )}
+              {selectedCollection.products.length === 0 && <p>No products in this collection.</p>}
             </div>
           </>
         ) : (
@@ -399,21 +371,16 @@ function AddProducts() {
             <h3>Your Products</h3>
             <div className="products-grid">
               {products
-                .filter((product) => !product.collection_name) // Only show products with no collection
+                .filter((product) => !product.collection_name)
                 .map((product) => (
                   <div key={product.id} className="preview-product-card">
                     {product.image && (
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="product-image"
-                      />
+                      <img src={product.image} alt={product.title} className="product-image" />
                     )}
                     <h4>{product.title}</h4>
-                    <p>{product.description}</p>
-                    <p>Price: {product.price ? `$${product.price}` : "N/A"}</p>
-                    <p>Stock: {product.stock || "N/A"}</p>
-                    <p>Collection: {product.collection_name || "None"}</p>
+                    {product.description && <p>{getShortDescription(product.description)}</p>}
+                    {product.price && <p>Price: ${product.price}</p>}
+                    {product.stock && <p>Stock: {product.stock}</p>}
                     <div className="action-buttons">
                       <button
                         onClick={() =>
@@ -454,6 +421,20 @@ function AddProducts() {
                   className="collection-card"
                   onClick={() => setSelectedCollection(collection)}
                 >
+                  <div className="collection-image-grid">
+                    {getCollectionImages(collection.products).map((image, index) =>
+                      image ? (
+                        <img
+                          key={index}
+                          src={image}
+                          alt={`${collection.name} image ${index + 1}`}
+                          className="collection-image"
+                        />
+                      ) : (
+                        <div key={index} className="collection-placeholder"></div>
+                      )
+                    )}
+                  </div>
                   <h4>{collection.name}</h4>
                   <p>{collection.products.length} product(s)</p>
                   <div className="action-buttons">
@@ -484,36 +465,26 @@ function AddProducts() {
         )}
       </div>
 
-      {/* Modals */}
       {modalType && (
         <div className="modal-overlay">
           <div className="modal-content">
             {modalType === "edit-product" && (
               <>
                 <h3>Edit Product</h3>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleEditProduct();
-                  }}
-                >
+                <form onSubmit={(e) => { e.preventDefault(); handleEditProduct(); }}>
                   <div className="form-group">
                     <label>Title *</label>
                     <input
                       type="text"
                       value={modalData.title}
-                      onChange={(e) =>
-                        setModalData({ ...modalData, title: e.target.value })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
                     />
                   </div>
                   <div className="form-group">
                     <label>Description</label>
                     <textarea
                       value={modalData.description}
-                      onChange={(e) =>
-                        setModalData({ ...modalData, description: e.target.value })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, description: e.target.value })}
                       rows="3"
                     />
                   </div>
@@ -522,9 +493,7 @@ function AddProducts() {
                     <input
                       type="number"
                       value={modalData.price}
-                      onChange={(e) =>
-                        setModalData({ ...modalData, price: e.target.value })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, price: e.target.value })}
                     />
                   </div>
                   <div className="form-group">
@@ -532,9 +501,7 @@ function AddProducts() {
                     <input
                       type="number"
                       value={modalData.stock || ""}
-                      onChange={(e) =>
-                        setModalData({ ...modalData, stock: e.target.value })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, stock: e.target.value })}
                     />
                   </div>
                   <div className="form-group">
@@ -542,21 +509,14 @@ function AddProducts() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) =>
-                        setModalData({ ...modalData, image: e.target.files[0] })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, image: e.target.files[0] })}
                     />
                   </div>
                   <div className="form-group">
                     <label>Collection</label>
                     <select
                       value={modalData.collection || ""}
-                      onChange={(e) =>
-                        setModalData({
-                          ...modalData,
-                          collection: e.target.value || null,
-                        })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, collection: e.target.value || null })}
                     >
                       <option value="">None</option>
                       {collections.map((col) => (
@@ -568,10 +528,7 @@ function AddProducts() {
                   </div>
                   <div className="modal-buttons">
                     <button type="submit">Confirm Changes</button>
-                    <button
-                      type="button"
-                      onClick={() => setModalType(null) || setModalData(null)}
-                    >
+                    <button type="button" onClick={() => setModalType(null) || setModalData(null)}>
                       Cancel
                     </button>
                   </div>
@@ -584,9 +541,7 @@ function AddProducts() {
                 <p>Are you sure you want to delete "{modalData.title}"?</p>
                 <div className="modal-buttons">
                   <button onClick={handleDeleteProduct}>Confirm Deletion</button>
-                  <button
-                    onClick={() => setModalType(null) || setModalData(null)}
-                  >
+                  <button onClick={() => setModalType(null) || setModalData(null)}>
                     Cancel
                   </button>
                 </div>
@@ -595,28 +550,18 @@ function AddProducts() {
             {modalType === "edit-collection" && (
               <>
                 <h3>Edit Collection</h3>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleEditCollection();
-                  }}
-                >
+                <form onSubmit={(e) => { e.preventDefault(); handleEditCollection(); }}>
                   <div className="form-group">
                     <label>Name *</label>
                     <input
                       type="text"
                       value={modalData.name}
-                      onChange={(e) =>
-                        setModalData({ ...modalData, name: e.target.value })
-                      }
+                      onChange={(e) => setModalData({ ...modalData, name: e.target.value })}
                     />
                   </div>
                   <div className="modal-buttons">
                     <button type="submit">Confirm Changes</button>
-                    <button
-                      type="button"
-                      onClick={() => setModalType(null) || setModalData(null)}
-                    >
+                    <button type="button" onClick={() => setModalType(null) || setModalData(null)}>
                       Cancel
                     </button>
                   </div>
@@ -626,15 +571,10 @@ function AddProducts() {
             {modalType === "delete-collection" && (
               <>
                 <h3>Delete Collection</h3>
-                <p>
-                  Are you sure you want to delete "{modalData.name}"? Products will
-                  remain but lose this collection association.
-                </p>
+                <p>Are you sure you want to delete "{modalData.name}"? Products will remain but lose this collection association.</p>
                 <div className="modal-buttons">
                   <button onClick={handleDeleteCollection}>Confirm Deletion</button>
-                  <button
-                    onClick={() => setModalType(null) || setModalData(null)}
-                  >
+                  <button onClick={() => setModalType(null) || setModalData(null)}>
                     Cancel
                   </button>
                 </div>
@@ -644,7 +584,6 @@ function AddProducts() {
         </div>
       )}
 
-      {/* Collection Toggle */}
       <div className="collection-toggle-section">
         <label className="toggle-label">
           Create a New Collection or Enter Existing Collection Name
@@ -668,7 +607,6 @@ function AddProducts() {
         )}
       </div>
 
-      {/* Option 1: Bulk Image Upload */}
       <div className="section">
         <h3>Option 1: Upload All Images</h3>
         <div className="form-group">
@@ -764,7 +702,6 @@ function AddProducts() {
         )}
       </div>
 
-      {/* Option 2: Bulk Upload via CSV */}
       <div className="section">
         <h3>Option 2: Bulk Upload via CSV</h3>
         <div className="form-group">

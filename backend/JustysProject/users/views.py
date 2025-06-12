@@ -402,7 +402,7 @@ class AddProductsView(APIView):
             try:
                 price = product_data.get('price')
                 price_decimal = None
-                if price and price.strip(): # CHANGE: Only process price if provided
+                if price and price.strip():
                     try:
                         price_decimal = float(price)
                     except ValueError:
@@ -410,7 +410,7 @@ class AddProductsView(APIView):
 
                 stock = product_data.get('stock')
                 stock_int = None
-                if stock and stock.strip(): # CHANGE: Only process stock if provided
+                if stock and stock.strip():
                     try:
                         stock_int = int(stock)
                     except ValueError:

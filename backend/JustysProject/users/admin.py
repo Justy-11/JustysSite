@@ -22,7 +22,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'email', 'is_active', 'is_staff', 'is_superuser')
     search_fields = ('username', 'email')
     list_filter = ('is_active', 'is_staff', 'is_superuser')
-    inlines = (ProfileInline, PageInline)  # <<< This makes Profile show inside User page
+    inlines = (ProfileInline, PageInline)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -41,7 +41,7 @@ class CollectionAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'user', 'created_at', 'updated_at')
     search_fields = ('name', 'user__username')
     list_filter = ('created_at', 'updated_at')
-    inlines = (ProductInline,)  # Show Products within Collection
+    inlines = (ProductInline,)
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):

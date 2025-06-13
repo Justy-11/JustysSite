@@ -30,10 +30,8 @@ class Profile(models.Model):
     social_links = models.TextField(blank=True)  # Comma-separated URLs
 
     def generate_otp(self):
-        # 6-digit OTP
         plain_otp = str(random.randint(100000, 999999))
 
-        # Hash the OTP
         hashed_otp = hashlib.sha256(plain_otp.encode('utf-8')).hexdigest()
 
         self.otp = hashed_otp

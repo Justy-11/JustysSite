@@ -94,20 +94,18 @@ class VerifyOTPView(APIView):
         try:
             if re.match(r"[^@]+@[^@]+\.[^@]+", username_or_email):  # if it's an email
                 user = User.objects.get(email=username_or_email.lower())
-            else:  # if it's a username
+            else:
                 user = User.objects.get(username=username_or_email)
 
             profile = user.profile
 
-            # first check if OTP expired
             if not profile.otp_created_at or timezone.now() > profile.otp_created_at + timedelta(minutes=5):
                 return Response({'error': 'OTP expired. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # check if OTP is correct
             if profile.check_otp(otp):
                 profile.is_verified = True
                 user.is_active = True
-                profile.otp = ''  # clear OTP after verification
+                profile.otp = ''
                 profile.save()
                 user.save()
                 return Response({'message': 'Account verified successfully!'}, status=status.HTTP_200_OK)
@@ -125,19 +123,16 @@ class ResendOTPView(APIView):
         username_or_email = request.data.get('username')
         
         try:
-            if re.match(r"[^@]+@[^@]+\.[^@]+", username_or_email):  # if it's an email
+            if re.match(r"[^@]+@[^@]+\.[^@]+", username_or_email):
                 user = User.objects.get(email=username_or_email.lower())
-            else:  # if it's a username
+            else:
                 user = User.objects.get(username=username_or_email)
 
             profile = user.profile
 
-            # Check if OTP expired (based on 5-minute window)
             if profile.otp_created_at and timezone.now() > profile.otp_created_at + timedelta(minutes=5):
-                # OTP expired, regenerate a new one
-                new_otp = profile.generate_otp()  # This will regenerate the OTP
+                new_otp = profile.generate_otp()
 
-                # Send the new OTP to the user via email
                 send_mail(
                     subject='Your new verification code',
                     message=f'Your new OTP is {new_otp}',
@@ -148,7 +143,6 @@ class ResendOTPView(APIView):
 
                 return Response({'message': 'OTP resent successfully!'}, status=status.HTTP_200_OK)
             else:
-                # If OTP is still valid, inform user that they should use the previous OTP
                 return Response({'error': 'OTP is still valid, please use the existing one.'}, status=status.HTTP_400_BAD_REQUEST)
 
         except User.DoesNotExist:
@@ -165,21 +159,17 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         user = None
         try:
-            # first, try finding the user by username
             user = User.objects.get(username=username_or_email)
         except User.DoesNotExist:
             try:
-                # if not found, try finding the user by email
                 user = User.objects.get(email=username_or_email.lower())
             except User.DoesNotExist:
                 raise AuthenticationFailed('User with this username/email does not exist.')
 
-        # check if user is a social login user
         if user.has_usable_password():
             if not user.check_password(password):
                 raise AuthenticationFailed('Invalid credentials')
         else:
-            # social login users don't need password
             if password:
                 raise AuthenticationFailed('This account uses social login.')
 
@@ -187,10 +177,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             profile = user.profile
 
             if profile.otp_created_at and timezone.now() > profile.otp_created_at + timedelta(minutes=5):
-                # OTP expired, regenerate a new one
-                new_otp = profile.generate_otp()  # This will regenerate the OTP
+                
+                new_otp = profile.generate_otp()
 
-                # Send the new OTP to the user via email
                 send_mail(
                     subject='Your new verification code',
                     message=f'Your new OTP is {new_otp}',
@@ -204,7 +193,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 'message': 'Account not verified. OTP sent!! Please check your email.'
             }
             else:
-                # If OTP is still valid, inform user that they should use the previous OTP
                 return {
                 'is_verified': False,
                 'message': 'OTP is still valid. Please check your email.'
@@ -473,7 +461,6 @@ class AddProductsCSVView(APIView):
                     if file_name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
                         with zip_ref.open(file_name) as file:
                             content = file.read()
-                            # Save image with original filename
                             filename = os.path.basename(file_name)
                             path = f'product_images/{filename}'
                             if not default_storage.exists(path):

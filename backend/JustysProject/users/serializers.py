@@ -67,10 +67,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
     username = serializers.CharField(source='user.username', required=False)
+    currency = serializers.ChoiceField(choices=[('LKR', 'LKR'), ('USD', 'USD')], default='LKR')
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'phone_number', 'street', 'city', 'state', 'zip_code', 'social_links']
+        fields = ['username', 'email', 'phone_number', 'street', 'city', 'state', 'zip_code', 'social_links', 'currency']
         read_only_fields = ['email']
 
     def validate_social_links(self, value):
@@ -100,6 +101,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.state = validated_data.get('state', instance.state)
         instance.zip_code = validated_data.get('zip_code', instance.zip_code)
         instance.social_links = validated_data.get('social_links', instance.social_links)
+        instance.currency = validated_data.get('currency', instance.currency)
         instance.save()
         return instance
 

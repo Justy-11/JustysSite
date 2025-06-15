@@ -28,6 +28,7 @@ class Profile(models.Model):
     state = models.CharField(max_length=100, blank=True)
     zip_code = models.CharField(max_length=20, blank=True)
     social_links = models.TextField(blank=True)  # Comma-separated URLs
+    currency = models.CharField(max_length=3, choices=[('LKR', 'LKR'), ('USD', 'USD')], default='LKR')
 
     def generate_otp(self):
         plain_otp = str(random.randint(100000, 999999))

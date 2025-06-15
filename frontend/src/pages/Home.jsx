@@ -15,6 +15,7 @@ function Home() {
     state: "",
     zip: "",
     socialLinks: "",
+    currency: "LKR",
   });
 
   useEffect(() => {
@@ -32,6 +33,7 @@ function Home() {
           state: data.state || "",
           zip: data.zip_code || "",
           socialLinks: data.social_links || "",
+          currency: data.currency || "LKR",
         });
       } catch (error) {
         console.error("Error fetching profile:", error.response?.data || error.message);
@@ -66,6 +68,7 @@ function Home() {
           state: formData.state,
           zip_code: formData.zip,
           social_links: formData.socialLinks,
+          currency: formData.currency,
         });
         console.log("Profile updated:", response.data);
         setUsername(response.data.username || '');
@@ -86,7 +89,6 @@ function Home() {
           <h2>Good evening, {username || 'User'}</h2>
           <p>Welcome to CreatiMate...</p>
         </div>
-        {/* CHANGED: Added status-card */}
         <div className="status-card">
           <h3>Progress Status</h3>
           <div className="status-item">
@@ -153,6 +155,17 @@ function Home() {
                     onChange={handleChange}
                     placeholder="Phone Number"
                   />
+                </div>
+                <div className="form-group">
+                  <label>Currency</label>
+                  <select
+                    name="currency"
+                    value={formData.currency}
+                    onChange={handleChange}
+                  >
+                    <option value="LKR">LKR (Rs.)</option>
+                    <option value="USD">$ (USD)</option>
+                  </select>
                 </div>
               </div>
             </div>

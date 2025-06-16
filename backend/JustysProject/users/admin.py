@@ -26,7 +26,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_id', 'is_verified', 'otp', 'otp_created_at', 'phone_number', 'street', 'city', 'state', 'zip_code', 'social_links')
+    list_display = ('id', 'user_id', 'is_verified', 'otp', 'otp_created_at', 'phone_number', 'street', 'city', 'state', 'zip_code', 'social_links', 'currency')
     search_fields = ('user__username', 'user__email', 'phone_number')
     list_filter = ('is_verified',)
 

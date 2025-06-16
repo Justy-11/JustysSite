@@ -214,14 +214,18 @@ function CreatePage() {
     <div className="create-page-container">
       {isCreated && (
         <div className="preview-card-container" ref={previewCardRef}>
-          {previewBannerImage && (
+          {previewBannerImage ? (
             <div className="banner-section">
               <img src={previewBannerImage} alt="Banner" className="banner-image" />
             </div>
+          ) : (
+            <div className="banner-placeholder">No banner image selected</div>
           )}
           <div className="profile-section">
-            {previewProfileImage && (
+            {previewProfileImage ? (
               <img src={previewProfileImage} alt="Profile" className="profile-image" />
+            ) : (
+              <div className="profile-placeholder">No profile image selected</div>
             )}
           </div>
           <div className="about-section">

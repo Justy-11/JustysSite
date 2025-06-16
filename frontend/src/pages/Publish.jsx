@@ -118,10 +118,14 @@ function Publish() {
         {pageData ? (
           <>
             <div className="publish-top-section">
-              <div className="publish-banner-section" style={{ backgroundImage: pageData.banner_image ? `url(${pageData.banner_image})` : 'none' }}></div>
+              <div className="publish-banner-section" style={{ backgroundImage: pageData.banner_image ? `url(${pageData.banner_image})` : 'none' }}>
+                {!pageData.banner_image && <div className="banner-placeholder">No banner image set</div>}
+              </div>
               <div className="publish-profile-section">
-                {pageData.profile_image && (
+                {pageData.profile_image ? (
                   <img src={pageData.profile_image} alt="Profile" className="publish-profile-image" />
+                ) : (
+                  <div className="profile-placeholder">No profile image set</div>
                 )}
               </div>
               <div className="publish-about-details-container">

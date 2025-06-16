@@ -11,18 +11,21 @@ function Publish() {
   const [isPublished, setIsPublished] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [profileData, setProfileData] = useState({ currency: "LKR" });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [pageRes, productsRes, collectionsRes] = await Promise.all([
+        const [pageRes, productsRes, collectionsRes, profileRes] = await Promise.all([
           api.get("/api/page/"),
           api.get("/api/products/"),
           api.get("/api/collections/"),
+          api.get("/api/profile/"),
         ]);
         setPageData(pageRes.data || null);
         setProducts(productsRes.data || []);
         setCollections(collectionsRes.data || []);
+        setProfileData(profileRes.data || { currency: "LKR" });
       } catch (error) {
         console.error("Error fetching data:", error.response?.data || error.message);
         showErrorToast("Failed to load page data. Please try again.");
@@ -187,7 +190,12 @@ function Publish() {
                         )}
                         <h5>{product.title}</h5>
                         {product.description && <p>{getShortDescription(product.description)}</p>}
-                        {product.price && <p>Price: ${product.price}</p>}
+                        {product.price && (
+                          <p>
+                            {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                            {product.price}
+                          </p>
+                        )}
                       </div>
                     ))
                   ) : (
@@ -213,7 +221,12 @@ function Publish() {
                           )}
                           <h5>{product.title}</h5>
                           {product.description && <p>{getShortDescription(product.description)}</p>}
-                          {product.price && <p>Price: ${product.price}</p>}
+                          {product.price && (
+                            <p>
+                              {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                              {product.price}
+                            </p>
+                          )}
                         </div>
                       ))}
                     {products.filter((product) => !product.collection_name).length === 0 && (

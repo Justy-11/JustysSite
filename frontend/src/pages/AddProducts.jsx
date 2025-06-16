@@ -16,6 +16,7 @@ function AddProducts() {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [modalData, setModalData] = useState(null);
+  const [profileData, setProfileData] = useState({ currency: "LKR" });
   const bulkImageInputRef = useRef(null);
   const csvInputRef = useRef(null);
   const zipInputRef = useRef(null);
@@ -24,12 +25,14 @@ function AddProducts() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, collectionsRes] = await Promise.all([
+        const [productsRes, collectionsRes, profileRes] = await Promise.all([
           api.get("/api/products/"),
           api.get("/api/collections/"),
+          api.get("/api/profile/"),
         ]);
         setProducts(productsRes.data || []);
         setCollections(collectionsRes.data || []);
+        setProfileData(profileRes.data || { currency: "LKR" });
       } catch (error) {
         console.error("Error fetching data:", error);
         showErrorToast("Failed to load products and collections.");
@@ -333,7 +336,12 @@ function AddProducts() {
                   )}
                   <h4>{product.title}</h4>
                   {product.description && <p>{getShortDescription(product.description)}</p>}
-                  {product.price && <p>Price: ${product.price}</p>}
+                  {product.price && (
+                    <p>
+                      {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                      {product.price}
+                    </p>
+                  )}
                   {product.stock && <p>Stock: {product.stock}</p>}
                   <div className="action-buttons">
                     <button
@@ -379,7 +387,12 @@ function AddProducts() {
                     )}
                     <h4>{product.title}</h4>
                     {product.description && <p>{getShortDescription(product.description)}</p>}
-                    {product.price && <p>Price: ${product.price}</p>}
+                    {product.price && (
+                      <p>
+                        {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                        {product.price}
+                      </p>
+                    )}
                     {product.stock && <p>Stock: {product.stock}</p>}
                     <div className="action-buttons">
                       <button

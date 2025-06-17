@@ -229,9 +229,6 @@ function CreatePage() {
   };
 
   const getSocialIcon = (url) => {
-    BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub, 
-        BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
-        BiLogoTelegram, BiLogoReddit, BiLogoPinterest
     if (url.includes("instagram.com")) return <BiLogoInstagram />;
     if (url.includes("facebook.com")) return <BiLogoFacebook />;
     if (url.includes("tiktok.com")) return <BiLogoTiktok />;

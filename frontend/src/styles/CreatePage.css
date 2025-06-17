@@ -518,6 +518,23 @@
     margin-bottom: 16px;
   }
   
+    /* Social Links Preview */
+  .social-links-preview {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .social-link {
+    color: #3b82f6;
+    font-size: 24px;
+    transition: color 0.3s;
+  }
+
+  .social-link:hover {
+    color: #2563eb;
+  }
+
   @media (max-width: 768px) {
     .preview-card-container {
       padding: 16px;
@@ -539,5 +556,13 @@
       width: 100px;
       height: 100px;
       font-size: 12px;
+    }
+
+    .social-links-preview {
+      gap: 8px;
+    }
+  
+    .social-link {
+      font-size: 20px;
     }
   }

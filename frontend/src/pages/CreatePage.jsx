@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/CreatePage.css";
 import api from "../api";
+import { FaInstagram, FaFacebookF } from "react-icons/fa";
+import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub, 
+        BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
+        BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
 
 function CreatePage() {
   const [isCreated, setIsCreated] = useState(false);
@@ -20,6 +24,7 @@ function CreatePage() {
   const [bannerImageError, setBannerImageError] = useState("");
   const [existingProfileImage, setExistingProfileImage] = useState(null);
   const [existingBannerImage, setExistingBannerImage] = useState(null);
+  const [socialLinks, setSocialLinks] = useState([]);
   const profileImageInputRef = useRef(null);
   const bannerImageInputRef = useRef(null);
   const previewCardRef = useRef(null);
@@ -30,8 +35,13 @@ function CreatePage() {
   useEffect(() => {
     const fetchPageData = async () => {
       try {
-        const response = await api.get("/api/page/");
+        // const response = await api.get("/api/page/");
+        const [response, profileRes] = await Promise.all([
+          api.get("/api/page/"),
+          api.get("/api/profile/"),
+        ]);
         const data = response.data;
+        const profileData = profileRes.data;
         if (data && Object.keys(data).length > 0) {
           setFormData({
             profileImage: null,
@@ -65,6 +75,14 @@ function CreatePage() {
           });
           setIsCreated(false);
         }
+        const links = profileData.social_links 
+          ? typeof profileData.social_links === "string" 
+            ? profileData.social_links.split(",").map(link => link.trim())
+            : Array.isArray(profileData.social_links) 
+              ? profileData.social_links.map(link => link.url)
+              : []
+          : [];
+        setSocialLinks(links);
       } catch (error) {
         console.error("Error fetching page data:", error.response?.data || error.message);
         alert("Failed to load page data. Please try again.");
@@ -210,6 +228,24 @@ function CreatePage() {
     }
   };
 
+  const getSocialIcon = (url) => {
+    BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub, 
+        BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
+        BiLogoTelegram, BiLogoReddit, BiLogoPinterest
+    if (url.includes("instagram.com")) return <BiLogoInstagram />;
+    if (url.includes("facebook.com")) return <BiLogoFacebook />;
+    if (url.includes("tiktok.com")) return <BiLogoTiktok />;
+    if (url.includes("github.com")) return <BiLogoGithub />;
+    if (url.includes("twitter.com")) return <BiLogoTwitter />;
+    if (url.includes("wa.me")) return <BiLogoWhatsapp />;
+    if (url.includes("youtube.com")) return <BiLogoYoutube />;
+    if (url.includes("linkedin.com")) return <BiLogoLinkedin />;
+    if (url.includes("t.me")) return <BiLogoTelegram />;
+    if (url.includes("reddit.com")) return <BiLogoReddit />;
+    if (url.includes("pinterest.com")) return <BiLogoPinterest />;
+    return null;
+  };
+
   return (
     <div className="create-page-container">
       {isCreated && (
@@ -246,6 +282,21 @@ function CreatePage() {
                 </li>
               )}
             </ul>
+            {socialLinks.length > 0 && (
+              <div className="social-links-preview">
+                {socialLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                  >
+                    {getSocialIcon(link)}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
           <button className="edit-button" onClick={handleEdit}>
             Edit

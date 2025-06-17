@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/CreatePage.css";
 import api from "../api";
-import { FaInstagram, FaFacebookF } from "react-icons/fa";
 import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub, 
         BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
         BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';

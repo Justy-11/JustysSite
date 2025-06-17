@@ -34,7 +34,6 @@ function CreatePage() {
   useEffect(() => {
     const fetchPageData = async () => {
       try {
-        // const response = await api.get("/api/page/");
         const [response, profileRes] = await Promise.all([
           api.get("/api/page/"),
           api.get("/api/profile/"),

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import "../styles/Publish.css";
 import api from "../api";
+import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub, 
+  BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
+  BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 
 function Publish() {
@@ -12,6 +15,7 @@ function Publish() {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [profileData, setProfileData] = useState({ currency: "LKR" });
+  const [socialLinks, setSocialLinks] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,10 +26,19 @@ function Publish() {
           api.get("/api/collections/"),
           api.get("/api/profile/"),
         ]);
+        const profileData = profileRes.data;
         setPageData(pageRes.data || null);
         setProducts(productsRes.data || []);
         setCollections(collectionsRes.data || []);
         setProfileData(profileRes.data || { currency: "LKR" });
+        const links = profileData.social_links 
+          ? typeof profileData.social_links === "string" 
+            ? profileData.social_links.split(",").map(link => link.trim())
+            : Array.isArray(profileData.social_links) 
+              ? profileData.social_links.map(link => link.url)
+              : []
+          : [];
+        setSocialLinks(links);
       } catch (error) {
         console.error("Error fetching data:", error.response?.data || error.message);
         showErrorToast("Failed to load page data. Please try again.");
@@ -51,19 +64,19 @@ function Publish() {
     showSuccessToast("Link copied to clipboard!");
   };
 
-  const renderSocialLinks = () => {
-    if (!pageData?.profile?.social_links) return null;
-    const urls = pageData.profile.social_links.split(",").filter((url) => url.trim());
-    return (
-      <div className="publish-social-links">
-        {urls.map((url, index) => (
-          <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="publish-social-link">
-            {new URL(url).hostname}
-          </a>
-        ))}
-      </div>
-    );
-  };
+  // const renderSocialLinks = () => {
+  //   if (!pageData?.profile?.social_links) return null;
+  //   const urls = pageData.profile.social_links.split(",").filter((url) => url.trim());
+  //   return (
+  //     <div className="publish-social-links">
+  //       {urls.map((url, index) => (
+  //         <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="publish-social-link">
+  //           {new URL(url).hostname}
+  //         </a>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   const handleCollectionClick = (collection) => {
     setSelectedCollection(collection);
@@ -91,6 +104,21 @@ function Publish() {
       ...imageUrls.slice(0, 6), // Take top 6 images
       ...Array(placeholderCount).fill(null), // Fill remaining with null for placeholders
     ];
+  };
+
+  const getSocialIcon = (url) => {
+    if (url.includes("instagram.com")) return <BiLogoInstagram />;
+    if (url.includes("facebook.com")) return <BiLogoFacebook />;
+    if (url.includes("tiktok.com")) return <BiLogoTiktok />;
+    if (url.includes("github.com")) return <BiLogoGithub />;
+    if (url.includes("twitter.com")) return <BiLogoTwitter />;
+    if (url.includes("wa.me")) return <BiLogoWhatsapp />;
+    if (url.includes("youtube.com")) return <BiLogoYoutube />;
+    if (url.includes("linkedin.com")) return <BiLogoLinkedin />;
+    if (url.includes("t.me")) return <BiLogoTelegram />;
+    if (url.includes("reddit.com")) return <BiLogoReddit />;
+    if (url.includes("pinterest.com")) return <BiLogoPinterest />;
+    return null;
   };
 
   return (
@@ -131,7 +159,7 @@ function Publish() {
               <div className="publish-about-details-container">
                 <h3>{pageData.product_name || "Your Product Name"}</h3>
                 <p className="publish-tagline">{pageData.tagline || "Your Tagline"}</p>
-                {renderSocialLinks()}
+                {/* {renderSocialLinks()} */}
                 <div className="publish-about-section">
                   <p>{pageData.about || "Describe your product or service here."}</p>
                 </div>
@@ -148,6 +176,21 @@ function Publish() {
                       </li>
                     )}
                   </ul>
+                  {socialLinks.length > 0 && (
+                  <div className="publish-social-links-preview">
+                    {socialLinks.map((link, index) => (
+                      <a
+                        key={index}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="publish-social-link"
+                      >
+                        {getSocialIcon(link)}
+                      </a>
+                    ))}
+                  </div>
+                )}
                 </div>
               </div>
             </div>

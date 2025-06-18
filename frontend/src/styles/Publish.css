@@ -571,6 +571,23 @@
   color: #a0a0a0;
 }
 
+/* Social Links Preview */
+.publish-social-links-preview {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.publish-social-link {
+  color: #3b82f6;
+  font-size: 24px;
+  transition: color 0.3s;
+}
+
+.publish-social-link:hover {
+  color: #2563eb;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .publish-product-detail {
@@ -596,28 +613,28 @@
   /* Adjust grids to 2 columns on mobile */
   .publish-products-grid,
   .publish-collections-grid {
-    grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
-    gap: 8px; /* Reduced gap for mobile */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
   .publish-collection-image-grid {
-    grid-template-columns: repeat(3, 1fr); /* Maintain 2x3 layout */
-    grid-template-rows: repeat(2, 1fr); /* Maintain 2 rows */
-    padding: 2px; /* Minimal padding */
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    padding: 2px;
   }
 
   .publish-collection-image,
   .publish-collection-placeholder {
-    height: 30px; /* Tinier square size for mobile */
+    height: 30px;
   }
 
   .publish-product-image {
-    max-height: 80px; /* Adjusted for smaller card size */
+    max-height: 80px;
   }
 
   .publish-product-card,
   .publish-collection-card {
-    padding: 8px; /* Reduced padding for smaller cards */
+    padding: 8px;
   }
 
   .banner-placeholder {
@@ -629,5 +646,13 @@
     width: 100px;
     height: 100px;
     font-size: 12px;
+  }
+
+  .publish-social-links-preview {
+    gap: 8px;
+  }
+
+  .publish-social-link {
+    font-size: 20px;
   }
 }

@@ -572,19 +572,19 @@
 }
 
 /* Social Links Preview */
-.publish-social-links-preview {
+.social-links-preview-publish {
   display: flex;
   gap: 12px;
   margin-top: 16px;
 }
 
-.publish-social-link {
+.social-link-publish {
   color: #3b82f6;
   font-size: 24px;
   transition: color 0.3s;
 }
 
-.publish-social-link:hover {
+.social-link-publish:hover {
   color: #2563eb;
 }
 

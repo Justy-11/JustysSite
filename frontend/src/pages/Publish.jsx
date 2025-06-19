@@ -177,14 +177,14 @@ function Publish() {
                     )}
                   </ul>
                   {socialLinks.length > 0 && (
-                  <div className="publish-social-links-preview">
+                  <div className="social-links-preview-publish">
                     {socialLinks.map((link, index) => (
                       <a
                         key={index}
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="publish-social-link"
+                        className="social-link-publish"
                       >
                         {getSocialIcon(link)}
                       </a>

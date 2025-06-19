@@ -334,7 +334,7 @@ function AddProducts() {
                   {product.image && (
                     <img src={product.image} alt={product.title} className="product-image" />
                   )}
-                  <h4>{product.title}</h4>
+                  <h4 title={product.title}>{product.title}</h4>
                   {product.description && <p>{getShortDescription(product.description)}</p>}
                   {product.price && (
                     <p>
@@ -385,7 +385,7 @@ function AddProducts() {
                     {product.image && (
                       <img src={product.image} alt={product.title} className="product-image" />
                     )}
-                    <h4>{product.title}</h4>
+                    <h4 title={product.title}>{product.title}</h4>
                     {product.description && <p>{getShortDescription(product.description)}</p>}
                     {product.price && (
                       <p>

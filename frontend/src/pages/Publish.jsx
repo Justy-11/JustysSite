@@ -159,7 +159,6 @@ function Publish() {
               <div className="publish-about-details-container">
                 <h3>{pageData.product_name || "Your Product Name"}</h3>
                 <p className="publish-tagline">{pageData.tagline || "Your Tagline"}</p>
-                {/* {renderSocialLinks()} */}
                 <div className="publish-about-section">
                   <p>{pageData.about || "Describe your product or service here."}</p>
                 </div>
@@ -235,7 +234,7 @@ function Publish() {
                             className="publish-product-image"
                           />
                         )}
-                        <h5>{product.title}</h5>
+                        <h5 title={product.title}>{product.title}</h5>
                         {product.description && <p>{getShortDescription(product.description)}</p>}
                         {product.price && (
                           <p>
@@ -266,7 +265,8 @@ function Publish() {
                               className="publish-product-image"
                             />
                           )}
-                          <h5>{product.title}</h5>
+                          {/* <h5>{product.title}</h5> */}
+                          <h5 title={product.title}>{product.title}</h5>
                           {product.description && <p>{getShortDescription(product.description)}</p>}
                           {product.price && (
                             <p>

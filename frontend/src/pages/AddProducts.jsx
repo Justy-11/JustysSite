@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import "../styles/AddProducts.css";
 import api from "../api";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
+import { Editor } from '@tinymce/tinymce-react';
+import DOMPurify from 'dompurify';
 
 function AddProducts() {
   const [createCollection, setCreateCollection] = useState(false);
@@ -289,10 +291,23 @@ function AddProducts() {
     }
   };
 
+//   const downloadExampleCsv = () => {
+//     const csvContent = `Title,Description,Price,Stock,Image File Name
+// "Smartphone","A high-end smartphone with 128GB storage","699.99","50","smartphone.jpg"
+// "Laptop","A powerful laptop for gaming and work","1299.99","30","laptop.jpg"`;
+//     const blob = new Blob([csvContent], { type: "text/csv" });
+//     const url = URL.createObjectURL(blob);
+//     const a = document.createElement("a");
+//     a.href = url;
+//     a.download = "example-product-upload.csv";
+//     a.click();
+//     URL.revokeObjectURL(url);
+//   };
+
   const downloadExampleCsv = () => {
     const csvContent = `Title,Description,Price,Stock,Image File Name
-"Smartphone","A high-end smartphone with 128GB storage","699.99","50","smartphone.jpg"
-"Laptop","A powerful laptop for gaming and work","1299.99","30","laptop.jpg"`;
+  "Smartphone","<p style='text-align: center;'><strong>High-end smartphone</strong></p><ul><li>128GB storage</li><li>5G support</li></ul>","699.99","50","smartphone.jpg"
+  "Laptop","<p>A powerful laptop for gaming and work</p><ul><li>16GB RAM</li><li>1TB SSD</li></ul>","1299.99","30","laptop.jpg"`;
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -304,8 +319,14 @@ function AddProducts() {
 
   const getShortDescription = (description) => {
     if (!description) return "";
-    const words = description.split(" ").slice(0, 3);
-    return words.join(" ") + (words.length < description.split(" ").length ? "..." : "");
+    const textOnly = description.replace(/<[^>]+>/g, '');
+    if (textOnly.length <= 50) return description;
+    let truncated = description.slice(0, 50);
+    const lastTagIndex = truncated.lastIndexOf('<');
+    if (lastTagIndex > truncated.lastIndexOf('>')) {
+      truncated = truncated.slice(0, lastTagIndex);
+    }
+    return truncated + '...';
   };
 
   const getCollectionImages = (products) => {
@@ -335,7 +356,9 @@ function AddProducts() {
                     <img src={product.image} alt={product.title} className="product-image" />
                   )}
                   <h4 title={product.title}>{product.title}</h4>
-                  {product.description && <p>{getShortDescription(product.description)}</p>}
+                  {product.description && (
+                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                  )}
                   {product.price && (
                     <p>
                       {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
@@ -386,7 +409,9 @@ function AddProducts() {
                       <img src={product.image} alt={product.title} className="product-image" />
                     )}
                     <h4 title={product.title}>{product.title}</h4>
-                    {product.description && <p>{getShortDescription(product.description)}</p>}
+                    {product.description && (
+                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                    )}
                     {product.price && (
                       <p>
                         {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
@@ -495,11 +520,23 @@ function AddProducts() {
                   </div>
                   <div className="form-group">
                     <label>Description</label>
-                    <textarea
+                    <Editor
+                      apiKey="qurxofpmyqzkeo86oviplz1nngr1ezj3kw48j8vv8iwljmn3"
                       value={modalData.description}
-                      onChange={(e) => setModalData({ ...modalData, description: e.target.value })}
-                      rows="3"
-                    />
+                      onEditorChange={(content) => setModalData({ ...modalData, description: content })}
+                      init={{
+                        height: 200,
+                        menubar: false,
+                        plugins: [
+                          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                          'insertdatetime', 'media', 'table', 'preview', 'wordcount'
+                        ],
+                        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+                        content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; color: #ffffff; background-color: #4a5b5c; }',
+                        placeholder: 'Description'
+                    }}
+                  />
                   </div>
                   <div className="form-group">
                     <label>Price</label>
@@ -667,13 +704,24 @@ function AddProducts() {
                         handleBulkProductChange(index, "title", e.target.value)
                       }
                     />
-                    <textarea
-                      placeholder="Description"
+                    <Editor
+                      apiKey="qurxofpmyqzkeo86oviplz1nngr1ezj3kw48j8vv8iwljmn3"
                       value={bulkProductDetails[index].description}
-                      onChange={(e) =>
-                        handleBulkProductChange(index, "description", e.target.value)
+                      onEditorChange={(content) =>
+                        handleBulkProductChange(index, "description", content)
                       }
-                      rows="3"
+                      init={{
+                        height: 150,
+                        menubar: false,
+                        plugins: [
+                          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                          'insertdatetime', 'media', 'table', 'preview', 'wordcount'
+                        ],
+                        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+                        content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; color: #ffffff; background-color: #4a5b5c; }',
+                        placeholder: 'Description'
+                      }}
                     />
                     <input
                       type="number"
@@ -745,13 +793,12 @@ function AddProducts() {
             </div>
           </div>
           <p className="hint">
-            Upload a .csv with: Title, Description, Price, Stock, and Image File
-            Name. Include a ZIP file containing the images referenced in the CSV.
+            Upload a .csv with: Title, Description, Price, Stock, and Image File Name. Include a ZIP file containing the images referenced in the CSV. Descriptions can include HTML tags for formatting (e.g., &lt;strong&gt; for bold, &lt;ul&gt; for bullet points, &lt;p style='text-align: center;'&gt; for alignment).
             Example format:
             <br />
             "Title","Description","Price","Stock","Image File Name"
             <br />
-            "Smartphone","A high-end smartphone","699.99","50","smartphone.jpg"
+            "Smartphone","&lt;p style='text-align: center;'&gt;&lt;strong&gt;High-end smartphone&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;128GB storage&lt;/li&gt;&lt;/ul&gt;","699.99","50","smartphone.jpg"
           </p>
           <button
             type="button"

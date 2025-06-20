@@ -5,6 +5,7 @@ import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub,
   BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
   BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
+import DOMPurify from 'dompurify';
 
 function Publish() {
   const [pageData, setPageData] = useState(null);
@@ -64,20 +65,6 @@ function Publish() {
     showSuccessToast("Link copied to clipboard!");
   };
 
-  // const renderSocialLinks = () => {
-  //   if (!pageData?.profile?.social_links) return null;
-  //   const urls = pageData.profile.social_links.split(",").filter((url) => url.trim());
-  //   return (
-  //     <div className="publish-social-links">
-  //       {urls.map((url, index) => (
-  //         <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="publish-social-link">
-  //           {new URL(url).hostname}
-  //         </a>
-  //       ))}
-  //     </div>
-  //   );
-  // };
-
   const handleCollectionClick = (collection) => {
     setSelectedCollection(collection);
   };
@@ -93,8 +80,14 @@ function Publish() {
 
   const getShortDescription = (description) => {
     if (!description) return "";
-    const words = description.split(" ").slice(0, 3);
-    return words.join(" ") + (words.length < description.split(" ").length ? "..." : "");
+    const textOnly = description.replace(/<[^>]+>/g, '');
+    if (textOnly.length <= 50) return description;
+    let truncated = description.slice(0, 50);
+    const lastTagIndex = truncated.lastIndexOf('<');
+    if (lastTagIndex > truncated.lastIndexOf('>')) {
+      truncated = truncated.slice(0, lastTagIndex);
+    }
+    return truncated + '...';
   };
 
   const getCollectionImages = (products) => {
@@ -211,7 +204,9 @@ function Publish() {
                   </div>
                   <div className="publish-product-info">
                     <h4>{selectedProduct.title}</h4>
-                    {selectedProduct.description && <p>{selectedProduct.description}</p>}
+                    {selectedProduct.description && (
+                      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedProduct.description) }} />
+                    )}
                     {selectedProduct.price && <p>Price: ${selectedProduct.price}</p>}
                     {selectedProduct.stock && <p>Stock: {selectedProduct.stock}</p>}
                   </div>
@@ -235,7 +230,9 @@ function Publish() {
                           />
                         )}
                         <h5 title={product.title}>{product.title}</h5>
-                        {product.description && <p>{getShortDescription(product.description)}</p>}
+                        {product.description && (
+                          <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                        )}
                         {product.price && (
                           <p>
                             {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
@@ -265,9 +262,10 @@ function Publish() {
                               className="publish-product-image"
                             />
                           )}
-                          {/* <h5>{product.title}</h5> */}
                           <h5 title={product.title}>{product.title}</h5>
-                          {product.description && <p>{getShortDescription(product.description)}</p>}
+                          {product.description && (
+                            <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                          )}
                           {product.price && (
                             <p>
                               {profileData.currency === 'LKR' ? 'Rs. ' : '$'}

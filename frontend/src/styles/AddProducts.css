@@ -689,3 +689,116 @@
     padding: 10px;
   }
 }
+
+/* TinyMCE Editor */
+.tox-tinymce {
+  border: none !important;
+  border-radius: 4px !important;
+  background-color: #4a5b5c !important;
+}
+
+.tox-toolbar, .tox-toolbar__primary {
+  background-color: #3a4b4c !important;
+  border-bottom: 1px solid #2a3b3c !important;
+}
+
+.tox-toolbar__group {
+  color: #ffffff !important;
+}
+
+.tox-tbtn, .tox-tbtn__select-label {
+  color: #ffffff !important;
+}
+
+.tox-tbtn:hover {
+  background-color: #4a5b5c !important;
+}
+
+.tox-editor-container {
+  background-color: #4a5b5c !important;
+}
+
+.tox-edit-area__iframe {
+  background-color: #4a5b5c !important;
+}
+
+.tox-statusbar {
+  background-color: #3a4b4c !important;
+  color: #a0a0a0 !important;
+}
+
+.preview-product-card p {
+  text-align: left;
+  margin: 4px 0;
+  font-size: 14px;
+  color: #a0a0a0;
+  padding: 0 8px;
+  font-weight: normal;
+  line-height: 1.5;
+}
+
+.preview-product-card p h1,
+.preview-product-card p h2,
+.preview-product-card p h3,
+.preview-product-card p h4,
+.preview-product-card p h5,
+.preview-product-card p h6,
+.preview-product-card p strong,
+.preview-product-card p b,
+.preview-product-card p em,
+.preview-product-card p i {
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  display: inline;
+}
+
+.preview-product-card p ul,
+.preview-product-card p ol {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.preview-product-card p li {
+  margin-bottom: 4px;
+}
+
+@media (max-width: 768px) {
+  .tox-tinymce {
+    min-height: 120px !important;
+  }
+
+  .tox-toolbar__primary {
+    padding: 4px !important;
+  }
+
+  .tox-tbtn {
+    font-size: 12px !important;
+  }
+
+  .preview-product-card p {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+
+  .preview-product-card p h1,
+  .preview-product-card p h2,
+  .preview-product-card p h3,
+  .preview-product-card p h4,
+  .preview-product-card p h5,
+  .preview-product-card p h6,
+  .preview-product-card p strong,
+  .preview-product-card p b,
+  .preview-product-card p em,
+  .preview-product-card p i {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    display: inline;
+  }
+
+  .preview-product-card p ul,
+  .preview-product-card p ol {
+    padding-left: 16px;
+  }
+}

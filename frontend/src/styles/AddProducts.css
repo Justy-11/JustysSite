@@ -45,12 +45,19 @@
 }
 
 /* Products and Collections Grids */
-.products-grid,
 .collections-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
   margin-top: 16px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 /* Preview Product Card */
@@ -253,6 +260,7 @@
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .form-group textarea {
@@ -321,7 +329,7 @@
 .hint {
   font-size: 12px;
   color: #a0a0a0;
-  margin-top: 4px;
+  margin-bottom: 10px;
 }
 
 /* Bulk Products Grid */

@@ -4,6 +4,7 @@ import api from "../api";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 import { Editor } from '@tinymce/tinymce-react';
 import DOMPurify from 'dompurify';
+import { BiPencil, BiTrash } from 'react-icons/bi';
 
 function AddProducts() {
   const [createCollection, setCreateCollection] = useState(false);
@@ -381,7 +382,7 @@ function AddProducts() {
                         })
                       }
                     >
-                      Edit
+                      <BiPencil />
                     </button>
                     <button
                       onClick={() =>
@@ -389,7 +390,7 @@ function AddProducts() {
                         setModalData({ id: product.id, title: product.title })
                       }
                     >
-                      Delete
+                      <BiTrash />
                     </button>
                   </div>
                 </div>
@@ -434,7 +435,7 @@ function AddProducts() {
                           })
                         }
                       >
-                        Edit
+                        <BiPencil />
                       </button>
                       <button
                         onClick={() =>
@@ -442,7 +443,7 @@ function AddProducts() {
                           setModalData({ id: product.id, title: product.title })
                         }
                       >
-                        Delete
+                        <BiTrash />
                       </button>
                     </div>
                   </div>
@@ -483,7 +484,7 @@ function AddProducts() {
                         setModalData({ id: collection.id, name: collection.name });
                       }}
                     >
-                      Edit
+                      <BiPencil />
                     </button>
                     <button
                       onClick={(e) => {
@@ -492,7 +493,7 @@ function AddProducts() {
                         setModalData({ id: collection.id, name: collection.name });
                       }}
                     >
-                      Delete
+                      <BiTrash />
                     </button>
                   </div>
                 </div>

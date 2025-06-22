@@ -272,7 +272,7 @@
 
 /* Formatted Description in Product Cards */
 .publish-product-card p {
-  text-align: left;
+  text-align: center;
   margin: 4px 0;
   font-size: 14px;
   color: #a0a0a0;

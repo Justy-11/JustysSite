@@ -522,7 +522,7 @@ function AddProducts() {
                   <div className="form-group">
                     <label>Description</label>
                     <Editor
-                      apiKey="qurxofpmyqzkeo86oviplz1nngr1ezj3kw48j8vv8iwljmn3"
+                      apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
                       value={modalData.description}
                       onEditorChange={(content) => setModalData({ ...modalData, description: content })}
                       init={{
@@ -706,7 +706,7 @@ function AddProducts() {
                       }
                     />
                     <Editor
-                      apiKey="qurxofpmyqzkeo86oviplz1nngr1ezj3kw48j8vv8iwljmn3"
+                      apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
                       value={bulkProductDetails[index].description}
                       onEditorChange={(content) =>
                         handleBulkProductChange(index, "description", content)

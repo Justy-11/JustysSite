@@ -109,6 +109,9 @@ Add a Social Application:
    ```bash
    VITE_API_URL="http://127.0.0.1:8000"
    VITE_GOOGLE_CLIENT_ID=YourClientID
+   VITE_TINYMCE_API_KEY=YourTinyMCEAPIKey
+
+   Create account and get the API key: https://www.tiny.cloud/auth/login/
 
 4. **Start the frontend dev server:**
    ```bash

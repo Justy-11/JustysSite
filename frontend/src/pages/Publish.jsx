@@ -51,7 +51,8 @@ function Publish() {
   const handlePublish = async () => {
     try {
       const response = await api.post("/api/page/publish/", {});
-      setShareableLink(response.data.shareable_link || `${window.location.origin}/public/${pageData?.id}`);
+      const shareableLink = `${window.location.origin}/landingpage/${pageData?.id}`;
+      setShareableLink(shareableLink);
       setIsPublished(true);
       showSuccessToast("Page published successfully!");
     } catch (error) {

@@ -112,7 +112,7 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
-        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'created_at', 'updated_at']
+        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'is_published', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def create(self, validated_data):
@@ -248,3 +248,33 @@ class CollectionSerializer(serializers.ModelSerializer):
         if Collection.objects.filter(user=user, name=value).exists():
             raise serializers.ValidationError("A collection with this name already exists for this user.")
         return value
+
+
+class PublicPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class PublicProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class PublicCollectionSerializer(serializers.ModelSerializer):
+    products = PublicProductSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Collection
+        fields = ['id', 'name', 'products', 'created_at']
+        read_only_fields = ['id', 'products', 'created_at']
+
+
+class PublicProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['social_links', 'currency']
+        read_only_fields = ['social_links', 'currency']

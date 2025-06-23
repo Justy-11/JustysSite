@@ -17,6 +17,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
 import Publish from './pages/Publish';
+import PublicProductPage from './pages/PublicProductPage';
 
 
 function Logout() {
@@ -64,6 +65,7 @@ function App() {
                     }
                 />
                 <Route path="/landingpage" element={<LandingPage />} />
+                <Route path="/landingpage/:pageId" element={<PublicProductPage />} />
                 <Route path="/verify-otp" element={<VerifyOtp />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />

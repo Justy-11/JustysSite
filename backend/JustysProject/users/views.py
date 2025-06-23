@@ -4,7 +4,9 @@ from rest_framework.permissions import AllowAny
 from users.models import CustomUser as User, Page, Collection, Product
 from .serializers import (
     RegisterSerializer, UserSerializer, PageSerializer,
-    CollectionSerializer, ProductSerializer, ProfileSerializer
+    CollectionSerializer, ProductSerializer, ProfileSerializer,
+    PublicPageSerializer, PublicProductSerializer, PublicCollectionSerializer,
+    PublicProfileSerializer
 )
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -39,6 +41,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from rest_framework.exceptions import ValidationError
 from decimal import Decimal
+from django.http import Http404
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -577,3 +580,78 @@ class CollectionDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         # Products will have collection set to null due to SET_NULL
         instance.delete()
+
+
+# Public API Views (No authentication required)
+class PublicPagesListView(generics.ListAPIView):
+    serializer_class = PublicPageSerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        return Page.objects.filter(is_published=True).select_related('user')
+
+
+class PublicPageDetailView(generics.RetrieveAPIView):
+    serializer_class = PublicPageSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
+    
+    def get_queryset(self):
+        return Page.objects.filter(is_published=True).select_related('user')
+
+
+class PublicProductsListView(generics.ListAPIView):
+    serializer_class = PublicProductSerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        page_id = self.kwargs.get('page_id')
+        try:
+            page = Page.objects.get(id=page_id, is_published=True)
+            return Product.objects.filter(user=page.user)
+        except Page.DoesNotExist:
+            return Product.objects.none()
+
+
+class PublicCollectionsListView(generics.ListAPIView):
+    serializer_class = PublicCollectionSerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        page_id = self.kwargs.get('page_id')
+        try:
+            page = Page.objects.get(id=page_id, is_published=True)
+            return Collection.objects.filter(user=page.user).prefetch_related('products')
+        except Page.DoesNotExist:
+            return Collection.objects.none()
+
+
+class PublicProfileDetailView(generics.RetrieveAPIView):
+    serializer_class = PublicProfileSerializer
+    permission_classes = [AllowAny]
+    
+    def get_object(self):
+        page_id = self.kwargs.get('page_id')
+        try:
+            page = Page.objects.get(id=page_id, is_published=True)
+            return page.user.profile
+        except Page.DoesNotExist:
+            raise Http404("Page not found")
+
+
+class PublishPageView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            page = Page.objects.get(user=request.user)
+            page.is_published = True
+            page.save()
+            return Response({
+                'message': 'Page published successfully!',
+                'shareable_link': f"{request.build_absolute_uri('/').rstrip('/')}/landingpage/{page.id}"
+            }, status=status.HTTP_200_OK)
+        except Page.DoesNotExist:
+            return Response({
+                'error': 'Page not found. Please create a page first.'
+            }, status=status.HTTP_404_NOT_FOUND)

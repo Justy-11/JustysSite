@@ -4,7 +4,9 @@ from .views import (
     ResendOTPView, ForgotPasswordView, ResetPasswordView,
     PageDetailView, AddProductsView, AddProductsCSVView,
     ProfileDetailView, ProductListView, ProductDetailView,
-    CollectionListView, CollectionDetailView
+    CollectionListView, CollectionDetailView, PublishPageView,
+    PublicPagesListView, PublicPageDetailView, PublicProductsListView,
+    PublicCollectionsListView, PublicProfileDetailView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -19,10 +21,16 @@ urlpatterns = [
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
     path('profile/', ProfileDetailView.as_view(), name='profile_detail'),
     path('page/', PageDetailView.as_view(), name='page_detail'),
+    path('page/publish/', PublishPageView.as_view(), name='publish_page'),
     path('products/add/', AddProductsView.as_view(), name='add_products'),
     path('products/add-csv/', AddProductsCSVView.as_view(), name='add_products_csv'),
     path('products/', ProductListView.as_view(), name='product-list'),
     path('products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path('collections/', CollectionListView.as_view(), name='collection-list'),
     path('collections/<int:pk>/', CollectionDetailView.as_view(), name='collection-detail'),
+    path('pages/public/', PublicPagesListView.as_view(), name='public_pages_list'),
+    path('page/public/<int:id>/', PublicPageDetailView.as_view(), name='public_page_detail'),
+    path('products/public/<int:page_id>/', PublicProductsListView.as_view(), name='public_products_list'),
+    path('collections/public/<int:page_id>/', PublicCollectionsListView.as_view(), name='public_collections_list'),
+    path('profile/public/<int:page_id>/', PublicProfileDetailView.as_view(), name='public_profile_detail'),
 ]

@@ -151,3 +151,194 @@
   .btn-secondary:hover {
     background-color: #e6b800;
   }
+
+  /* Published Pages Section */
+  .published-pages-section {
+    background-color: #f8f9fa;
+    padding: 80px 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 48px;
+    color: #666;
+  }
+
+  .loading-pages {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    padding: 40px 0;
+  }
+
+  .no-pages {
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .no-pages p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 24px;
+  }
+
+  .pages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 32px;
+    margin-top: 40px;
+  }
+
+  .page-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+
+  .page-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .page-card-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .page-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .page-card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .page-card-content {
+    padding: 24px;
+    position: relative;
+  }
+
+  .page-card-profile {
+    position: absolute;
+    top: -30px;
+    left: 24px;
+  }
+
+  .page-profile-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+  }
+
+  .page-profile-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .page-card-details {
+    margin-top: 20px;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    line-height: 1.3;
+  }
+
+  .page-tagline {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  .page-description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .page-contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .contact-item {
+    font-size: 0.85rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .published-pages-section {
+      padding: 40px 0;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      margin-bottom: 32px;
+    }
+
+    .pages-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .page-card-content {
+      padding: 20px;
+    }
+
+    .page-title {
+      font-size: 1.2rem;
+    }
+
+    .page-description {
+      font-size: 0.9rem;
+    }
+  }

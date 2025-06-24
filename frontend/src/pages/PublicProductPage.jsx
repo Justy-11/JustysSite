@@ -5,6 +5,7 @@ import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub,
   BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
   BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
 import DOMPurify from 'dompurify';
+import NavBar from "../components/NavBar";
 import "../styles/PublicProductPage.css";
 
 function PublicProductPage() {
@@ -53,6 +54,12 @@ function PublicProductPage() {
     };
     fetchData();
   }, [pageId]);
+
+  const navLinks = [
+    { href: "/landingpage", label: "Home" },
+    { href: "/about", label: "About Us" },
+    { href: "/", label: "Support" },
+  ];
 
   const handleCollectionClick = (collection) => {
     setSelectedCollection(collection);
@@ -103,6 +110,14 @@ function PublicProductPage() {
     return null;
   };
 
+  // Get all product IDs that are in collections
+  const productIdsInCollections = new Set();
+  collections.forEach(col => {
+    (col.products || []).forEach(prod => productIdsInCollections.add(prod.id));
+  });
+  // Only show products not in any collection
+  const standaloneProducts = products.filter(p => !productIdsInCollections.has(p.id));
+
   if (loading) {
     return (
       <div className="public-page-container">
@@ -124,131 +139,100 @@ function PublicProductPage() {
   }
 
   return (
-    <div className="public-page-container">
-      <div className="public-page-content">
-        <div className="public-top-section">
-          <div className="public-banner-section" style={{ backgroundImage: pageData.banner_image ? `url(${pageData.banner_image})` : 'none' }}>
-            {!pageData.banner_image && <div className="banner-placeholder">No banner image set</div>}
-          </div>
-          <div className="public-profile-section">
-            {pageData.profile_image ? (
-              <img src={pageData.profile_image} alt="Profile" className="public-profile-image" />
-            ) : (
-              <div className="profile-placeholder">No profile image set</div>
-            )}
-          </div>
-          <div className="public-about-details-container">
-            <h3>{pageData.product_name || "Product Name"}</h3>
-            <p className="public-tagline">{pageData.tagline || "Product Tagline"}</p>
-            <div className="public-about-section">
-              <p>{pageData.about || "Product description will appear here."}</p>
+    <>
+      <NavBar links={navLinks} />
+      <div className="public-page-container">
+        <div className="public-page-content">
+          <div className="public-top-section">
+            <div className="public-banner-section" style={{ backgroundImage: pageData.banner_image ? `url(${pageData.banner_image})` : 'none' }}>
+              {!pageData.banner_image && <div className="banner-placeholder">No banner image set</div>}
             </div>
-            <div className="public-contact-section">
-              <ul>
-                {pageData.email && (
-                  <li>
-                    Email: <a href={`mailto:${pageData.email}`}>{pageData.email}</a>
-                  </li>
-                )}
-                {pageData.phone && (
-                  <li>
-                    Phone: <a href={`tel:${pageData.phone}`}>{pageData.phone}</a>
-                  </li>
-                )}
-              </ul>
-              {socialLinks.length > 0 && (
-                <div className="social-links-public">
-                  {socialLinks.map((link, index) => (
-                    <a
-                      key={index}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="social-link-public"
-                    >
-                      {getSocialIcon(link)}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        <hr className="public-divider" />
-        
-        {selectedProduct ? (
-          <div className="public-product-detail-view">
-            <button className="public-back-button" onClick={handleBack}>
-              ← Back
-            </button>
-            <div className="public-product-detail">
-              <div className="public-product-image-container">
-                {selectedProduct.image && (
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.title}
-                    className="public-product-image-large"
-                  />
-                )}
-              </div>
-              <div className="public-product-info">
-                <h4>{selectedProduct.title}</h4>
-                {selectedProduct.description && (
-                  <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedProduct.description) }} />
-                )}
-                {selectedProduct.price && (
-                  <p>
-                    Price: {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
-                    {selectedProduct.price}
-                  </p>
-                )}
-                {selectedProduct.stock && <p>Stock: {selectedProduct.stock}</p>}
-              </div>
-            </div>
-          </div>
-        ) : selectedCollection ? (
-          <div className="public-collection-view">
-            <button className="public-back-button" onClick={handleBack}>
-              ← Back
-            </button>
-            <h4>Collection: {selectedCollection.name}</h4>
-            <div className="public-products-grid">
-              {selectedCollection.products.length > 0 ? (
-                selectedCollection.products.map((product) => (
-                  <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
-                    {product.image && (
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="public-product-image"
-                      />
-                    )}
-                    <h5 title={product.title}>{product.title}</h5>
-                    {product.description && (
-                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
-                    )}
-                    {product.price && (
-                      <p>
-                        {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
-                        {product.price}
-                      </p>
-                    )}
-                  </div>
-                ))
+            <div className="public-profile-section">
+              {pageData.profile_image ? (
+                <img src={pageData.profile_image} alt="Profile" className="public-profile-image" />
               ) : (
-                <p>No products in this collection.</p>
+                <div className="profile-placeholder">No profile image set</div>
               )}
             </div>
+            <div className="public-about-details-container">
+              <h3>{pageData.product_name || "Product Name"}</h3>
+              <p className="public-tagline">{pageData.tagline || "Product Tagline"}</p>
+              <div className="public-about-section">
+                <p>{pageData.about || "Product description will appear here."}</p>
+              </div>
+              <div className="public-contact-section">
+                <ul>
+                  {pageData.email && (
+                    <li>
+                      Email: <a href={`mailto:${pageData.email}`}>{pageData.email}</a>
+                    </li>
+                  )}
+                  {pageData.phone && (
+                    <li>
+                      Phone: <a href={`tel:${pageData.phone}`}>{pageData.phone}</a>
+                    </li>
+                  )}
+                </ul>
+                {socialLinks.length > 0 && (
+                  <div className="social-links-public">
+                    {socialLinks.map((link, index) => (
+                      <a
+                        key={index}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-link-public"
+                      >
+                        {getSocialIcon(link)}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        ) : (
-          <>
-            <div className="public-products-section">
-              <h4>Products</h4>
+          
+          <hr className="public-divider" />
+          
+          {selectedProduct ? (
+            <div className="public-product-detail-view">
+              <button className="public-back-button" onClick={handleBack}>
+                ← Back
+              </button>
+              <div className="public-product-detail">
+                <div className="public-product-image-container">
+                  {selectedProduct.image && (
+                    <img
+                      src={selectedProduct.image}
+                      alt={selectedProduct.title}
+                      className="public-product-image-large"
+                    />
+                  )}
+                </div>
+                <div className="public-product-info">
+                  <h4>{selectedProduct.title}</h4>
+                  {selectedProduct.description && (
+                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedProduct.description) }} />
+                  )}
+                  {selectedProduct.price && (
+                    <p>
+                      Price: {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                      {selectedProduct.price}
+                    </p>
+                  )}
+                  {selectedProduct.stock && <p>Stock: {selectedProduct.stock}</p>}
+                </div>
+              </div>
+            </div>
+          ) : selectedCollection ? (
+            <div className="public-collection-view">
+              <button className="public-back-button" onClick={handleBack}>
+                ← Back
+              </button>
+              <h4>Collection: {selectedCollection.name}</h4>
               <div className="public-products-grid">
-                {products
-                  .filter((product) => !product.collection_name)
-                  .map((product) => (
+                {selectedCollection.products.length > 0 ? (
+                  selectedCollection.products.map((product) => (
                     <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
                       {product.image && (
                         <img
@@ -268,47 +252,80 @@ function PublicProductPage() {
                         </p>
                       )}
                     </div>
-                  ))}
-                {products.filter((product) => !product.collection_name).length === 0 && (
-                  <p>No standalone products available.</p>
+                  ))
+                ) : (
+                  <p>No products in this collection.</p>
                 )}
               </div>
             </div>
-            
-            <div className="public-collections-section">
-              <h4>Collections</h4>
-              <div className="public-collections-grid">
-                {collections.map((collection) => (
-                  <div
-                    key={collection.id}
-                    className="public-collection-card"
-                    onClick={() => handleCollectionClick(collection)}
-                  >
-                    <div className="public-collection-image-grid">
-                      {getCollectionImages(collection.products).map((image, index) =>
-                        image ? (
+          ) : (
+            <>
+              <div className="public-products-section">
+                <h4>Products</h4>
+                <div className="public-products-grid">
+                  {standaloneProducts.length > 0 ? (
+                    standaloneProducts.map((product) => (
+                      <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
+                        {product.image && (
                           <img
-                            key={index}
-                            src={image}
-                            alt={`${collection.name} image ${index + 1}`}
-                            className="public-collection-image"
+                            src={product.image}
+                            alt={product.title}
+                            className="public-product-image"
                           />
-                        ) : (
-                          <div key={index} className="public-collection-placeholder"></div>
-                        )
-                      )}
-                    </div>
-                    <h5>{collection.name}</h5>
-                    <p>{collection.products.length} product(s)</p>
-                  </div>
-                ))}
-                {collections.length === 0 && <p>No collections available.</p>}
+                        )}
+                        <h5 title={product.title}>{product.title}</h5>
+                        {product.description && (
+                          <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                        )}
+                        {product.price && (
+                          <p>
+                            {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                            {product.price}
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No standalone products available.</p>
+                  )}
+                </div>
               </div>
-            </div>
-          </>
-        )}
+              
+              <div className="public-collections-section">
+                <h4>Collections</h4>
+                <div className="public-collections-grid">
+                  {collections.map((collection) => (
+                    <div
+                      key={collection.id}
+                      className="public-collection-card"
+                      onClick={() => handleCollectionClick(collection)}
+                    >
+                      <div className="public-collection-image-grid">
+                        {getCollectionImages(collection.products).map((image, index) =>
+                          image ? (
+                            <img
+                              key={index}
+                              src={image}
+                              alt={`${collection.name} image ${index + 1}`}
+                              className="public-collection-image"
+                            />
+                          ) : (
+                            <div key={index} className="public-collection-placeholder"></div>
+                          )
+                        )}
+                      </div>
+                      <h5>{collection.name}</h5>
+                      <p>{collection.products.length} product(s)</p>
+                    </div>
+                  ))}
+                  {collections.length === 0 && <p>No collections available.</p>}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

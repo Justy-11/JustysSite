@@ -4,6 +4,7 @@
   min-height: 100vh;
   color: #ffffff;
   font-family: Arial, sans-serif;
+  margin-top: 64px;
 }
 
 .public-page-content {
@@ -225,6 +226,32 @@
   line-height: 1.5;
 }
 
+.public-product-card p h1,
+.public-product-card p h2,
+.public-product-card p h3,
+.public-product-card p h4,
+.public-product-card p h5,
+.public-product-card p h6,
+.public-product-card p strong,
+.public-product-card p b,
+.public-product-card p em,
+.public-product-card p i {
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  display: inline;
+}
+
+.public-product-card p ul,
+.public-product-card p ol {
+  padding-left: 20px;
+  margin: 4px 0;
+}
+
+.public-product-card p li {
+  margin-bottom: 4px;
+}
+
 /* Collections section */
 .public-collections-section {
   margin-bottom: 24px;
@@ -289,24 +316,25 @@
 }
 
 /* Product detail view */
-.public-product-detail-view {
-  margin-top: 16px;
-}
-
 .public-product-detail {
-  flex-direction: column;
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
+  gap: 24px;
 }
 
 .public-product-image-container {
-  flex: 0 0 100%;
-  margin-bottom: 16px;
+  flex: 0 0 250px;
+  max-width: 250px;
+  width: 100%;
+  margin-bottom: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
 }
 
 .public-product-image-large {
@@ -316,6 +344,7 @@
 }
 
 .public-product-info {
+  flex: 1;
   width: 100%;
   box-sizing: border-box;
   text-align: left;
@@ -420,19 +449,20 @@
     font-size: 12px;
   }
 
-  .public-products-grid,
-  .public-collections-grid {
+  .public-products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+    width: 100%;
   }
 
-  .public-product-card,
-  .public-collection-card {
+  .public-product-card {
     padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
-  .public-product-card h5,
-  .public-collection-card h5 {
+  .public-product-card h5 {
     font-size: 14px;
   }
 
@@ -463,5 +493,17 @@
     font-size: 11px;
     padding: 0 2px;
     margin: 2px 0;
+  }
+
+  .public-product-detail {
+    flex-direction: column;
+    text-align: center;
+    gap: 0;
+  }
+
+  .public-product-image-container,
+  .public-product-info {
+    width: 100%;
+    max-width: 100%;
   }
 } 

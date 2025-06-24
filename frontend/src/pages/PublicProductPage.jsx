@@ -6,6 +6,8 @@ import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub,
   BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
 import DOMPurify from 'dompurify';
 import NavBar from "../components/NavBar";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import "../styles/PublicProductPage.css";
 
 function PublicProductPage() {
@@ -120,9 +122,21 @@ function PublicProductPage() {
 
   if (loading) {
     return (
-      <div className="public-page-container">
-        <div className="loading">Loading...</div>
-      </div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        <CircularProgress />
+      </Box>
     );
   }
 

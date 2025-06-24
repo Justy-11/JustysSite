@@ -3,10 +3,12 @@ import Navbar from "../components/NavBar"
 import "../styles/LandingPage.css";
 import BG from "../assets/BG.png";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const [publishedPages, setPublishedPages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPublishedPages = async () => {
@@ -77,7 +79,7 @@ const LandingPage = () => {
           ) : publishedPages.length > 0 ? (
             <div className="pages-grid">
               {publishedPages.map((page) => (
-                <div key={page.id} className="page-card" onClick={() => window.location.href = `/landingpage/${page.id}`}>
+                <div key={page.id} className="page-card" onClick={() => navigate(`/landingpage/${page.id}`)}>
                   <div className="page-card-image">
                     {page.banner_image ? (
                       <img src={page.banner_image} alt={page.product_name} />

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
-  FaLayerGroup, FaPlusSquare, FaFileUpload, FaEye,
-  FaGlobe, FaChartBar, FaCog, FaQuestionCircle,
+  FaPlusSquare, FaGlobe, FaQuestionCircle,
   FaBars, FaTimes, FaHome, FaPlus
 } from "react-icons/fa";
 import "../styles/SideBar.css";
@@ -18,9 +17,7 @@ const Sidebar = () => {
     { href: "/", icon: <FaHome />, label: "Dashboard" },
     { href: "/create", icon: <FaPlus />, label: "Create/Edit Page" },
     { href: "/add-products", icon: <FaPlusSquare />, label: "Add Products" },
-    // { href: "/preview", icon: <FaEye />, label: "Preview Page" },
     { href: "/publish", icon: <FaGlobe />, label: "Publish Page" },
-    { href: "/settings", icon: <FaCog />, label: "Settings" },
     { href: "/help", icon: <FaQuestionCircle />, label: "Help" },
   ];
 

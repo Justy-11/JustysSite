@@ -18,6 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
 import Publish from './pages/Publish';
 import PublicProductPage from './pages/PublicProductPage';
+import Help from './pages/Help';
 
 
 function Logout() {
@@ -40,6 +41,7 @@ function App() {
                         <Route path="/create" element={<CreatePage />} />
                         <Route path="/add-products" element={<AddProducts/>} />
                         <Route path="/publish" element={<Publish/>} />
+                        <Route path="/help" element={<Help/>} />
                     </Route>
                     <Route path="/about" element={<AboutUs />} />
                     {/* Protected routes here */}

@@ -58,7 +58,7 @@ const LandingPage = () => {
 
             <div className="hero-buttons">
               <a href="/login" className="btn btn-primary">Create a Product Page</a>
-              <a href="/custom-website" className="btn btn-secondary">Request a Custom Website</a>
+              <a href="https://forms.gle/sPmXJzZwM8phYzCS7" className="btn btn-secondary">Request a Custom Website</a>
             </div>
           </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "../styles/Dashboard.css";
 import api from "../api";
 import { showSuccessToast, showErrorToast } from '../utils/toastUtils';
+import { FaCheckCircle } from "react-icons/fa";
 
 function Home() {
   const [username, setUsername] = useState("");
@@ -18,11 +19,17 @@ function Home() {
     currency: "LKR",
   });
 
+  // Status booleans
+  const [hasPage, setHasPage] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
+  const [hasProductsOrCollections, setHasProductsOrCollections] = useState(false);
+
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileAndStatus = async () => {
       try {
-        const response = await api.get("/api/profile/");
-        const data = response.data;
+        // Fetch profile
+        const profileRes = await api.get("/api/profile/");
+        const data = profileRes.data;
         setUsername(data.username || "");
         setFormData({
           username: data.username || "",
@@ -35,12 +42,36 @@ function Home() {
           socialLinks: data.social_links || "",
           currency: data.currency || "LKR",
         });
+
+        // Fetch page
+        let pageRes;
+        try {
+          pageRes = await api.get("/api/page/");
+        } catch (err) {
+          pageRes = null;
+        }
+        if (pageRes && pageRes.data) {
+          setHasPage(true);
+          setIsPublished(!!pageRes.data.is_published);
+        } else {
+          setHasPage(false);
+          setIsPublished(false);
+        }
+
+        // Fetch products and collections
+        const [productsRes, collectionsRes] = await Promise.all([
+          api.get("/api/products/"),
+          api.get("/api/collections/")
+        ]);
+        const hasProducts = Array.isArray(productsRes.data) && productsRes.data.length > 0;
+        const hasCollections = Array.isArray(collectionsRes.data) && collectionsRes.data.length > 0;
+        setHasProductsOrCollections(hasProducts || hasCollections);
       } catch (error) {
-        console.error("Error fetching profile:", error.response?.data || error.message);
-        showErrorToast("Failed to load profile data. Please try again.");
+        console.error("Error fetching dashboard data:", error.response?.data || error.message);
+        showErrorToast("Failed to load dashboard data. Please try again.");
       }
     };
-    fetchProfile();
+    fetchProfileAndStatus();
   }, []);
 
   const handleNext = () => {
@@ -82,26 +113,29 @@ function Home() {
     }
   };
 
+  // Colors
+  const green = "#22c55e";
+  const gray = "#a0a0a0";
+
   return (
     <div className="dashboard-container">
-      <div className="cards-container">
+      <div className="cards-container new-cards-layout">
         <div className="greeting-card">
           <h2>Good evening, {username || 'User'}</h2>
           <p>Welcome to CreatiMate...</p>
         </div>
-        <div className="status-card">
-          <h3>Progress Status</h3>
-          <div className="status-item">
-            <span>Page Created</span>
-            <span className="status-tick">✅</span>
+        <div className="status-cards-row">
+          <div className="status-card single-status-card">
+            <FaCheckCircle className="status-icon" style={{ color: hasPage ? green : gray }} />
+            <div className="status-label">Page Created</div>
           </div>
-          <div className="status-item">
-            <span>Products Added</span>
-            <span className="status-tick">✅</span>
+          <div className="status-card single-status-card">
+            <FaCheckCircle className="status-icon" style={{ color: hasProductsOrCollections ? green : gray }} />
+            <div className="status-label">Products Added</div>
           </div>
-          <div className="status-item">
-            <span>Published</span>
-            <span className="status-tick">✅</span>
+          <div className="status-card single-status-card">
+            <FaCheckCircle className="status-icon" style={{ color: isPublished ? green : gray }} />
+            <div className="status-label">Published</div>
           </div>
         </div>
       </div>

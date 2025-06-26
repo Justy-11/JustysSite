@@ -32,7 +32,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'about', 'tagline','banner_image','profile_image', 'product_name', 'email', 'phone', 'created_at', 'updated_at')
+    list_display = ('id', 'user', 'about', 'tagline', 'banner_image', 'profile_image', 'product_name', 'email', 'phone', 'is_published', 'created_at', 'updated_at')
     search_fields = ('user__username', 'product_name', 'email')
     list_filter = ('created_at', 'updated_at')
 

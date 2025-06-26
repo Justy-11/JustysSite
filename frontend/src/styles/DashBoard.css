@@ -284,3 +284,76 @@
     margin-left: 0;
   }
 }
+
+.new-cards-layout {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.greeting-card {
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+.status-cards-row {
+  display: flex;
+  flex: 2 1 400px;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.single-status-card {
+  background-color: #2a3b3c;
+  padding: 24px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  flex: 1 1 0;
+}
+
+.status-icon {
+  color: #3b82f6;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.status-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .new-cards-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .status-cards-row {
+    flex-direction: row;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .new-cards-layout {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .status-cards-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .greeting-card {
+    min-width: 0;
+  }
+  .single-status-card {
+    min-width: 0;
+    padding: 16px 8px;
+  }
+}

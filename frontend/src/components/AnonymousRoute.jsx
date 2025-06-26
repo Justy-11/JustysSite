@@ -46,34 +46,47 @@ function AnonymousRoute({ children }) {
                 await refreshToken();
             } else {
                 setIsAuthorized(true);
+              }
+            } else {
+              setIsAuthorized(false);
             }
-        } else if (googleAccessToken) {
-            const isValid = await validateGoogleToken(googleAccessToken);
-            setIsAuthorized(isValid);
-        } else {
-            setIsAuthorized(false);
-        }
     };
 
-    const validateGoogleToken = async (googleAccessToken) => {
-        try {
-            const res = await api.post("/api/google/validate_token/", {
-                access_token: googleAccessToken,
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            console.log("Validated response: ", res.data);
-            return res.data.valid;
-        } catch (error) {
-            console.error("Google token validation failed:", error);
-            return false;
-        }
-    };
+    // const validateGoogleToken = async (googleAccessToken) => {
+    //     try {
+    //         const res = await api.post("/api/google/validate_token/", {
+    //             access_token: googleAccessToken,
+    //         }, {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         });
+    //         console.log("Validated response: ", res.data);
+    //         return res.data.valid;
+    //     } catch (error) {
+    //         console.error("Google token validation failed:", error);
+    //         return false;
+    //     }
+    // };
 
     if (isAuthorized === null) {
-        return null
+        return (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+                width: "100vw",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          );
     }
 
     if (isAuthorized) {

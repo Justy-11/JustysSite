@@ -1,16 +1,18 @@
 .help-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1a2526;
+  box-sizing: border-box;
+  color: #fff;
 }
 
 .help-header {
   text-align: center;
   margin-bottom: 3rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #2a3b3c;
+  color: #fff;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -22,11 +24,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  color: #fff;
 }
 
 .help-header p {
   font-size: 1.2rem;
-  opacity: 0.9;
+  color: #a0a0a0;
   margin: 0;
 }
 
@@ -37,7 +40,7 @@
 }
 
 .help-section {
-  background: white;
+  background: #2a3b3c;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -49,19 +52,32 @@
   transform: translateY(-2px);
 }
 
+.help-section:nth-of-type(1) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+.help-section:nth-of-type(2) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: #fff;
+}
+.help-section:nth-of-type(3) {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: #fff;
+}
+
 .help-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: #3a4b4c;
+  color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .help-section-header:hover {
-  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+  background: #4a5b5c;
 }
 
 .section-title {
@@ -74,23 +90,30 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+  color: #fff;
 }
 
 .section-title svg {
   font-size: 1.3rem;
+  color: #fff;
 }
 
 .help-section-content {
   padding: 2rem;
-  background: white;
+  background: #2a3b3c;
+}
+
+.help-section-header,
+.help-section-content {
+  background: transparent;
 }
 
 .step {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
+  background: #3a4b4c;
   border-radius: 8px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #3b82f6;
 }
 
 .step:last-child {
@@ -98,14 +121,14 @@
 }
 
 .step h3 {
-  color: #2c3e50;
+  color: #fff;
   margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
 .step p {
-  color: #555;
+  color: #a0a0a0;
   line-height: 1.6;
   margin: 0;
 }
@@ -116,7 +139,7 @@
 }
 
 .step li {
-  color: #555;
+  color: #a0a0a0;
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
@@ -126,13 +149,13 @@
 }
 
 .step strong {
-  color: #2c3e50;
+  color: #fff;
   font-weight: 600;
 }
 
 /* Tips Section */
 .help-tips {
-  background: white;
+  background: #2a3b3c;
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -141,7 +164,7 @@
 
 .help-tips h2 {
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
   margin-bottom: 2rem;
   font-size: 1.8rem;
   font-weight: 600;
@@ -155,26 +178,49 @@
 
 .tip {
   padding: 1.5rem;
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  background: #3a4b4c;
   border-radius: 10px;
-  border: 1px solid #e9ecef;
+  border: 1px solid #4a5b5c;
   transition: all 0.3s ease;
 }
 
 .tip:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background: #4a5b5c;
+}
+
+.tip:nth-of-type(1) {
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  color: #2c3e50;
+}
+.tip:nth-of-type(2) {
+  background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+  color: #fff;
+}
+.tip:nth-of-type(3) {
+  background: linear-gradient(135deg, #fa8bff 0%, #2bd2ff 52%, #2bff88 90%);
+  color: #2c3e50;
+}
+.tip:nth-of-type(4) {
+  background: linear-gradient(135deg, #f54ea2 0%, #ff7676 100%);
+  color: #fff;
+}
+
+.tip {
+  border: none;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
 }
 
 .tip h4 {
-  color: #2c3e50;
+  color: inherit;
   margin-bottom: 0.8rem;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .tip p {
-  color: #555;
+  color: inherit;
   line-height: 1.5;
   margin: 0;
 }
@@ -182,7 +228,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .help-container {
-    padding: 1rem;
+    padding: 0.5rem;
   }
   
   .help-header {

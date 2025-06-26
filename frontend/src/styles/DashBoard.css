@@ -12,11 +12,84 @@
 }
 
 .greeting-card {
-  background-color: #2a3b3c;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  flex: 1 1 260px;
+  min-width: 220px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+
+.greeting-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 16px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(34,34,64,0.88) 0%, rgba(34,34,64,0.60) 60%, rgba(34,34,64,0.32) 100%);
+}
+
+.greeting-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 24px;
+  width: 100%;
+}
+
+.greeting-card-inner.greeting-card-bg-text {
+  width: 100%;
+  height: 100%;
+  padding: 32px 24px;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 16px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.greeting-card-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff2;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.greeting-card-text {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.greeting-card-text h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.greeting-card-text p {
+  font-size: 1rem;
+  color: #e0e0e0;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
 .status-card {
@@ -43,16 +116,6 @@
 
 .status-tick {
   font-size: 20px;
-}
-
-.greeting-card h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.greeting-card p {
-  font-size: 16px;
 }
 
 .wizard-form {
@@ -291,11 +354,6 @@
   align-items: stretch;
 }
 
-.greeting-card {
-  flex: 1 1 260px;
-  min-width: 220px;
-}
-
 .status-cards-row {
   display: flex;
   flex: 2 1 400px;
@@ -355,5 +413,21 @@
   .single-status-card {
     min-width: 0;
     padding: 16px 8px;
+  }
+  .greeting-card-inner.greeting-card-bg-text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 8px;
+  }
+  .greeting-card-img {
+    width: 70px;
+    height: 70px;
+  }
+  .greeting-card-text h2 {
+    font-size: 1.1rem;
+  }
+  .greeting-card-text p {
+    font-size: 0.95rem;
   }
 }

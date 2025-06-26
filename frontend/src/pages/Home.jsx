@@ -3,6 +3,7 @@ import "../styles/Dashboard.css";
 import api from "../api";
 import { showSuccessToast, showErrorToast } from '../utils/toastUtils';
 import { FaCheckCircle } from "react-icons/fa";
+import GreetingCardBg from "../assets/greeting card.png";
 
 function Home() {
   const [username, setUsername] = useState("");
@@ -120,9 +121,13 @@ function Home() {
   return (
     <div className="dashboard-container">
       <div className="cards-container new-cards-layout">
-        <div className="greeting-card">
-          <h2>Good evening, {username || 'User'}</h2>
-          <p>Welcome to CreatiMate...</p>
+        <div className="greeting-card" style={{ backgroundImage: `url(${GreetingCardBg})` }}>
+          <div className="greeting-card-inner greeting-card-bg-text">
+            <div className="greeting-card-text">
+              <h2>Good evening, {username || 'User'}</h2>
+              <p>Welcome to CreatiMate...</p>
+            </div>
+          </div>
         </div>
         <div className="status-cards-row">
           <div className="status-card single-status-card">
@@ -251,12 +256,13 @@ function Home() {
                 </div>
                 <div className="form-group full-width">
                   <label>Social Links (comma-separated URLs)</label>
-                  <input
-                    type="text"
+                  <textarea
                     name="socialLinks"
                     value={formData.socialLinks}
                     onChange={handleChange}
-                    placeholder="e.g., https://www.twitter.com/yourbrand,https://www.instagram.com/yourbrand,https://www.linkedin.com/company/yourbrand,https://www.facebook.com/yourbrand,https://www.youtube.com/@yourbrand"
+                    placeholder="e.g., https://www.twitter.com/yourbrand\nhttps://www.instagram.com/yourbrand\nhttps://www.linkedin.com/company/yourbrand"
+                    rows={4}
+                    style={{ resize: 'vertical', minHeight: 80 }}
                   />
                 </div>
               </div>

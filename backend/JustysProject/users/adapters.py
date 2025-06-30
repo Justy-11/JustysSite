@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from .models import CustomUser, Profile
 from django.contrib.messages import get_messages
+from urllib.parse import urlencode
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -42,6 +43,19 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         print("Cleared Django messages to prevent session interference")
 
         return user
+
+    def get_login_redirect_url(self, request):
+        """
+        After successful social login, redirect to the frontend with the remember param.
+        """
+        state = request.GET.get('state', '')
+        remember = 'true' if 'remember:true' in state else 'false'
+        params = {
+            'remember': remember,
+        }
+        redirect_url = f"http://localhost:5173/login/callback/?{urlencode(params)}"
+        print(f"Redirecting to: {redirect_url}")
+        return redirect_url
 
     # def get_app(self, request, provider):
     #     site_id = getattr(settings, 'SITE_ID', None)

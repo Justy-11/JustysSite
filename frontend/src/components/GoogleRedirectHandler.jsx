@@ -5,6 +5,7 @@ import { GOOGLE_ACCESS_TOKEN, ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { showErrorToast, showInfoToast } from "../utils/toastUtils";
+import Cookies from "js-cookie";
 
 function RedirectGoogleAuth() {
     const navigate = useNavigate();
@@ -19,15 +20,20 @@ function RedirectGoogleAuth() {
         const accessToken = queryParams.get('access_token');
         const refreshToken = queryParams.get('refresh_token');
         const error = queryParams.get("error");
+        const remember = queryParams.get("remember") === 'true';
 
         console.log("QueryParams: ", window.location.search);
+        console.log("Remember Me:", remember);
 
         if (accessToken) {
           console.log("AccessToken found:", accessToken);
-          localStorage.setItem(GOOGLE_ACCESS_TOKEN, accessToken);
-          localStorage.setItem(ACCESS_TOKEN, accessToken);
+          // Use persistent cookies if remember is true, otherwise session cookies
+          const cookieOptions = remember ? { expires: 7 } : undefined;
+          console.log("Setting cookies with options:", cookieOptions);
+          Cookies.set(GOOGLE_ACCESS_TOKEN, accessToken, cookieOptions);
+          Cookies.set(ACCESS_TOKEN, accessToken, cookieOptions);
           if (refreshToken) {
-            localStorage.setItem(REFRESH_TOKEN, refreshToken);
+            Cookies.set(REFRESH_TOKEN, refreshToken, cookieOptions);
             console.log("RefreshToken found:", refreshToken);
           }
           console.log("Stored tokens from Google login:", {
@@ -46,9 +52,9 @@ function RedirectGoogleAuth() {
             .catch((error) => {
               console.error("Error verifying token:", error.response?.data || error.message);
               showErrorToast("Failed to verify token. Please log in again.");
-              localStorage.removeItem(ACCESS_TOKEN);
-              localStorage.removeItem(GOOGLE_ACCESS_TOKEN);
-              localStorage.removeItem(REFRESH_TOKEN);
+              Cookies.remove(ACCESS_TOKEN);
+              Cookies.remove(GOOGLE_ACCESS_TOKEN);
+              Cookies.remove(REFRESH_TOKEN);
               navigate("/login");
             });
         } else if (error) {

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "./constants";
+import Cookies from "js-cookie";
 
 const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
 
@@ -11,12 +12,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem(ACCESS_TOKEN);
+    const token = Cookies.get(ACCESS_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    const googleAccessToken = localStorage.getItem(GOOGLE_ACCESS_TOKEN);
+    const googleAccessToken = Cookies.get(GOOGLE_ACCESS_TOKEN);
     if (googleAccessToken) {
       config.headers["X-Google-Access-Token"] = googleAccessToken;
     }
@@ -31,8 +31,8 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 401) {
-      localStorage.removeItem(ACCESS_TOKEN);
-      localStorage.removeItem(GOOGLE_ACCESS_TOKEN);
+      Cookies.remove(ACCESS_TOKEN);
+      Cookies.remove(GOOGLE_ACCESS_TOKEN);
       window.location.href = '/login';
     }
     return Promise.reject(error);

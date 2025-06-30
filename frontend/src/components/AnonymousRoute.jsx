@@ -4,6 +4,7 @@ import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN, GOOGLE_ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 import { showInfoToast } from '../utils/toastUtils';
+import Cookies from "js-cookie";
 
 function AnonymousRoute({ children }) {
     const [isAuthorized, setIsAuthorized] = useState(null);
@@ -13,13 +14,13 @@ function AnonymousRoute({ children }) {
     }, []);
 
     const refreshToken = async () => {
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+        const refreshToken = Cookies.get(REFRESH_TOKEN);
         try {
             const res = await api.post("/api/token/refresh/", {
                 refresh: refreshToken,
             });
             if (res.status === 200) {
-                localStorage.setItem(ACCESS_TOKEN, res.data.access);
+                Cookies.set(ACCESS_TOKEN, res.data.access);
                 setIsAuthorized(true);
             } else {
                 setIsAuthorized(false);
@@ -31,8 +32,8 @@ function AnonymousRoute({ children }) {
     };
 
     const auth = async () => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
-        const googleAccessToken = localStorage.getItem(GOOGLE_ACCESS_TOKEN);
+        const token = Cookies.get(ACCESS_TOKEN);
+        const googleAccessToken = Cookies.get(GOOGLE_ACCESS_TOKEN);
 
         console.log("ACCESS_TOKEN", token);
         console.log("GOOGLE_ACCESS_TOKEN", googleAccessToken);
@@ -70,23 +71,7 @@ function AnonymousRoute({ children }) {
     // };
 
     if (isAuthorized === null) {
-        return (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-                width: "100vw",
-                position: "fixed",
-                top: 0,
-                left: 0,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          );
+        return null
     }
 
     if (isAuthorized) {

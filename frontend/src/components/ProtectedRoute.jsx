@@ -5,6 +5,7 @@ import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect, useRef } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import Cookies from "js-cookie";
 
 
 function ProtectedRoute() {
@@ -23,13 +24,13 @@ function ProtectedRoute() {
     }, [])
 
     const refreshToken = async () => {
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+        const refreshToken = Cookies.get(REFRESH_TOKEN);
         try {
             const res = await api.post("/api/token/refresh/", {
                 refresh: refreshToken,
             });
             if (res.status === 200) {
-                localStorage.setItem(ACCESS_TOKEN, res.data.access)
+                Cookies.set(ACCESS_TOKEN, res.data.access)
                 setIsAuthorized(true)
             } else {
                 setIsAuthorized(false)
@@ -41,7 +42,7 @@ function ProtectedRoute() {
     };
 
     const auth = async () => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
+        const token = Cookies.get(ACCESS_TOKEN);
     
         console.log("ACCESS_TOKEN", token);
     

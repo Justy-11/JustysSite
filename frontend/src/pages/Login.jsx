@@ -6,12 +6,14 @@ import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
 import { FcGoogle } from 'react-icons/fc';
 import Navbar from "../components/NavBar";
+import Cookies from 'js-cookie';
 
 function Login() {
     const [usernameOrEmail, setUsernameOrEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
 
     const navLinks = [
@@ -34,11 +36,13 @@ function Login() {
                     navigate("/verify-otp", { state: { username: usernameOrEmail } });
                 }, 2000);
             } else {
-                localStorage.setItem(ACCESS_TOKEN, res.data.access);
-                localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+                // Store tokens in cookies
+                const cookieOptions = rememberMe ? { expires: 7 } : undefined;
+                Cookies.set(ACCESS_TOKEN, res.data.access, cookieOptions);
+                Cookies.set(REFRESH_TOKEN, res.data.refresh, cookieOptions);
                 console.log('Tokens stored from login:', {
-                    access: localStorage.getItem(ACCESS_TOKEN),
-                    refresh: localStorage.getItem(REFRESH_TOKEN)
+                    access: Cookies.get(ACCESS_TOKEN),
+                    refresh: Cookies.get(REFRESH_TOKEN)
                 });
                 showInfoToast('Logged in successfully!');
                 navigate("/");
@@ -56,8 +60,9 @@ function Login() {
     };
 
     const googleLogin = () => {
-        console.log('Initiating Google login');
-        window.location.href = 'http://localhost:8000/accounts/google/login/';
+        console.log('Initiating Google login with rememberMe:', rememberMe);
+        const state = rememberMe ? 'remember:true' : 'remember:false';
+        window.location.href = `http://localhost:8000/accounts/google/login/?state=${encodeURIComponent(state)}`;
     };
 
     return (
@@ -101,6 +106,19 @@ function Login() {
                     required
                 />
 
+                <div style={{ width: '90%', display: 'flex', alignItems: 'center', margin: '10px 0' }}>
+                    <input
+                        type="checkbox"
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onChange={e => setRememberMe(e.target.checked)}
+                        style={{ marginRight: '8px' }}
+                    />
+                    <label htmlFor="rememberMe" style={{ fontSize: '14px', color: '#4a3174', cursor: 'pointer' }}>
+                        Remember Me
+                    </label>
+                </div>
+
                 {errors.password && <p className="error-message">{errors.password}</p>}
 
                 <button className="form-button" type="submit" disabled={loading}>
@@ -115,7 +133,7 @@ function Login() {
                     <div className="line-separator" />
 
                     <p onClick={() => navigate("/register")} className="resend-link">
-                        Don’t have an account? <strong>Sign up</strong>
+                        Don't have an account? <strong>Sign up</strong>
                     </p>
                 </div>
             </form>

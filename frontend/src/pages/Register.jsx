@@ -5,6 +5,7 @@ import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
 import { FcGoogle } from 'react-icons/fc';
 import Navbar from "../components/NavBar";
+import Cookies from 'js-cookie';
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
 
     const navLinks = [
@@ -54,8 +56,9 @@ function Register() {
     };
 
     const googleRegister = () => {
-        console.log('Initiating Google registration');
-        window.location.href = 'http://localhost:8000/accounts/google/login/';
+        console.log('Initiating Google registration with rememberMe:', rememberMe);
+        const state = rememberMe ? 'remember:true' : 'remember:false';
+        window.location.href = `http://localhost:8000/accounts/google/login/?state=${encodeURIComponent(state)}`;
     };
 
     return (
@@ -120,6 +123,19 @@ function Register() {
                     required
                 />
                 {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
+
+                <div style={{ width: '90%', display: 'flex', alignItems: 'center', margin: '10px 0' }}>
+                    <input
+                        type="checkbox"
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onChange={e => setRememberMe(e.target.checked)}
+                        style={{ marginRight: '8px' }}
+                    />
+                    <label htmlFor="rememberMe" style={{ fontSize: '14px', color: '#4a3174', cursor: 'pointer' }}>
+                        Remember Me
+                    </label>
+                </div>
 
                 <button className="form-button" type="submit" disabled={loading}>
                     {loading ? "Processing..." : "Register"}

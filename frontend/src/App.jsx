@@ -19,15 +19,20 @@ import LandingPage from './pages/LandingPage';
 import Publish from './pages/Publish';
 import PublicProductPage from './pages/PublicProductPage';
 import Help from './pages/Help';
+import Cookies from "js-cookie";
 
 
 function Logout() {
-    localStorage.clear();
+    Cookies.remove("access");
+    Cookies.remove("refresh");
+    Cookies.remove("google_access_token");
     return <Navigate to="/login" />;
 }
 
 function RegisterAndLogout() {
-    localStorage.clear();
+    Cookies.remove("access");
+    Cookies.remove("refresh");
+    Cookies.remove("google_access_token");
     return <Register />;
 }
 

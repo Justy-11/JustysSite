@@ -1,12 +1,10 @@
 import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css";
 import { showErrorToast, showInfoToast } from '../utils/toastUtils';
 import { FcGoogle } from 'react-icons/fc';
 import Navbar from "../components/NavBar";
-import Cookies from 'js-cookie';
 
 function Login() {
     const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -29,21 +27,12 @@ function Login() {
 
         try {
             const res = await api.post("/api/login/", { username: usernameOrEmail, password });
-            console.log('Login response:', res.data); // Debug
             if (res.data.is_verified === false) {
                 showErrorToast("Please verify your email first!");
                 setTimeout(() => {
                     navigate("/verify-otp", { state: { username: usernameOrEmail } });
                 }, 2000);
             } else {
-                // Store tokens in cookies
-                const cookieOptions = rememberMe ? { expires: 7 } : undefined;
-                Cookies.set(ACCESS_TOKEN, res.data.access, cookieOptions);
-                Cookies.set(REFRESH_TOKEN, res.data.refresh, cookieOptions);
-                console.log('Tokens stored from login:', {
-                    access: Cookies.get(ACCESS_TOKEN),
-                    refresh: Cookies.get(REFRESH_TOKEN)
-                });
                 showInfoToast('Logged in successfully!');
                 navigate("/");
             }
@@ -60,7 +49,6 @@ function Login() {
     };
 
     const googleLogin = () => {
-        console.log('Initiating Google login with rememberMe:', rememberMe);
         const state = rememberMe ? 'remember:true' : 'remember:false';
         window.location.href = `http://localhost:8000/accounts/google/login/?state=${encodeURIComponent(state)}`;
     };

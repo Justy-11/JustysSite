@@ -19,20 +19,22 @@ import LandingPage from './pages/LandingPage';
 import Publish from './pages/Publish';
 import PublicProductPage from './pages/PublicProductPage';
 import Help from './pages/Help';
-import Cookies from "js-cookie";
+import api from "./api";
 
 
 function Logout() {
-    Cookies.remove("access");
-    Cookies.remove("refresh");
-    Cookies.remove("google_access_token");
-    return <Navigate to="/login" />;
+    // Call backend logout endpoint to clear cookies
+    api.post("/api/logout/").finally(() => {
+        window.location.href = "/login";
+    });
+    return null; // Or a loading spinner if you want
 }
 
 function RegisterAndLogout() {
-    Cookies.remove("access");
-    Cookies.remove("refresh");
-    Cookies.remove("google_access_token");
+    api.post("/api/logout/").finally(() => {
+        // Render the Register component after logout
+        // (or just redirect to /register if you want)
+    });
     return <Register />;
 }
 
@@ -57,18 +59,20 @@ function App() {
                 <Route
                     path="/login"
                     element={
-                        <AnonymousRoute>
-                            <Login />
-                        </AnonymousRoute>
+                        // <AnonymousRoute>
+                        //     <Login />
+                        // </AnonymousRoute>
+                        <Login />
                     }
                 />
                 <Route path="/logout" element={<Logout />} />
                 <Route
                     path="/register"
                     element={
-                        <AnonymousRoute>
-                            <RegisterAndLogout />
-                        </AnonymousRoute>
+                        // <AnonymousRoute>
+                        //     <RegisterAndLogout />
+                        // </AnonymousRoute>
+                        <RegisterAndLogout />
                     }
                 />
                 <Route path="/landingpage" element={<LandingPage />} />

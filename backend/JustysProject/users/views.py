@@ -212,6 +212,25 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        # If login failed, don't set cookies
+        if response.status_code != 200 or 'access' not in response.data or 'refresh' not in response.data:
+            return response
+
+        access_token = response.data['access']
+        refresh_token = response.data['refresh']
+
+        # Set HTTP-only cookies
+        response.set_cookie('access', access_token, httponly=True, secure=False, samesite='Lax')
+        response.set_cookie('refresh', refresh_token, httponly=True, secure=False, samesite='Lax')
+
+        # Optionally, remove tokens from response body for extra security
+        # del response.data['access']
+        # del response.data['refresh']
+
+        return response
+
 
 class ForgotPasswordView(APIView):
     permission_classes = [AllowAny]
@@ -276,15 +295,14 @@ def google_login_callback(request):
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
-        
-        # Extract 'state' parameter and parse for remember:true/false
-        state = request.GET.get('state', '')
-        remember = 'true' if 'remember:true' in state else 'false'
-        remember_param = f'&remember={remember}'
-        
-        return redirect(f'http://localhost:5173/login/callback/?access_token={access_token}&refresh_token={refresh_token}{remember_param}')
+
+        response = redirect('http://localhost:5173/login/callback/')
+        # Set cookies (secure, httponly in production)
+        response.set_cookie('access', access_token, httponly=True, secure=False, samesite='Lax')
+        response.set_cookie('refresh', refresh_token, httponly=True, secure=False, samesite='Lax')
+        return response
     else:
-        return redirect(f'http://localhost:5173/login/callback/?error=NoGoogleToken')
+        return redirect('http://localhost:5173/login/callback/?error=NoGoogleToken')
 
 
 @csrf_exempt
@@ -316,7 +334,10 @@ def validate_google_token(request):
 
 class LogoutView(generics.GenericAPIView):
     def post(self, request):
-        return Response({"message": "Logged out"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
+        response.delete_cookie('access')
+        response.delete_cookie('refresh')
+        return response
 
 
 class PageDetailView(generics.RetrieveUpdateAPIView):

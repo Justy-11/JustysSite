@@ -221,13 +221,14 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         access_token = response.data['access']
         refresh_token = response.data['refresh']
 
-        # Set HTTP-only cookies
-        response.set_cookie('access', access_token, httponly=True, secure=False, samesite='Lax')
-        response.set_cookie('refresh', refresh_token, httponly=True, secure=False, samesite='Lax')
+        # Persistent cookie if remember is true, else session cookie
+        remember = request.data.get('remember', False)
+        cookie_options = {'httponly': True, 'secure': False, 'samesite': 'Lax'}
+        if remember in [True, 'true', 'True', 1, '1']:
+            cookie_options['max_age'] = 60 * 60 * 24 * 7  # 7 days
 
-        # Optionally, remove tokens from response body for extra security
-        # del response.data['access']
-        # del response.data['refresh']
+        response.set_cookie('access', access_token, **cookie_options)
+        response.set_cookie('refresh', refresh_token, **cookie_options)
 
         return response
 
@@ -296,10 +297,18 @@ def google_login_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
+        # Persistent cookie if remember=true in state or query param
+        remember = False
+        state = request.GET.get('state', '')
+        if 'remember:true' in state or request.GET.get('remember') == 'true':
+            remember = True
+        cookie_options = {'httponly': True, 'secure': False, 'samesite': 'Lax'}
+        if remember:
+            cookie_options['max_age'] = 60 * 60 * 24 * 7  # 7 days
+
         response = redirect('http://localhost:5173/login/callback/')
-        # Set cookies (secure, httponly in production)
-        response.set_cookie('access', access_token, httponly=True, secure=False, samesite='Lax')
-        response.set_cookie('refresh', refresh_token, httponly=True, secure=False, samesite='Lax')
+        response.set_cookie('access', access_token, **cookie_options)
+        response.set_cookie('refresh', refresh_token, **cookie_options)
         return response
     else:
         return redirect('http://localhost:5173/login/callback/?error=NoGoogleToken')

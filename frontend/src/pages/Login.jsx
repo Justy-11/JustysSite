@@ -26,7 +26,7 @@ function Login() {
         setErrors({});
 
         try {
-            const res = await api.post("/api/login/", { username: usernameOrEmail, password });
+            const res = await api.post("/api/login/", { username: usernameOrEmail, password, remember: rememberMe });
             if (res.data.is_verified === false) {
                 showErrorToast("Please verify your email first!");
                 setTimeout(() => {

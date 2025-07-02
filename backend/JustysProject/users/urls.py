@@ -6,9 +6,8 @@ from .views import (
     ProfileDetailView, ProductListView, ProductDetailView,
     CollectionListView, CollectionDetailView, PublishPageView,
     PublicPagesListView, PublicPageDetailView, PublicProductsListView,
-    PublicCollectionsListView, PublicProfileDetailView
+    PublicCollectionsListView, PublicProfileDetailView, CustomTokenRefreshView
 )
-from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path('user/register/', RegisterView.as_view(), name='register'),
@@ -16,7 +15,7 @@ urlpatterns = [
     path('user/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
     path('profile/', ProfileDetailView.as_view(), name='profile_detail'),

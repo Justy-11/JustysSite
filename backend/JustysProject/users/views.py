@@ -40,6 +40,38 @@ from rest_framework.exceptions import ValidationError
 from decimal import Decimal
 from django.http import Http404
 from datetime import timedelta
+from rest_framework_simplejwt.views import TokenRefreshView
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        print("=== /api/token/refresh/ called ===")
+        print("Cookies received:", request.COOKIES)
+        print("Refresh token in cookie:", request.COOKIES.get('refresh'))
+
+        # Use refresh token from cookie if not in data
+        refresh_token = request.COOKIES.get('refresh')
+        if not refresh_token:
+            return Response({'detail': 'No refresh token in cookie.'}, status=400)
+
+        serializer = self.get_serializer(data={'refresh': refresh_token})
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            print("Refresh error:", str(e))
+            return Response({'detail': 'Invalid refresh token.'}, status=400)
+
+        # Set new access token in cookie
+        access_token = serializer.validated_data['access']
+        response = Response(serializer.validated_data, status=200)
+        cookie_options = {
+            'httponly': True,
+            'secure': False,  # Set to True in production
+            'samesite': 'Lax',
+            'path': '/',
+        }
+        response.set_cookie('access', access_token, **cookie_options)
+        return response
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):

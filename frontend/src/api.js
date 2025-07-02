@@ -31,7 +31,6 @@ api.interceptors.response.use(
 
     // If 401 and not already trying to refresh
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      console.log("401 received, attempting to refresh token...");
       if (isRefreshing) {
         // Queue the request until refresh is done
         return new Promise(function(resolve, reject) {
@@ -45,7 +44,6 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        console.log("Sending POST to /api/token/refresh/ ...");
         const refreshResponse = await api.post("/api/token/refresh/");
         console.log("Refresh response:", refreshResponse);
         processQueue(null);

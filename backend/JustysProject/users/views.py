@@ -45,10 +45,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
-        print("=== /api/token/refresh/ called ===")
-        print("Cookies received:", request.COOKIES)
-        print("Refresh token in cookie:", request.COOKIES.get('refresh'))
-
         # Use refresh token from cookie if not in data
         refresh_token = request.COOKIES.get('refresh')
         if not refresh_token:
@@ -58,7 +54,6 @@ class CustomTokenRefreshView(TokenRefreshView):
         try:
             serializer.is_valid(raise_exception=True)
         except Exception as e:
-            print("Refresh error:", str(e))
             return Response({'detail': 'Invalid refresh token.'}, status=400)
 
         # Set new access token in cookie

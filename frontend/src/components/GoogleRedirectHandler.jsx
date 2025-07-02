@@ -14,7 +14,6 @@ function RedirectGoogleAuth() {
         hasRun.current = true;
         console.log("RedirectHandler mounted successfully");
 
-        // No need to parse tokens from URL anymore!
         api
           .get("/api/auth/user/")
           .then((response) => {

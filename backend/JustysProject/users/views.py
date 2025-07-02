@@ -24,8 +24,6 @@ from django.contrib.auth.tokens import default_token_generator
 from allauth.socialaccount.models import SocialAccount
 from django.shortcuts import redirect
 from rest_framework.permissions import IsAuthenticated
-from django.http import HttpResponseRedirect
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -34,7 +32,6 @@ from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import AccessToken
 import csv
 from io import TextIOWrapper
-from django.http import QueryDict
 import zipfile
 import os
 from django.core.files.storage import default_storage
@@ -42,6 +39,7 @@ from django.core.files.base import ContentFile
 from rest_framework.exceptions import ValidationError
 from decimal import Decimal
 from django.http import Http404
+from datetime import timedelta
 
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
@@ -221,12 +219,26 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         access_token = response.data['access']
         refresh_token = response.data['refresh']
 
-        # Persistent cookie if remember is true, else session cookie
         remember = request.data.get('remember', False)
-        cookie_options = {'httponly': True, 'secure': False, 'samesite': 'Lax'}
+        cookie_options = {
+            'httponly': True, 
+            'secure': False,  # Set to True in production with HTTPS
+            'samesite': 'Lax',
+            'path': '/'
+        }
+        
         if remember in [True, 'true', 'True', 1, '1']:
+            # persistant cookie
             cookie_options['max_age'] = 60 * 60 * 24 * 7  # 7 days
+        else:
+            # session cookie (browser will delete when closed)
+            pass
 
+        # Clear any existing session cookies first
+        response.delete_cookie('sessionid')
+        response.delete_cookie('csrftoken')
+        response.delete_cookie('messages')
+        
         response.set_cookie('access', access_token, **cookie_options)
         response.set_cookie('refresh', refresh_token, **cookie_options)
 
@@ -244,7 +256,7 @@ class ForgotPasswordView(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             
             
-            frontend_url = config('FRONTEND_URL')
+            frontend_url = config('FRONTEND_URL', default='http://localhost:5173')
             reset_url = f"{frontend_url}/reset-password?token={token}&uid={uid}"
             
             send_mail(
@@ -285,10 +297,11 @@ def google_login_callback(request):
     user = request.user
     social_accounts = SocialAccount.objects.filter(user=user)
     social_account = social_accounts.first()
+    frontend_url = config('FRONTEND_URL', default='http://localhost:5173')
 
     if not social_account:
         print("No social account for user:", user)
-        return redirect('http://localhost:5173/login/callback/?error=NoSocialAccount')
+        return redirect(f'{frontend_url}/login/callback/?error=NoSocialAccount')
     
     token = SocialToken.objects.filter(account=social_account, account__provider='google').first()
 
@@ -297,21 +310,34 @@ def google_login_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        # Persistent cookie if remember=true in state or query param
         remember = False
         state = request.GET.get('state', '')
         if 'remember:true' in state or request.GET.get('remember') == 'true':
             remember = True
-        cookie_options = {'httponly': True, 'secure': False, 'samesite': 'Lax'}
+        
+        cookie_options = {
+            'httponly': True, 
+            'secure': False,  # Set to True in production with HTTPS
+            'samesite': 'Lax',
+            'path': '/'
+        }
+        
         if remember:
+            # persistant cookie
             cookie_options['max_age'] = 60 * 60 * 24 * 7  # 7 days
 
-        response = redirect('http://localhost:5173/login/callback/')
+        response = redirect(f'{frontend_url}/login/callback/')
+        
+        # Clear any existing session cookies first
+        response.delete_cookie('sessionid')
+        response.delete_cookie('csrftoken')
+        response.delete_cookie('messages')
+        
         response.set_cookie('access', access_token, **cookie_options)
         response.set_cookie('refresh', refresh_token, **cookie_options)
         return response
     else:
-        return redirect('http://localhost:5173/login/callback/?error=NoGoogleToken')
+        return redirect(f'{frontend_url}/login/callback/?error=NoGoogleToken')
 
 
 @csrf_exempt
@@ -344,8 +370,13 @@ def validate_google_token(request):
 class LogoutView(generics.GenericAPIView):
     def post(self, request):
         response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
+        
         response.delete_cookie('access')
         response.delete_cookie('refresh')
+        response.delete_cookie('sessionid')
+        response.delete_cookie('csrftoken')
+        response.delete_cookie('messages')
+        
         return response
 
 

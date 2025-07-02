@@ -50,7 +50,8 @@ function Login() {
 
     const googleLogin = () => {
         const state = rememberMe ? 'remember:true' : 'remember:false';
-        window.location.href = `http://localhost:8000/accounts/google/login/?state=${encodeURIComponent(state)}`;
+        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        window.location.href = `${backendUrl}/accounts/google/login/?state=${encodeURIComponent(state)}`;
     };
 
     return (

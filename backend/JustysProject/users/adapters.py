@@ -5,6 +5,7 @@ from django.contrib.sites.models import Site
 from .models import CustomUser, Profile
 from django.contrib.messages import get_messages
 from urllib.parse import urlencode
+from decouple import config
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -53,7 +54,8 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         params = {
             'remember': remember,
         }
-        redirect_url = f"http://localhost:5173/login/callback/?{urlencode(params)}"
+        frontend_url = config('FRONTEND_URL', default='http://localhost:5173')
+        redirect_url = f"{frontend_url}/login/callback/?{urlencode(params)}"
         print(f"Redirecting to: {redirect_url}")
         return redirect_url
 

@@ -1,6 +1,53 @@
 # CreatiMate
 
-## ⚙️ Requirements
+A no-code platform that empowers users to create and customize their own branded product/service pages and full websites.
+
+## 🚀 Main Features & Functions
+
+- **User Authentication**
+  - Register with email/password and email verification (OTP)
+  - Login with email/password or Google OAuth
+  - Secure JWT-based authentication with HTTP-only cookies
+  - "Remember Me" for persistent login
+  - Password reset via email
+
+- **Profile Management**
+  - View and update user profile details (email, username, phone, address, currency, social links)
+
+- **Page & Website Builder**
+  - Create and update a personal or business page
+  - Add profile and banner images, product name, tagline, about, contact info
+  - Publish/unpublish your page
+
+- **Product Management**
+  - Add, edit, and delete products (title, description, price, stock, image)
+  - Bulk add products via CSV and ZIP upload
+  - Organize products into collections
+
+- **Collections**
+  - Create, update, and delete product collections
+  - View products by collection
+
+- **Public Pages**
+  - Shareable public product/service pages
+  - Publicly viewable collections and products
+
+- **Security**
+  - All authentication is handled via JWT tokens stored in HTTP-only cookies
+  - Automatic access token refresh using refresh tokens (also in HTTP-only cookies)
+  - CORS and CSRF protection configured for secure cross-origin requests
+
+## 🔒 How JWT + HTTP-only Cookies Provide Security
+
+- **HTTP-only cookies** prevent JavaScript access to tokens, protecting against XSS attacks.
+- **JWT tokens** are signed and have short lifetimes, so even if intercepted, they can't be tampered with or used for long.
+- **Refresh tokens** are also stored in HTTP-only cookies, allowing seamless, secure token renewal without exposing tokens to the frontend.
+- **No sessionid or CSRF tokens** are needed for API authentication, reducing attack surface.
+- **Automatic token refresh** ensures users stay logged in securely, but are logged out if both tokens expire.
+
+## 🚀 Getting Started
+
+### ⚙️ Requirements
 
 - **Python**: 3.12.0 (Used)
 - **Node.js** 
@@ -8,7 +55,7 @@
 - **Git**
 ---
 
-## 🐍 Backend Setup (Django)
+### 🐍 Backend Setup (Django)
 
 1. **Clone the repository:**
    ```bash
@@ -49,7 +96,7 @@
     GOOGLE_CLIENT_ID=YourClientID
     GOOGLE_CLIENT_SECRET=YourClientSecret
 
-## ✉️ Email Verification with Gmail
+### ✉️ Email Verification with Gmail
 To use Gmail SMTP, you need to generate an App Password:
 
 Steps:
@@ -75,7 +122,7 @@ https://myaccount.google.com/security
    ```bash
     py manage.py runserver
 
-## 🔐 Configure Google Login (Django AllAuth)
+### 🔐 Configure Google Login (Django AllAuth)
 Log in to Django Admin
 Go to http://localhost:8000/admin/
 Use your superuser credentials.
@@ -87,7 +134,7 @@ Add a Social Application:
 - Name: Google
 - Enter Client ID and Secret Key (instructions below)
 
-## Get Client ID and Secret from Google Cloud:
+### Get Client ID and Secret from Google Cloud:
 
 - Go to https://console.cloud.google.com , Create or select a project
 - Navigate to APIs & Services > Credentials
@@ -95,7 +142,7 @@ Add a Social Application:
 - App type: Web application
 - Add this Redirect URI: http://localhost:8000/accounts/google/login/callback
 
-## ⚛️ Frontend Setup (React + Vite)
+### ⚛️ Frontend Setup (React + Vite)
 
 1. **Navigate to frontend folder:**
    ```bash
@@ -110,8 +157,8 @@ Add a Social Application:
    VITE_API_URL="http://localhost:8000"
    VITE_GOOGLE_CLIENT_ID=YourClientID
    VITE_TINYMCE_API_KEY=YourTinyMCEAPIKey
-
-   Create account and get the API key: https://www.tiny.cloud/auth/login/
+   ```
+   Create account and get the TINYMCE API key: https://www.tiny.cloud/auth/login/
 
 4. **Start the frontend dev server:**
    ```bash

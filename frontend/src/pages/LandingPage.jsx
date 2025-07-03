@@ -4,11 +4,18 @@ import "../styles/LandingPage.css";
 import BG from "../assets/BG.png";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
+import { FaInstagram, FaGithub, FaXTwitter } from "react-icons/fa6";
 
 const LandingPage = () => {
   const [publishedPages, setPublishedPages] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  
+  const PAGE_SIZE = 20;
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(publishedPages.length / PAGE_SIZE);
+  const paginatedPages = publishedPages.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   useEffect(() => {
     const fetchPublishedPages = async () => {
@@ -77,39 +84,48 @@ const LandingPage = () => {
           {loading ? (
             <div className="loading-pages">Loading published pages...</div>
           ) : publishedPages.length > 0 ? (
-            <div className="pages-grid">
-              {publishedPages.map((page) => (
-                <div key={page.id} className="page-card" onClick={() => navigate(`/landingpage/${page.id}`)}>
-                  <div className="page-card-image">
-                    {page.banner_image ? (
-                      <img src={page.banner_image} alt={page.product_name} />
-                    ) : (
-                      <div className="page-card-placeholder">No Banner Image</div>
-                    )}
-                  </div>
-                  <div className="page-card-content">
-                    <div className="page-card-profile">
-                      {page.profile_image ? (
-                        <img src={page.profile_image} alt="Profile" className="page-profile-image" />
+            <>
+              <div className="pages-grid">
+                {paginatedPages.map((page) => (
+                  <div key={page.id} className="page-card" onClick={() => navigate(`/landingpage/${page.id}`)}>
+                    <div className="page-card-image">
+                      {page.banner_image ? (
+                        <img src={page.banner_image} alt={page.product_name} />
                       ) : (
-                        <div className="page-profile-placeholder"></div>
+                        <div className="page-card-placeholder">No Banner Image</div>
                       )}
                     </div>
-                    <div className="page-card-details">
-                      <h3 className="page-title">{page.product_name || "Product Name"}</h3>
-                      <p className="page-tagline">{page.tagline || "Product Tagline"}</p>
-                      <p className="page-description">
-                        {getShortDescription(page.about || "No description available")}
-                      </p>
-                      <div className="page-contact-info">
-                        {page.email && <span className="contact-item">📧 {page.email}</span>}
-                        {page.phone && <span className="contact-item">📞 {page.phone}</span>}
+                    <div className="page-card-content">
+                      <div className="page-card-profile">
+                        {page.profile_image ? (
+                          <img src={page.profile_image} alt="Profile" className="page-profile-image" />
+                        ) : (
+                          <div className="page-profile-placeholder"></div>
+                        )}
+                      </div>
+                      <div className="page-card-details">
+                        <h3 className="page-title">{page.product_name || "Product Name"}</h3>
+                        <p className="page-tagline">{page.tagline || "Product Tagline"}</p>
+                        <p className="page-description">
+                          {getShortDescription(page.about || "No description available")}
+                        </p>
+                        <div className="page-contact-info">
+                          {page.email && <span className="contact-item">📧 {page.email}</span>}
+                          {page.phone && <span className="contact-item">📞 {page.phone}</span>}
+                        </div>
                       </div>
                     </div>
                   </div>
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="pagination-controls">
+                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Prev</button>
+                  <span>Page {page} of {totalPages}</span>
+                  <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>Next</button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="no-pages">
               <p>No published pages yet. Be the first to create one!</p>
@@ -118,6 +134,40 @@ const LandingPage = () => {
           )}
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer className="footer-section">
+        <div className="footer-container">
+          <div className="footer-column">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="/about">About</a></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/contact">Contact Us</a></li>
+            </ul>
+          </div>
+          <div className="footer-column">
+            <h4>Follow Us</h4>
+            <div className="footer-social-links">
+              <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <FaInstagram size={24} color="#E1306C" />
+              </a>
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <FaGithub size={24} color="#fff" />
+              </a>
+              <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X">
+                <FaXTwitter size={24} color="#1da1f2" />
+              </a>
+          </div>
+          </div>
+          <div className="footer-column">
+            <h4>About This Site</h4>
+            <p>Made with <span style={{ color: '#ff4d6d', fontSize: '1.2em', verticalAlign: 'middle' }}>♥</span> to empower creators and small businesses everywhere.</p>
+            <p style={{ marginTop: '16px', color: '#a0a0a0', fontSize: '0.95em' }}>© 2025 CreatiMate. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 };

@@ -1,0 +1,86 @@
+.terms-gradient-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #593b8b 0%, #2a3b3c 100%);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+.terms-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 90px 20px 40px 20px;
+}
+.terms-title {
+  font-size: 2.7rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #fff;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.terms-title-icon {
+  color: #ffcc00;
+  font-size: 2.2rem;
+}
+.glass-card {
+  background: rgba(35, 46, 49, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  margin-bottom: 32px;
+  padding: 36px 32px;
+  border: 1.5px solid rgba(124, 84, 187, 0.18);
+}
+.terms-card h2 {
+  color: #ffcc00;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.terms-section-icon {
+  color: #7c54bb;
+  font-size: 1.4em;
+}
+.terms-card p {
+  color: #e0e0e0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+.terms-legal {
+  font-size: 0.98rem;
+  color: #a0a0a0;
+  text-align: center;
+}
+.terms-heart {
+  color: #ff4d6d;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+.terms-footer-copy {
+  margin-top: 16px;
+  color: #a0a0a0;
+  font-size: 0.95em;
+}
+@media (max-width: 600px) {
+  .terms-container {
+    padding: 90px 10px 40px 10px;
+  }
+  .glass-card {
+    padding: 22px 12px;
+    margin-bottom: 18px;
+  }
+  .terms-card h2 {
+    font-size: 1.08rem;
+  }
+  .terms-card p, .terms-card li {
+    font-size: 0.92rem;
+  }
+  .terms-title {
+    font-size: 1.2rem;
+  }
+}

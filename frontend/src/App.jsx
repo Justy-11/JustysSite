@@ -20,6 +20,10 @@ import Publish from './pages/Publish';
 import PublicProductPage from './pages/PublicProductPage';
 import Help from './pages/Help';
 import api from "./api";
+import About from './pages/About';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import ContactUs from './pages/ContactUs';
 
 
 function Logout() {
@@ -45,7 +49,7 @@ function App() {
                         <Route path="/publish" element={<Publish/>} />
                         <Route path="/help" element={<Help/>} />
                     </Route>
-                    <Route path="/about" element={<AboutUs />} />
+                    <Route path="/about-us" element={<AboutUs />} />
                     {/* Protected routes here */}
                 </Route>
 
@@ -72,6 +76,10 @@ function App() {
                 />
                 <Route path="/landingpage" element={<LandingPage />} />
                 <Route path="/landingpage/:pageId" element={<PublicProductPage />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<Terms />} />
+                <Route path="/contact" element={<ContactUs />} />
                 <Route path="/verify-otp" element={<VerifyOtp />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />

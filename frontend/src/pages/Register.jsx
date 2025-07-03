@@ -67,7 +67,7 @@ function Register() {
             <Navbar links={navLinks} />
 
             <form onSubmit={handleSubmit} className="form-container">
-                <h1>Register</h1>
+                <h2 className="form-title">Register</h2>
 
                 <button
                     className="form-button google-button"

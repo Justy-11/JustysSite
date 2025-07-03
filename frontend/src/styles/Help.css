@@ -11,7 +11,7 @@
   text-align: center;
   margin-bottom: 3rem;
   padding: 2rem;
-  background: #2a3b3c;
+  background: rgba(35, 46, 49, 0.92);
   color: #fff;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -24,12 +24,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: #fff;
+  color: #ffcc00;
 }
 
 .help-header p {
   font-size: 1.2rem;
-  color: #a0a0a0;
+  color: #e0e0e0;
   margin: 0;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .help-section {
-  background: #2a3b3c;
+  background: rgba(35, 46, 49, 0.92);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -70,14 +70,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
-  background: #3a4b4c;
+  background: transparent;
   color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .help-section-header:hover {
-  background: #4a5b5c;
+  background: #7c54bb22;
 }
 
 .section-title {
@@ -95,12 +95,13 @@
 
 .section-title svg {
   font-size: 1.3rem;
-  color: #fff;
+  color: #ffcc00;
 }
 
 .help-section-content {
   padding: 2rem;
-  background: #2a3b3c;
+  background: transparent;
+  color: #e0e0e0;
 }
 
 .help-section-header,
@@ -111,7 +112,7 @@
 .step {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #3a4b4c;
+  background: rgba(44, 55, 58, 0.85);
   border-radius: 8px;
   border-left: 4px solid #3b82f6;
 }
@@ -121,14 +122,14 @@
 }
 
 .step h3 {
-  color: #fff;
+  color: #7c54bb;
   margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
 .step p {
-  color: #a0a0a0;
+  color: #e0e0e0;
   line-height: 1.6;
   margin: 0;
 }
@@ -139,7 +140,7 @@
 }
 
 .step li {
-  color: #a0a0a0;
+  color: #e0e0e0;
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
@@ -149,13 +150,13 @@
 }
 
 .step strong {
-  color: #fff;
+  color: #ffcc00;
   font-weight: 600;
 }
 
 /* Tips Section */
 .help-tips {
-  background: #2a3b3c;
+  background: rgba(35, 46, 49, 0.92);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -164,7 +165,7 @@
 
 .help-tips h2 {
   text-align: center;
-  color: #fff;
+  color: #ffcc00;
   margin-bottom: 2rem;
   font-size: 1.8rem;
   font-weight: 600;
@@ -178,7 +179,7 @@
 
 .tip {
   padding: 1.5rem;
-  background: #3a4b4c;
+  background: rgba(44, 55, 58, 0.85);
   border-radius: 10px;
   border: 1px solid #4a5b5c;
   transition: all 0.3s ease;
@@ -187,7 +188,7 @@
 .tip:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  background: #4a5b5c;
+  background: #7c54bb22;
 }
 
 .tip:nth-of-type(1) {
@@ -229,6 +230,7 @@
 @media (max-width: 768px) {
   .help-container {
     padding: 0.5rem;
+    margin-top: 20px;
   }
   
   .help-header {

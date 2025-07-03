@@ -449,7 +449,8 @@
     font-size: 12px;
   }
 
-  .public-products-grid {
+  .public-products-grid,
+  .public-collections-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     width: 100%;

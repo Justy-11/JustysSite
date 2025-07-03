@@ -32,7 +32,7 @@ function ForgotPassword() {
             <Navbar links={navLinks} />
 
             <form onSubmit={handleSubmit} className="form-container">
-                <h1>Forgot Password</h1>
+                <h2 className="form-title">Forgot Password</h2>
                 <input
                     className="form-input"
                     type="email"

@@ -60,7 +60,7 @@ function VerifyOtp() {
         <>
             <Navbar links={navLinks} />
             <form onSubmit={handleSubmit} className="form-container">
-                <h1>Verify OTP</h1>
+                <h2 className="form-title">Verify OTP</h2>
 
                 {error && <p className="error-message">{error}</p>}
 

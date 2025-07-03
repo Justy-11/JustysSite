@@ -95,4 +95,9 @@ body {
     .navbar a {
       font-size: 20px; /* make icons a bit larger */
     }
+
+    .logo {
+        font-size: 25px;
+        margin-left: 5px;
+    }
   }

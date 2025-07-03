@@ -24,6 +24,13 @@ function AddProducts() {
   const csvInputRef = useRef(null);
   const zipInputRef = useRef(null);
   const previewRef = useRef(null);
+  const MAX_PRODUCTS_PER_COLLECTION = 1000;
+  const MAX_STANDALONE_PRODUCTS = 1000;
+  const PAGE_SIZE = 20;
+  const [productPage, setProductPage] = useState(1);
+  const [collectionPage, setCollectionPage] = useState(1);
+  const [collectionDetailPage, setCollectionDetailPage] = useState(1);
+  const collectionDetailPageSize = PAGE_SIZE;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,6 +101,19 @@ function AddProducts() {
     if (bulkProductDetails.some((detail) => !detail.title)) {
       showErrorToast("Please fill in all required fields (Title).");
       return;
+    }
+    if (createCollection && collectionName) {
+      const targetCollection = collections.find(col => col.name === collectionName);
+      const currentCount = targetCollection ? (targetCollection.products?.length || 0) : 0;
+      if (currentCount + bulkProductDetails.length > MAX_PRODUCTS_PER_COLLECTION) {
+        showErrorToast(`You can only have up to ${MAX_PRODUCTS_PER_COLLECTION} products per collection.`);
+        return;
+      }
+    } else {
+      if (products.filter((product) => !product.collection_name).length + bulkProductDetails.length > MAX_STANDALONE_PRODUCTS) {
+        showErrorToast(`You can only have up to ${MAX_STANDALONE_PRODUCTS} standalone products.`);
+        return;
+      }
     }
     const formData = new FormData();
     if (createCollection && collectionName) {
@@ -292,19 +312,6 @@ function AddProducts() {
     }
   };
 
-//   const downloadExampleCsv = () => {
-//     const csvContent = `Title,Description,Price,Stock,Image File Name
-// "Smartphone","A high-end smartphone with 128GB storage","699.99","50","smartphone.jpg"
-// "Laptop","A powerful laptop for gaming and work","1299.99","30","laptop.jpg"`;
-//     const blob = new Blob([csvContent], { type: "text/csv" });
-//     const url = URL.createObjectURL(blob);
-//     const a = document.createElement("a");
-//     a.href = url;
-//     a.download = "example-product-upload.csv";
-//     a.click();
-//     URL.revokeObjectURL(url);
-//   };
-
   const downloadExampleCsv = () => {
     const csvContent = `Title,Description,Price,Stock,Image File Name
   "Smartphone","<p style='text-align: center;'><strong>High-end smartphone</strong></p><ul><li>128GB storage</li><li>5G support</li></ul>","699.99","50","smartphone.jpg"
@@ -332,12 +339,23 @@ function AddProducts() {
 
   const getCollectionImages = (products) => {
     const imageUrls = products.map((product) => product.image).filter((img) => img);
-    const placeholderCount = 6 - imageUrls.length;
+    const placeholderCount = Math.max(0, 6 - imageUrls.length);
     return [
       ...imageUrls.slice(0, 6),
       ...Array(placeholderCount).fill(null),
     ];
   };
+
+  const paginatedStandaloneProducts = products
+    .filter((product) => !product.collection_name)
+    .slice((productPage - 1) * PAGE_SIZE, productPage * PAGE_SIZE);
+  const paginatedCollections = collections.slice((collectionPage - 1) * PAGE_SIZE, collectionPage * PAGE_SIZE);
+  const standaloneProductCount = products.filter((product) => !product.collection_name).length;
+  const totalProductPages = Math.ceil(standaloneProductCount / PAGE_SIZE);
+  const totalCollectionPages = Math.ceil(collections.length / PAGE_SIZE);
+
+  const paginatedCollectionProducts = selectedCollection ? (selectedCollection.products || []).slice((collectionDetailPage - 1) * collectionDetailPageSize, collectionDetailPage * collectionDetailPageSize) : [];
+  const totalCollectionDetailPages = selectedCollection ? Math.ceil((selectedCollection.products || []).length / collectionDetailPageSize) : 1;
 
   return (
     <div className="add-products-container">
@@ -346,12 +364,12 @@ function AddProducts() {
       <div className="preview-card-container" ref={previewRef}>
         {selectedCollection ? (
           <>
-            <button className="back-button" onClick={() => setSelectedCollection(null)}>
+            <button className="back-button" onClick={() => { setSelectedCollection(null); setCollectionDetailPage(1); }}>
               Back to All Products
             </button>
             <h3>Collection: {selectedCollection.name}</h3>
             <div className="products-grid">
-              {selectedCollection.products.map((product) => (
+              {paginatedCollectionProducts.map((product) => (
                 <div key={product.id} className="preview-product-card">
                   {product.image && (
                     <img src={product.image} alt={product.title} className="product-image" />
@@ -395,66 +413,78 @@ function AddProducts() {
                   </div>
                 </div>
               ))}
-              {selectedCollection.products.length === 0 && <p>No products in this collection.</p>}
+              {paginatedCollectionProducts.length === 0 && <p>No products in this collection.</p>}
             </div>
+            {totalCollectionDetailPages > 1 && (
+              <div className="pagination-controls">
+                <button onClick={() => setCollectionDetailPage(p => Math.max(1, p - 1))} disabled={collectionDetailPage === 1}>Prev</button>
+                <span>Page {collectionDetailPage} of {totalCollectionDetailPages}</span>
+                <button onClick={() => setCollectionDetailPage(p => Math.min(totalCollectionDetailPages, p + 1))} disabled={collectionDetailPage === totalCollectionDetailPages}>Next</button>
+              </div>
+            )}
           </>
         ) : (
           <>
             <h3>Your Products</h3>
             <div className="products-grid">
-              {products
-                .filter((product) => !product.collection_name)
-                .map((product) => (
-                  <div key={product.id} className="preview-product-card">
-                    {product.image && (
-                      <img src={product.image} alt={product.title} className="product-image" />
-                    )}
-                    <h4 title={product.title}>{product.title}</h4>
-                    {product.description && (
-                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
-                    )}
-                    {product.price && (
-                      <p>
-                        {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
-                        {product.price}
-                      </p>
-                    )}
-                    {product.stock && <p>Stock: {product.stock}</p>}
-                    <div className="action-buttons">
-                      <button
-                        onClick={() =>
-                          setModalType("edit-product") ||
-                          setModalData({
-                            id: product.id,
-                            title: product.title,
-                            description: product.description,
-                            price: product.price || "",
-                            stock: product.stock || "",
-                            image: null,
-                            collection: product.collection,
-                          })
-                        }
-                      >
-                        <BiPencil />
-                      </button>
-                      <button
-                        onClick={() =>
-                          setModalType("delete-product") ||
-                          setModalData({ id: product.id, title: product.title })
-                        }
-                      >
-                        <BiTrash />
-                      </button>
-                    </div>
+              {paginatedStandaloneProducts.map((product) => (
+                <div key={product.id} className="preview-product-card">
+                  {product.image && (
+                    <img src={product.image} alt={product.title} className="product-image" />
+                  )}
+                  <h4 title={product.title}>{product.title}</h4>
+                  {product.description && (
+                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                  )}
+                  {product.price && (
+                    <p>
+                      {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                      {product.price}
+                    </p>
+                  )}
+                  {product.stock && <p>Stock: {product.stock}</p>}
+                  <div className="action-buttons">
+                    <button
+                      onClick={() =>
+                        setModalType("edit-product") ||
+                        setModalData({
+                          id: product.id,
+                          title: product.title,
+                          description: product.description,
+                          price: product.price || "",
+                          stock: product.stock || "",
+                          image: null,
+                          collection: product.collection,
+                        })
+                      }
+                    >
+                      <BiPencil />
+                    </button>
+                    <button
+                      onClick={() =>
+                        setModalType("delete-product") ||
+                        setModalData({ id: product.id, title: product.title })
+                      }
+                    >
+                      <BiTrash />
+                    </button>
                   </div>
-                ))}
-              {products.filter((product) => !product.collection_name).length === 0 && (
+                </div>
+              ))}
+              {paginatedStandaloneProducts.length === 0 && (
                 <p>No standalone products added yet.</p>
               )}
             </div>
+            {totalProductPages > 1 && (
+              <div className="pagination-controls">
+                <button onClick={() => setProductPage(p => Math.max(1, p - 1))} disabled={productPage === 1}>Prev</button>
+                <span>Page {productPage} of {totalProductPages}</span>
+                <button onClick={() => setProductPage(p => Math.min(totalProductPages, p + 1))} disabled={productPage === totalProductPages}>Next</button>
+              </div>
+            )}
             <h3>Your Collections</h3>
             <div className="collections-grid">
-              {collections.map((collection) => (
+              {paginatedCollections.map((collection) => (
                 <div
                   key={collection.id}
                   className="collection-card"
@@ -498,8 +528,15 @@ function AddProducts() {
                   </div>
                 </div>
               ))}
-              {collections.length === 0 && <p>No collections added yet.</p>}
+              {paginatedCollections.length === 0 && <p>No collections added yet.</p>}
             </div>
+            {totalCollectionPages > 1 && (
+              <div className="pagination-controls">
+                <button onClick={() => setCollectionPage(p => Math.max(1, p - 1))} disabled={collectionPage === 1}>Prev</button>
+                <span>Page {collectionPage} of {totalCollectionPages}</span>
+                <button onClick={() => setCollectionPage(p => Math.min(totalCollectionPages, p + 1))} disabled={collectionPage === totalCollectionPages}>Next</button>
+              </div>
+            )}
           </>
         )}
       </div>

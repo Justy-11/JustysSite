@@ -21,6 +21,11 @@ function PublicProductPage() {
   const [socialLinks, setSocialLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const PAGE_SIZE = 20;
+  const [productPage, setProductPage] = useState(1);
+  const [collectionPage, setCollectionPage] = useState(1);
+  const [collectionDetailPage, setCollectionDetailPage] = useState(1);
+  const collectionDetailPageSize = PAGE_SIZE;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,7 +95,7 @@ function PublicProductPage() {
 
   const getCollectionImages = (products) => {
     const imageUrls = products.map((product) => product.image).filter((img) => img);
-    const placeholderCount = 6 - imageUrls.length;
+    const placeholderCount = Math.max(0, 6 - imageUrls.length);
     return [
       ...imageUrls.slice(0, 6),
       ...Array(placeholderCount).fill(null),
@@ -119,6 +124,14 @@ function PublicProductPage() {
   });
   // Only show products not in any collection
   const standaloneProducts = products.filter(p => !productIdsInCollections.has(p.id));
+
+  const paginatedStandaloneProducts = standaloneProducts.slice((productPage - 1) * PAGE_SIZE, productPage * PAGE_SIZE);
+  const paginatedCollections = collections.slice((collectionPage - 1) * PAGE_SIZE, collectionPage * PAGE_SIZE);
+  const totalProductPages = Math.ceil(standaloneProducts.length / PAGE_SIZE);
+  const totalCollectionPages = Math.ceil(collections.length / PAGE_SIZE);
+
+  const paginatedCollectionProducts = selectedCollection ? (selectedCollection.products || []).slice((collectionDetailPage - 1) * collectionDetailPageSize, collectionDetailPage * collectionDetailPageSize) : [];
+  const totalCollectionDetailPages = selectedCollection ? Math.ceil((selectedCollection.products || []).length / collectionDetailPageSize) : 1;
 
   if (loading) {
     return (
@@ -240,45 +253,49 @@ function PublicProductPage() {
             </div>
           ) : selectedCollection ? (
             <div className="public-collection-view">
-              <button className="public-back-button" onClick={handleBack}>
+              <button className="public-back-button" onClick={() => { setSelectedCollection(null); setCollectionDetailPage(1); }}>
                 ← Back
               </button>
               <h4>Collection: {selectedCollection.name}</h4>
               <div className="public-products-grid">
-                {selectedCollection.products.length > 0 ? (
-                  selectedCollection.products.map((product) => (
-                    <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
-                      {product.image && (
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className="public-product-image"
-                        />
-                      )}
-                      <h5 title={product.title}>{product.title}</h5>
-                      {product.description && (
-                        <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
-                      )}
-                      {product.price && (
-                        <p>
-                          {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
-                          {product.price}
-                        </p>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p>No products in this collection.</p>
-                )}
+                {paginatedCollectionProducts.map((product) => (
+                  <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
+                    {product.image && (
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="public-product-image"
+                      />
+                    )}
+                    <h5 title={product.title}>{product.title}</h5>
+                    {product.description && (
+                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                    )}
+                    {product.price && (
+                      <p>
+                        {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                        {product.price}
+                      </p>
+                    )}
+                  </div>
+                ))}
+                {paginatedCollectionProducts.length === 0 && <p>No products in this collection.</p>}
               </div>
+              {totalCollectionDetailPages > 1 && (
+                <div className="pagination-controls">
+                  <button onClick={() => setCollectionDetailPage(p => Math.max(1, p - 1))} disabled={collectionDetailPage === 1}>Prev</button>
+                  <span>Page {collectionDetailPage} of {totalCollectionDetailPages}</span>
+                  <button onClick={() => setCollectionDetailPage(p => Math.min(totalCollectionDetailPages, p + 1))} disabled={collectionDetailPage === totalCollectionDetailPages}>Next</button>
+                </div>
+              )}
             </div>
           ) : (
             <>
               <div className="public-products-section">
                 <h4>Products</h4>
                 <div className="public-products-grid">
-                  {standaloneProducts.length > 0 ? (
-                    standaloneProducts.map((product) => (
+                  {paginatedStandaloneProducts.length > 0 ? (
+                    paginatedStandaloneProducts.map((product) => (
                       <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
                         {product.image && (
                           <img
@@ -303,12 +320,19 @@ function PublicProductPage() {
                     <p>No standalone products available.</p>
                   )}
                 </div>
+                {totalProductPages > 1 && (
+                  <div className="pagination-controls">
+                    <button onClick={() => setProductPage(p => Math.max(1, p - 1))} disabled={productPage === 1}>Prev</button>
+                    <span>Page {productPage} of {totalProductPages}</span>
+                    <button onClick={() => setProductPage(p => Math.min(totalProductPages, p + 1))} disabled={productPage === totalProductPages}>Next</button>
+                  </div>
+                )}
               </div>
               
               <div className="public-collections-section">
                 <h4>Collections</h4>
                 <div className="public-collections-grid">
-                  {collections.map((collection) => (
+                  {paginatedCollections.map((collection) => (
                     <div
                       key={collection.id}
                       className="public-collection-card"
@@ -332,8 +356,15 @@ function PublicProductPage() {
                       <p>{collection.products.length} product(s)</p>
                     </div>
                   ))}
-                  {collections.length === 0 && <p>No collections available.</p>}
+                  {paginatedCollections.length === 0 && <p>No collections available.</p>}
                 </div>
+                {totalCollectionPages > 1 && (
+                  <div className="pagination-controls">
+                    <button onClick={() => setCollectionPage(p => Math.max(1, p - 1))} disabled={collectionPage === 1}>Prev</button>
+                    <span>Page {collectionPage} of {totalCollectionPages}</span>
+                    <button onClick={() => setCollectionPage(p => Math.min(totalCollectionPages, p + 1))} disabled={collectionPage === totalCollectionPages}>Next</button>
+                  </div>
+                )}
               </div>
             </>
           )}

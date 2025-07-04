@@ -6,6 +6,18 @@ import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub,
   BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 import DOMPurify from 'dompurify';
+import { SocialIcon } from 'react-social-icons/component';
+import 'react-social-icons/github';
+import 'react-social-icons/x';
+import 'react-social-icons/instagram';
+import 'react-social-icons/facebook';
+import 'react-social-icons/linkedin';
+import 'react-social-icons/youtube';
+import 'react-social-icons/tiktok';
+import 'react-social-icons/whatsapp';
+import 'react-social-icons/telegram';
+import 'react-social-icons/reddit';
+import 'react-social-icons/pinterest';
 
 function Publish() {
   const [pageData, setPageData] = useState(null);
@@ -191,16 +203,16 @@ function Publish() {
                   </ul>
                   {socialLinks.length > 0 && (
                   <div className="social-links-preview-publish">
-                    {socialLinks.map((link, index) => (
-                      <a
+                    {socialLinks.filter(link => typeof link === "string" && link.trim()).map((link, index) => (
+                      <SocialIcon
                         key={index}
-                        href={link}
+                        url={link}
+                        style={{ height: 32, width: 32, marginRight: 0 }}
+                        fallback="github"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-link-publish"
-                      >
-                        {getSocialIcon(link)}
-                      </a>
+                      />
                     ))}
                   </div>
                 )}

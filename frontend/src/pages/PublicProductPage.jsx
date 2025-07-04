@@ -9,6 +9,19 @@ import NavBar from "../components/NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import "../styles/PublicProductPage.css";
+import { SocialIcon } from 'react-social-icons/component';
+import 'react-social-icons/wa.me';
+import 'react-social-icons/github';
+import 'react-social-icons/x';
+import 'react-social-icons/instagram';
+import 'react-social-icons/facebook';
+import 'react-social-icons/linkedin';
+import 'react-social-icons/youtube';
+import 'react-social-icons/tiktok';
+import 'react-social-icons/whatsapp';
+import 'react-social-icons/telegram';
+import 'react-social-icons/reddit';
+import 'react-social-icons/pinterest';
 
 function PublicProductPage() {
   const { pageId } = useParams();
@@ -202,16 +215,16 @@ function PublicProductPage() {
                 </ul>
                 {socialLinks.length > 0 && (
                   <div className="social-links-public">
-                    {socialLinks.map((link, index) => (
-                      <a
+                    {socialLinks.filter(link => typeof link === "string" && link.trim()).map((link, index) => (
+                      <SocialIcon
                         key={index}
-                        href={link}
+                        url={link}
+                        style={{ height: 32, width: 32, marginRight: 0 }}
+                        fallback="github"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-link-public"
-                      >
-                        {getSocialIcon(link)}
-                      </a>
+                      />
                     ))}
                   </div>
                 )}

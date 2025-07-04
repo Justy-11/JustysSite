@@ -20,7 +20,7 @@ function Register() {
     const navLinks = [
         { href: "/landingpage", label: "Home" },
         { href: "/about", label: "About Us" },
-        { href: "/support", label: "Support" },
+        { href: "/contact", label: "Contact Us" },
     ];
     
     const handleSubmit = async (e) => {

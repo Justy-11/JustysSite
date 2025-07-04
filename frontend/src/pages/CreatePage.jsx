@@ -1,9 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/CreatePage.css";
 import api from "../api";
-import { BiLogoInstagram, BiLogoFacebook, BiLogoTiktok, BiLogoGithub, 
-        BiLogoTwitter, BiLogoWhatsapp, BiLogoYoutube, BiLogoLinkedin, 
-        BiLogoTelegram, BiLogoReddit, BiLogoPinterest } from 'react-icons/bi';
+import { SocialIcon } from 'react-social-icons/component';
+import 'react-social-icons/github';
+import 'react-social-icons/x';
+import 'react-social-icons/instagram';
+import 'react-social-icons/facebook';
+import 'react-social-icons/linkedin';
+import 'react-social-icons/youtube';
+import 'react-social-icons/tiktok';
+import 'react-social-icons/whatsapp';
+import 'react-social-icons/telegram';
+import 'react-social-icons/reddit';
+import 'react-social-icons/pinterest';
 
 function CreatePage() {
   const [isCreated, setIsCreated] = useState(false);
@@ -226,21 +235,6 @@ function CreatePage() {
     }
   };
 
-  const getSocialIcon = (url) => {
-    if (url.includes("instagram.com")) return <BiLogoInstagram />;
-    if (url.includes("facebook.com")) return <BiLogoFacebook />;
-    if (url.includes("tiktok.com")) return <BiLogoTiktok />;
-    if (url.includes("github.com")) return <BiLogoGithub />;
-    if (url.includes("twitter.com")) return <BiLogoTwitter />;
-    if (url.includes("wa.me")) return <BiLogoWhatsapp />;
-    if (url.includes("youtube.com")) return <BiLogoYoutube />;
-    if (url.includes("linkedin.com")) return <BiLogoLinkedin />;
-    if (url.includes("t.me")) return <BiLogoTelegram />;
-    if (url.includes("reddit.com")) return <BiLogoReddit />;
-    if (url.includes("pinterest.com")) return <BiLogoPinterest />;
-    return null;
-  };
-
   return (
     <div className="create-page-container">
       {isCreated && (
@@ -277,21 +271,17 @@ function CreatePage() {
                 </li>
               )}
             </ul>
-            {socialLinks.length > 0 && (
-              <div className="social-links-preview">
-                {socialLinks.map((link, index) => (
-                  <a
-                    key={index}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="social-link"
-                  >
-                    {getSocialIcon(link)}
-                  </a>
-                ))}
-              </div>
-            )}
+            {socialLinks.filter(link => typeof link === "string" && link.trim()).map((link, index) => (
+              <SocialIcon
+                key={index}
+                url={link}
+                style={{ height: 32, width: 32, marginRight: 8 }}
+                fallback="github"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link"
+              />
+            ))}
           </div>
           <button className="edit-button" onClick={handleEdit}>
             Edit
@@ -316,7 +306,7 @@ function CreatePage() {
                 </p>
               )}
               <p className="hint">
-                For the best results on all devices, use an image that’s at least 2048 x 1152 pixels and 6MB or less.
+                For the best results on all devices, use an image that's at least 2048 x 1152 pixels and 6MB or less.
               </p>
               {bannerImageError && <p className="error">{bannerImageError}</p>}
             </div>
@@ -334,7 +324,7 @@ function CreatePage() {
                 </p>
               )}
               <p className="hint">
-                For best results, use an image that’s at least 200 x 200 pixels and 2MB or less.
+                For best results, use an image that's at least 200 x 200 pixels and 2MB or less.
               </p>
               {profileImageError && <p className="error">{profileImageError}</p>}
             </div>

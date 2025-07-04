@@ -1,0 +1,48 @@
+<svg width="160" height="40" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for the main circle -->
+    <radialGradient id="circleGradient" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6C3FC5;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Gradient for the yellow accent -->
+    <linearGradient id="yellowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FDE047;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Glow effect filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Subtle shadow -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.3)"/>
+    </filter>
+  </defs>
+  
+
+  
+  <!-- Icon group with glow effect -->
+  <g filter="url(#glow)">
+    <!-- Main circle with gradient and shadow -->
+    <circle cx="26" cy="20" r="10" fill="url(#circleGradient)" filter="url(#shadow)"/>
+    
+    <!-- Yellow semi-circle with gradient -->
+    <path d="M21 20c0-2.76 2.24-5 5-5s5 2.24 5 5-2.24 5-5 5" fill="url(#yellowGradient)"/>
+    
+    <!-- Vertical bars with gradients and rounded corners -->
+    <rect x="38" y="14" width="3" height="12" rx="1.5" fill="url(#yellowGradient)" filter="url(#shadow)"/>
+    <rect x="43" y="14" width="3" height="12" rx="1.5" fill="url(#circleGradient)" filter="url(#shadow)"/>
+  </g>
+  
+  <!-- Text with subtle shadow -->
+  <text x="54" y="25" font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="bold" fill="#FFD700" letter-spacing="0.5" filter="url(#shadow)">Creati</text>
+  <text x="108" y="25" font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="bold" fill="#E0E0E0" letter-spacing="0.5" filter="url(#shadow)">Mate</text>
+</svg>

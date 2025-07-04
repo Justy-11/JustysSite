@@ -10,8 +10,8 @@ function ForgotPassword() {
 
     const navLinks = [
         { href: "/landingpage", label: "Home" },
-        { href: "/about", label: "About" },
-        { href: "/support", label: "Support" },
+        { href: "/about", label: "About Us" },
+        { href: "/contact", label: "Contact Us" },
     ];
     
     const handleSubmit = async (e) => {

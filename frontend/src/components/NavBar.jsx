@@ -1,14 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaInfoCircle, FaHeadset, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaInfoCircle, FaHeadset, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import "../styles/NavBar.css";
 
 const Navbar = ({ links }) => {
   const iconMap = {
     "Home": <FaHome />,
     "About Us": <FaInfoCircle />,
-    "Support": <FaHeadset />,
+    "Contact Us": <FaHeadset />,
     "Logout": <FaSignOutAlt />,
+    "Profile": <FaUserCircle />,
   };
 
   return (

@@ -17,7 +17,7 @@ import { FaInstagram, FaGithub } from 'react-icons/fa';
 const navLinks = [
   { href: "/landingpage", label: "Home" },
   { href: "/about", label: "About Us" },
-  { href: "/support", label: "Support" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 const Terms = () => (

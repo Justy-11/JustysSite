@@ -49,7 +49,7 @@ function App() {
                         <Route path="/publish" element={<Publish/>} />
                         <Route path="/help" element={<Help/>} />
                     </Route>
-                    <Route path="/about-us" element={<AboutUs />} />
+                    {/* <Route path="/about-us" element={<AboutUs />} /> */}
                     {/* Protected routes here */}
                 </Route>
 

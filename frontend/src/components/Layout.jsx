@@ -6,9 +6,7 @@ import "../styles/Layout.css";
 
 const Layout = () => {
   const navbarLinks = [
-    { label: "Home", href: "/" },
-    { label: "About Us", href: "/about" },
-    { label: "Support", href: "/help" },
+    { label: "Profile", href: "/" },
     { label: "Logout", href: "/logout" },
   ];
 

@@ -155,10 +155,7 @@ Add a Social Application:
 3. **Create a .env file inside frontend/:**
    ```bash
    VITE_API_URL="http://localhost:8000"
-   VITE_GOOGLE_CLIENT_ID=YourClientID
-   VITE_TINYMCE_API_KEY=YourTinyMCEAPIKey
-   ```
-   Create account and get the TINYMCE API key: https://www.tiny.cloud/auth/login/
+   VITE_GOOGLE_CLIENT_ID=YourClientID   
 
 4. **Start the frontend dev server:**
    ```bash

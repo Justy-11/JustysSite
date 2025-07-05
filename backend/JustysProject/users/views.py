@@ -749,3 +749,20 @@ class PublishPageView(APIView):
             return Response({
                 'error': 'Page not found. Please create a page first.'
             }, status=status.HTTP_404_NOT_FOUND)
+
+
+class UnpublishPageView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        try:
+            page = Page.objects.get(user=request.user)
+            page.is_published = False
+            page.save()
+            return Response({
+                'message': 'Page unpublished successfully!',
+                'is_published': False
+            }, status=status.HTTP_200_OK)
+        except Page.DoesNotExist:
+            return Response({
+                'error': 'Page not found. Please create a page first.'
+            }, status=status.HTTP_404_NOT_FOUND)

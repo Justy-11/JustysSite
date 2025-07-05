@@ -46,8 +46,15 @@ function Publish() {
           api.get("/api/collections/"),
           api.get("/api/profile/"),
         ]);
+        const pageData = pageRes.data || {};
+        setPageData(pageData);
+        setIsPublished(!!pageData.is_published);
+        if (pageData.is_published && pageData.id) {
+          setShareableLink(`${window.location.origin}/landingpage/${pageData.id}`);
+        } else {
+          setShareableLink("");
+        }
         const profileData = profileRes.data;
-        setPageData(pageRes.data || null);
         setProducts(productsRes.data || []);
         setCollections(collectionsRes.data || []);
         setProfileData(profileRes.data || { currency: "LKR" });
@@ -70,13 +77,25 @@ function Publish() {
   const handlePublish = async () => {
     try {
       const response = await api.post("/api/page/publish/", {});
-      const shareableLink = `${window.location.origin}/landingpage/${pageData?.id}`;
-      setShareableLink(shareableLink);
+      if (pageData?.id) {
+        setShareableLink(`${window.location.origin}/landingpage/${pageData.id}`);
+      }
       setIsPublished(true);
       showSuccessToast("Page published successfully!");
     } catch (error) {
       console.error("Error publishing page:", error.response?.data || error.message);
       showErrorToast(error.response?.data?.detail || "Failed to publish page.");
+    }
+  };
+
+  const handleUnpublish = async () => {
+    try {
+      await api.post("/api/page/unpublish/", {});
+      setIsPublished(false);
+      setShareableLink("");
+      showSuccessToast("Page unpublished successfully!");
+    } catch (error) {
+      showErrorToast("Failed to unpublish page.");
     }
   };
 
@@ -151,9 +170,16 @@ function Publish() {
     <div className="publish-container">
       <div className="publish-header">
         <h2>Preview & Publish Your Page</h2>
-        <button className="publish-button" onClick={handlePublish} disabled={isPublished}>
-          {isPublished ? "Published" : "Publish"}
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="publish-button" onClick={handlePublish}>
+            Publish
+          </button>
+          {isPublished && (
+            <button className="publish-button" style={{ background: "#ff4444" }} onClick={handleUnpublish}>
+              Unpublish
+            </button>
+          )}
+        </div>
       </div>
 
       {isPublished && shareableLink && (

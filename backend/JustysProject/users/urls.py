@@ -6,7 +6,8 @@ from .views import (
     ProfileDetailView, ProductListView, ProductDetailView,
     CollectionListView, CollectionDetailView, PublishPageView,
     PublicPagesListView, PublicPageDetailView, PublicProductsListView,
-    PublicCollectionsListView, PublicProfileDetailView, CustomTokenRefreshView
+    PublicCollectionsListView, PublicProfileDetailView, CustomTokenRefreshView,
+    UnpublishPageView
 )
 
 urlpatterns = [
@@ -21,6 +22,7 @@ urlpatterns = [
     path('profile/', ProfileDetailView.as_view(), name='profile_detail'),
     path('page/', PageDetailView.as_view(), name='page_detail'),
     path('page/publish/', PublishPageView.as_view(), name='publish_page'),
+    path('page/unpublish/', UnpublishPageView.as_view(), name='unpublish_page'),
     path('products/add/', AddProductsView.as_view(), name='add_products'),
     path('products/add-csv/', AddProductsCSVView.as_view(), name='add_products_csv'),
     path('products/', ProductListView.as_view(), name='product-list'),

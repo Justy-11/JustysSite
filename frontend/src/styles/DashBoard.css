@@ -224,6 +224,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
+  border: none;
 }
 
 .prev-button {
@@ -243,6 +244,10 @@
 
 .next-button:hover {
   background-color: #2563eb;
+}
+
+.form-buttons button {
+  border: none;
 }
 
 @media (max-width: 768px) {

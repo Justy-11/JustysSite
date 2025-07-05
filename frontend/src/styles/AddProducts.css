@@ -47,7 +47,7 @@
 /* Products and Collections Grids */
 .collections-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
   margin-top: 16px;
 }
@@ -922,4 +922,23 @@
   font-size: 15px;
   font-weight: bold;
   letter-spacing: 1px;
+}
+
+.download-csv-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .download-csv-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .download-csv-mobile {
+    width: 100%;
+    margin-left: 0 !important;
+    white-space: normal;
+  }
 }

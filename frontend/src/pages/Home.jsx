@@ -188,11 +188,13 @@ function Home() {
                 <div className="form-group">
                   <label>Phone Number</label>
                   <input
-                    type="text"
+                    type="tel"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    placeholder="Phone Number"
+                    placeholder="Phone Number (with country code, e.g., +94 70 1234567)"
+                    // pattern="^[0-9\-() +]*$"
+                    title="Please enter a valid phone number (numbers, spaces, +, -, (, ) only)"
                   />
                 </div>
                 <div className="form-group">

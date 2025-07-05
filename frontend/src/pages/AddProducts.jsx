@@ -818,7 +818,7 @@ function AddProducts() {
           </div>
           <div className="form-group">
             <label>Upload ZIP File (Product Images)</label>
-            <div className="file-input-wrapper">
+            <div className="file-input-wrapper download-csv-wrapper">
               <input
                 type="file"
                 accept=".zip"
@@ -828,6 +828,13 @@ function AddProducts() {
               <span className="file-input-label">
                 {zipFile ? zipFile.name : "No file chosen"}
               </span>
+              <button
+                type="button"
+                className="download-example-button download-csv-mobile"
+                onClick={downloadExampleCsv}
+              >
+                Download Example CSV
+              </button>
             </div>
           </div>
           <p className="hint">
@@ -838,16 +845,9 @@ function AddProducts() {
             <br />
             "Smartphone","&lt;p style='text-align: center;'&gt;&lt;strong&gt;High-end smartphone&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;128GB storage&lt;/li&gt;&lt;/ul&gt;","699.99","50","smartphone.jpg"
           </p>
-          <button
-            type="button"
-            className="download-example-button"
-            onClick={downloadExampleCsv}
-          >
-            Download Example CSV
-          </button>
         </div>
         {csvFile && zipFile && (
-          <div className="form-buttons">
+          <div className="form-buttons" style={{ justifyContent: 'flex-start' }}>
             <button
               type="button"
               className="create-button"

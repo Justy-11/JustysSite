@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import "../styles/AddProducts.css";
 import api from "../api";
 import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
-import { Editor } from '@tinymce/tinymce-react';
 import DOMPurify from 'dompurify';
 import { BiPencil, BiTrash } from 'react-icons/bi';
+import SimpleRichEditor from '../components/SimpleRichEditor';
 
 function AddProducts() {
   const [createCollection, setCreateCollection] = useState(false);
@@ -31,6 +31,8 @@ function AddProducts() {
   const [collectionPage, setCollectionPage] = useState(1);
   const [collectionDetailPage, setCollectionDetailPage] = useState(1);
   const collectionDetailPageSize = PAGE_SIZE;
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -328,13 +330,8 @@ function AddProducts() {
   const getShortDescription = (description) => {
     if (!description) return "";
     const textOnly = description.replace(/<[^>]+>/g, '');
-    if (textOnly.length <= 50) return description;
-    let truncated = description.slice(0, 50);
-    const lastTagIndex = truncated.lastIndexOf('<');
-    if (lastTagIndex > truncated.lastIndexOf('>')) {
-      truncated = truncated.slice(0, lastTagIndex);
-    }
-    return truncated + '...';
+    if (textOnly.length <= 50) return textOnly;
+    return textOnly.slice(0, 50) + '...';
   };
 
   const getCollectionImages = (products) => {
@@ -376,7 +373,7 @@ function AddProducts() {
                   )}
                   <h4 title={product.title}>{product.title}</h4>
                   {product.description && (
-                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                    <p>{getShortDescription(product.description)}</p>
                   )}
                   {product.price && (
                     <p>
@@ -434,7 +431,7 @@ function AddProducts() {
                   )}
                   <h4 title={product.title}>{product.title}</h4>
                   {product.description && (
-                    <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                    <p>{getShortDescription(product.description)}</p>
                   )}
                   {product.price && (
                     <p>
@@ -558,23 +555,11 @@ function AddProducts() {
                   </div>
                   <div className="form-group">
                     <label>Description</label>
-                    <Editor
-                      apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                    <SimpleRichEditor
                       value={modalData.description}
-                      onEditorChange={(content) => setModalData({ ...modalData, description: content })}
-                      init={{
-                        height: 200,
-                        menubar: false,
-                        plugins: [
-                          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                          'insertdatetime', 'media', 'table', 'preview', 'wordcount'
-                        ],
-                        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-                        content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; color: #ffffff; background-color: #4a5b5c; }',
-                        placeholder: 'Description'
-                    }}
-                  />
+                      onChange={(content) => setModalData({ ...modalData, description: content })}
+                      placeholder="Enter product description..."
+                    />
                   </div>
                   <div className="form-group">
                     <label>Price</label>
@@ -742,24 +727,12 @@ function AddProducts() {
                         handleBulkProductChange(index, "title", e.target.value)
                       }
                     />
-                    <Editor
-                      apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                    <SimpleRichEditor
                       value={bulkProductDetails[index].description}
-                      onEditorChange={(content) =>
+                      onChange={(content) =>
                         handleBulkProductChange(index, "description", content)
                       }
-                      init={{
-                        height: 150,
-                        menubar: false,
-                        plugins: [
-                          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                          'insertdatetime', 'media', 'table', 'preview', 'wordcount'
-                        ],
-                        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-                        content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; color: #ffffff; background-color: #4a5b5c; }',
-                        placeholder: 'Description'
-                      }}
+                      placeholder="Enter product description..."
                     />
                     <input
                       type="number"

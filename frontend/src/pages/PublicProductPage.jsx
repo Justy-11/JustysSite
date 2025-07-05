@@ -78,7 +78,7 @@ function PublicProductPage() {
   const navLinks = [
     { href: "/landingpage", label: "Home" },
     { href: "/about", label: "About Us" },
-    { href: "/", label: "Support" },
+    { href: "/contact", label: "Contact Us" },
   ];
 
   const handleCollectionClick = (collection) => {
@@ -97,13 +97,8 @@ function PublicProductPage() {
   const getShortDescription = (description) => {
     if (!description) return "";
     const textOnly = description.replace(/<[^>]+>/g, '');
-    if (textOnly.length <= 50) return description;
-    let truncated = description.slice(0, 50);
-    const lastTagIndex = truncated.lastIndexOf('<');
-    if (lastTagIndex > truncated.lastIndexOf('>')) {
-      truncated = truncated.slice(0, lastTagIndex);
-    }
-    return truncated + '...';
+    if (textOnly.length <= 50) return textOnly;
+    return textOnly.slice(0, 50) + '...';
   };
 
   const getCollectionImages = (products) => {
@@ -282,7 +277,7 @@ function PublicProductPage() {
                     )}
                     <h5 title={product.title}>{product.title}</h5>
                     {product.description && (
-                      <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                      <p>{getShortDescription(product.description)}</p>
                     )}
                     {product.price && (
                       <p>
@@ -306,33 +301,33 @@ function PublicProductPage() {
             <>
               <div className="public-products-section">
                 <h4>Products</h4>
-                <div className="public-products-grid">
-                  {paginatedStandaloneProducts.length > 0 ? (
-                    paginatedStandaloneProducts.map((product) => (
-                      <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
-                        {product.image && (
-                          <img
-                            src={product.image}
-                            alt={product.title}
-                            className="public-product-image"
-                          />
-                        )}
-                        <h5 title={product.title}>{product.title}</h5>
-                        {product.description && (
-                          <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
-                        )}
-                        {product.price && (
-                          <p>
-                            {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
-                            {product.price}
-                          </p>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <p>No standalone products available.</p>
-                  )}
-                </div>
+                                  <div className="public-products-grid">
+                    {paginatedStandaloneProducts.length > 0 ? (
+                      paginatedStandaloneProducts.map((product) => (
+                        <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
+                          {product.image && (
+                            <img
+                              src={product.image}
+                              alt={product.title}
+                              className="public-product-image"
+                            />
+                          )}
+                          <h5 title={product.title}>{product.title}</h5>
+                          {product.description && (
+                            <p>{getShortDescription(product.description)}</p>
+                          )}
+                          {product.price && (
+                            <p>
+                              {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                              {product.price}
+                            </p>
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <p>No standalone products available.</p>
+                    )}
+                  </div>
                 {totalProductPages > 1 && (
                   <div className="pagination-controls">
                     <button onClick={() => setProductPage(p => Math.max(1, p - 1))} disabled={productPage === 1}>Prev</button>

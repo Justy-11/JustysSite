@@ -766,41 +766,272 @@
   }
 }
 
-/* TinyMCE Editor */
-.tox-tinymce {
-  border: none !important;
-  border-radius: 4px !important;
-  background-color: #4a5b5c !important;
+/* Simple Rich Editor */
+.simple-rich-editor {
+  background-color: #4a5b5c;
+  border: 1px solid #2a3b3c;
+  border-radius: 4px;
+  overflow: visible;
+  position: relative;
 }
 
-.tox-toolbar, .tox-toolbar__primary {
-  background-color: #3a4b4c !important;
-  border-bottom: 1px solid #2a3b3c !important;
+.editor-toolbar {
+  background-color: #3a4b4c;
+  border-bottom: 1px solid #2a3b3c;
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
 }
 
-.tox-toolbar__group {
-  color: #ffffff !important;
+.toolbar-btn {
+  background-color: transparent;
+  border: 1px solid #2a3b3c;
+  border-radius: 3px;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.tox-tbtn, .tox-tbtn__select-label {
-  color: #ffffff !important;
+.toolbar-btn:hover {
+  background-color: #4a5b5c;
+  border-color: #3b82f6;
 }
 
-.tox-tbtn:hover {
-  background-color: #4a5b5c !important;
+.toolbar-btn:active {
+  background-color: #3b82f6;
 }
 
-.tox-editor-container {
-  background-color: #4a5b5c !important;
+.toolbar-btn.active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: #ffffff;
 }
 
-.tox-edit-area__iframe {
-  background-color: #4a5b5c !important;
+.help-button-container {
+  position: relative;
+  display: inline-block;
 }
 
-.tox-statusbar {
-  background-color: #3a4b4c !important;
-  color: #a0a0a0 !important;
+.help-btn {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background-color: #2a3b3c;
+  margin: 0 4px;
+}
+
+/* Help Tooltip */
+.editor-help-tooltip {
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+.editor-help-tooltip.tooltip-right {
+  right: 0;
+}
+
+.editor-help-tooltip.tooltip-left {
+  left: 0;
+}
+
+.help-content {
+  background-color: #2a3b3c;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  max-width: 300px;
+  position: relative;
+}
+
+.help-content h4 {
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.help-content ul {
+  margin: 0;
+  padding-left: 16px;
+  color: #ffffff;
+}
+
+.help-content li {
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.help-content strong {
+  color: #3b82f6;
+}
+
+.close-help-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #a0a0a0;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-help-btn:hover {
+  background-color: #4a5b5c;
+  color: #ffffff;
+}
+
+/* Help Backdrop for Mobile */
+.help-backdrop {
+  display: none;
+}
+
+.editor-content {
+  background-color: #4a5b5c;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 120px;
+  padding: 12px;
+  outline: none;
+  overflow-y: auto;
+}
+
+.editor-content:empty:before {
+  content: attr(placeholder);
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+.editor-content:focus {
+  background-color: #4a5b5c;
+}
+
+.editor-content ul,
+.editor-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.editor-content li {
+  margin: 4px 0;
+}
+
+.editor-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.editor-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 8px 0;
+}
+
+/* React Quill Editor (fallback) */
+.quill {
+  background-color: #4a5b5c;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.ql-toolbar {
+  background-color: #3a4b4c;
+  border: none;
+  border-bottom: 1px solid #2a3b3c;
+  border-radius: 4px 4px 0 0;
+}
+
+.ql-container {
+  background-color: #4a5b5c;
+  border: none;
+  border-radius: 0 0 4px 4px;
+  min-height: 120px;
+}
+
+.ql-editor {
+  background-color: #4a5b5c;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ql-editor.ql-blank::before {
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+.ql-toolbar button {
+  color: #ffffff;
+}
+
+.ql-toolbar button:hover {
+  color: #3b82f6;
+}
+
+.ql-toolbar .ql-active {
+  color: #3b82f6;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: #ffffff;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #ffffff;
+}
+
+.ql-toolbar .ql-picker {
+  color: #ffffff;
+}
+
+.ql-toolbar .ql-picker-options {
+  background-color: #3a4b4c;
+  border: 1px solid #2a3b3c;
+  color: #ffffff;
+}
+
+.ql-toolbar .ql-picker-item {
+  color: #ffffff;
+}
+
+.ql-toolbar .ql-picker-item:hover {
+  background-color: #4a5b5c;
+}
+
+.ql-toolbar .ql-picker-label {
+  color: #ffffff;
+}
+
+.ql-toolbar .ql-picker-label:hover {
+  color: #3b82f6;
 }
 
 .preview-product-card p {
@@ -840,16 +1071,93 @@
 }
 
 @media (max-width: 768px) {
-  .tox-tinymce {
-    min-height: 120px !important;
+  .simple-rich-editor {
+    min-height: 100px;
   }
 
-  .tox-toolbar__primary {
-    padding: 4px !important;
+  .editor-toolbar {
+    padding: 6px;
+    gap: 2px;
   }
 
-  .tox-tbtn {
-    font-size: 12px !important;
+  .toolbar-btn {
+    font-size: 10px;
+    padding: 3px 6px;
+    min-width: 28px;
+  }
+
+  .help-btn {
+    font-size: 12px;
+  }
+
+  .help-button-container {
+    position: relative;
+  }
+
+  .editor-help-tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0;
+    width: 90%;
+    max-width: 280px;
+    z-index: 1001;
+  }
+
+  .editor-help-tooltip.tooltip-right,
+  .editor-help-tooltip.tooltip-left {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .help-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .help-content {
+    padding: 12px;
+  }
+
+  .help-content h4 {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .help-content li {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .editor-content {
+    font-size: 12px;
+    padding: 8px;
+    min-height: 100px;
+  }
+
+  .quill {
+    min-height: 100px;
+  }
+
+  .ql-toolbar {
+    padding: 4px;
+  }
+
+  .ql-toolbar button {
+    font-size: 12px;
+  }
+
+  .ql-editor {
+    font-size: 12px;
   }
 
   .preview-product-card p {

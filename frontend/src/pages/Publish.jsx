@@ -120,13 +120,8 @@ function Publish() {
   const getShortDescription = (description) => {
     if (!description) return "";
     const textOnly = description.replace(/<[^>]+>/g, '');
-    if (textOnly.length <= 50) return description;
-    let truncated = description.slice(0, 50);
-    const lastTagIndex = truncated.lastIndexOf('<');
-    if (lastTagIndex > truncated.lastIndexOf('>')) {
-      truncated = truncated.slice(0, lastTagIndex);
-    }
-    return truncated + '...';
+    if (textOnly.length <= 50) return textOnly;
+    return textOnly.slice(0, 50) + '...';
   };
 
   const getCollectionImages = (products) => {
@@ -278,27 +273,27 @@ function Publish() {
                 </button>
                 <h4>Collection: {selectedCollection.name}</h4>
                 <div className="publish-products-grid">
-                  {paginatedCollectionProducts.map((product) => (
-                    <div key={product.id} className="publish-product-card" onClick={() => handleProductClick(product)}>
-                      {product.image && (
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className="publish-product-image"
-                        />
-                      )}
-                      <h5 title={product.title}>{product.title}</h5>
-                      {product.description && (
-                        <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
-                      )}
-                      {product.price && (
-                        <p>
-                          {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
-                          {product.price}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                                  {paginatedCollectionProducts.map((product) => (
+                  <div key={product.id} className="publish-product-card" onClick={() => handleProductClick(product)}>
+                    {product.image && (
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="publish-product-image"
+                      />
+                    )}
+                    <h5 title={product.title}>{product.title}</h5>
+                    {product.description && (
+                      <p>{getShortDescription(product.description)}</p>
+                    )}
+                    {product.price && (
+                      <p>
+                        {profileData.currency === 'LKR' ? 'Rs. ' : '$'}
+                        {product.price}
+                      </p>
+                    )}
+                  </div>
+                ))}
                   {paginatedCollectionProducts.length === 0 && <p>No products in this collection.</p>}
                 </div>
                 {totalCollectionDetailPages > 1 && (
@@ -326,7 +321,7 @@ function Publish() {
                           )}
                           <h5 title={product.title}>{product.title}</h5>
                           {product.description && (
-                            <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(getShortDescription(product.description)) }} />
+                            <p>{getShortDescription(product.description)}</p>
                           )}
                           {product.price && (
                             <p>

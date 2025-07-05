@@ -17,17 +17,17 @@ const Help = () => {
   };
 
   return (
-    <div className="help-container">
-      <div className="help-header">
+    <div className="help-page-container">
+      <div className="help-page-header">
         <h1><FaInfoCircle /> Help Center</h1>
         <p>Learn how to create and manage your product pages</p>
       </div>
 
-      <div className="help-content">
+      <div className="help-page-content">
         {/* Create/Edit Page Section */}
-        <div className="help-section">
+        <div className="help-page-section">
           <div 
-            className="help-section-header"
+            className="help-page-section-header"
             onClick={() => toggleSection('createPage')}
           >
             <div className="section-title">
@@ -38,7 +38,7 @@ const Help = () => {
           </div>
           
           {expandedSections.createPage && (
-            <div className="help-section-content">
+            <div className="help-page-section-content">
               <div className="step">
                 <h3>Step 1: Access the Create Page</h3>
                 <p>Click on "Create/Edit Page" in the sidebar menu to start building your product page.</p>
@@ -71,9 +71,9 @@ const Help = () => {
         </div>
 
         {/* Add Products Section */}
-        <div className="help-section">
+        <div className="help-page-section">
           <div 
-            className="help-section-header"
+            className="help-page-section-header"
             onClick={() => toggleSection('addProducts')}
           >
             <div className="section-title">
@@ -84,7 +84,7 @@ const Help = () => {
           </div>
           
           {expandedSections.addProducts && (
-            <div className="help-section-content">
+            <div className="help-page-section-content">
               <div className="step">
                 <h3>Step 1: Navigate to Add Products</h3>
                 <p>Click on "Add Products" in the sidebar menu to manage your product catalog.</p>
@@ -123,9 +123,9 @@ const Help = () => {
         </div>
 
         {/* Publish Section */}
-        <div className="help-section">
+        <div className="help-page-section">
           <div 
-            className="help-section-header"
+            className="help-page-section-header"
             onClick={() => toggleSection('publish')}
           >
             <div className="section-title">
@@ -136,7 +136,7 @@ const Help = () => {
           </div>
           
           {expandedSections.publish && (
-            <div className="help-section-content">
+            <div className="help-page-section-content">
               <div className="step">
                 <h3>Step 1: Preview Your Page</h3>
                 <p>Click on "Publish Page" in the sidebar to see how your page will look to visitors.</p>
@@ -182,7 +182,7 @@ const Help = () => {
         </div>
 
         {/* Tips Section */}
-        <div className="help-tips">
+        <div className="help-page-tips">
           <h2>💡 Pro Tips</h2>
           <div className="tips-grid">
             <div className="tip">

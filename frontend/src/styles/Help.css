@@ -1,4 +1,4 @@
-.help-container {
+.help-page-container {
   width: 100%;
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -7,7 +7,7 @@
   color: #fff;
 }
 
-.help-header {
+.help-page-header {
   text-align: center;
   margin-bottom: 3rem;
   padding: 2rem;
@@ -17,7 +17,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.help-header h1 {
+.help-page-header h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   display: flex;
@@ -27,19 +27,19 @@
   color: #ffcc00;
 }
 
-.help-header p {
+.help-page-header p {
   font-size: 1.2rem;
   color: #e0e0e0;
   margin: 0;
 }
 
-.help-content {
+.help-page-content {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.help-section {
+.help-page-section {
   background: rgba(35, 46, 49, 0.92);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -47,25 +47,25 @@
   transition: all 0.3s ease;
 }
 
-.help-section:hover {
+.help-page-section:hover {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   transform: translateY(-2px);
 }
 
-.help-section:nth-of-type(1) {
+.help-page-section:nth-of-type(1) {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
 }
-.help-section:nth-of-type(2) {
+.help-page-section:nth-of-type(2) {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
   color: #fff;
 }
-.help-section:nth-of-type(3) {
+.help-page-section:nth-of-type(3) {
   background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
   color: #fff;
 }
 
-.help-section-header {
+.help-page-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -76,7 +76,7 @@
   transition: all 0.3s ease;
 }
 
-.help-section-header:hover {
+.help-page-section-header:hover {
   background: #7c54bb22;
 }
 
@@ -98,14 +98,14 @@
   color: #ffcc00;
 }
 
-.help-section-content {
+.help-page-section-content {
   padding: 2rem;
   background: transparent;
   color: #e0e0e0;
 }
 
-.help-section-header,
-.help-section-content {
+.help-page-section-header,
+.help-page-section-content {
   background: transparent;
 }
 
@@ -155,7 +155,7 @@
 }
 
 /* Tips Section */
-.help-tips {
+.help-page-tips {
   background: rgba(35, 46, 49, 0.92);
   border-radius: 12px;
   padding: 2rem;
@@ -163,7 +163,7 @@
   margin-top: 2rem;
 }
 
-.help-tips h2 {
+.help-page-tips h2 {
   text-align: center;
   color: #ffcc00;
   margin-bottom: 2rem;
@@ -228,27 +228,27 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .help-container {
+  .help-page-container {
     padding: 0.5rem;
     margin-top: 20px;
   }
   
-  .help-header {
+  .help-page-header {
     padding: 1.5rem;
     margin-bottom: 2rem;
   }
   
-  .help-header h1 {
+  .help-page-header h1 {
     font-size: 2rem;
     flex-direction: column;
     gap: 0.5rem;
   }
   
-  .help-header p {
+  .help-page-header p {
     font-size: 1rem;
   }
   
-  .help-section-header {
+  .help-page-section-header {
     padding: 1rem 1.5rem;
   }
   
@@ -256,7 +256,7 @@
     font-size: 1.3rem;
   }
   
-  .help-section-content {
+  .help-page-section-content {
     padding: 1.5rem;
   }
   
@@ -268,25 +268,25 @@
     grid-template-columns: 1fr;
   }
   
-  .help-tips {
+  .help-page-tips {
     padding: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .help-container {
+  .help-page-container {
     padding: 0.5rem;
   }
   
-  .help-header {
+  .help-page-header {
     padding: 1rem;
   }
   
-  .help-header h1 {
+  .help-page-header h1 {
     font-size: 1.8rem;
   }
   
-  .help-section-header {
+  .help-page-section-header {
     padding: 0.8rem 1rem;
   }
   
@@ -298,7 +298,7 @@
     font-size: 1.1rem;
   }
   
-  .help-section-content {
+  .help-page-section-content {
     padding: 1rem;
   }
   
@@ -310,17 +310,17 @@
     font-size: 1.1rem;
   }
   
-  .help-tips {
+  .help-page-tips {
     padding: 1rem;
   }
   
-  .help-tips h2 {
+  .help-page-tips h2 {
     font-size: 1.5rem;
   }
 }
 
 /* Animation for expanding/collapsing sections */
-.help-section-content {
+.help-page-section-content {
   animation: slideDown 0.3s ease-out;
 }
 
@@ -336,20 +336,20 @@
 }
 
 /* Custom scrollbar for better UX */
-.help-section-content::-webkit-scrollbar {
+.help-page-section-content::-webkit-scrollbar {
   width: 6px;
 }
 
-.help-section-content::-webkit-scrollbar-track {
+.help-page-section-content::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
-.help-section-content::-webkit-scrollbar-thumb {
+.help-page-section-content::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 3px;
 }
 
-.help-section-content::-webkit-scrollbar-thumb:hover {
+.help-page-section-content::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }

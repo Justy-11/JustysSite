@@ -407,6 +407,22 @@ class LogoutView(generics.GenericAPIView):
         return response
 
 
+class ClearCookiesView(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        response = Response({"message": "Cookies cleared"}, status=status.HTTP_200_OK)
+        
+        # Clear all authentication cookies
+        response.delete_cookie('access')
+        response.delete_cookie('refresh')
+        response.delete_cookie('sessionid')
+        response.delete_cookie('csrftoken')
+        response.delete_cookie('messages')
+        
+        return response
+
+
 class PageDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = PageSerializer
     permission_classes = [IsAuthenticated]

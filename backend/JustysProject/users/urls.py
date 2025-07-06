@@ -7,7 +7,7 @@ from .views import (
     CollectionListView, CollectionDetailView, PublishPageView,
     PublicPagesListView, PublicPageDetailView, PublicProductsListView,
     PublicCollectionsListView, PublicProfileDetailView, CustomTokenRefreshView,
-    UnpublishPageView
+    UnpublishPageView, ClearCookiesView
 )
 
 urlpatterns = [
@@ -34,4 +34,5 @@ urlpatterns = [
     path('products/public/<int:page_id>/', PublicProductsListView.as_view(), name='public_products_list'),
     path('collections/public/<int:page_id>/', PublicCollectionsListView.as_view(), name='public_collections_list'),
     path('profile/public/<int:page_id>/', PublicProfileDetailView.as_view(), name='public_profile_detail'),
+    path('clear-cookies/', ClearCookiesView.as_view(), name='clear_cookies'),
 ]

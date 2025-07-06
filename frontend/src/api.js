@@ -13,6 +13,16 @@ const api = axios.create({
 let isRefreshing = false;
 let failedQueue = [];
 
+// Function to clear cookies from frontend
+const clearCookies = () => {
+  // Clear cookies by setting them to expire in the past
+  document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "messages=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+};
+
 const processQueue = (error, response = null) => {
   failedQueue.forEach(prom => {
     if (error) {
@@ -53,6 +63,17 @@ api.interceptors.response.use(
         console.log("Refresh failed:", refreshError);
         processQueue(refreshError, null);
         isRefreshing = false;
+        
+        // Clear cookies when refresh token expires
+        try {
+          await api.post("/api/clear-cookies/");
+          console.log("Cookies cleared successfully");
+        } catch (clearError) {
+          console.log("Failed to clear cookies via API, using frontend fallback:", clearError);
+          // Fallback: clear cookies from frontend
+          clearCookies();
+        }
+        
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }

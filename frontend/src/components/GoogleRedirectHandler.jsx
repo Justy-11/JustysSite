@@ -21,8 +21,25 @@ function RedirectGoogleAuth() {
             showInfoToast("Logged in successfully with Google!");
             navigate("/");
           })
-          .catch((error) => {
+          .catch(async (error) => {
             console.error("Error verifying token:", error.response?.data || error.message);
+            
+            // Clear cookies if there's an authentication error
+            if (error.response?.status === 401) {
+              try {
+                await api.post("/api/clear-cookies/");
+                console.log("Cookies cleared after Google auth error");
+              } catch (clearError) {
+                console.log("Failed to clear cookies via API, using frontend fallback:", clearError);
+                // Fallback: clear cookies from frontend
+                document.cookie = "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "messages=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+              }
+            }
+            
             showErrorToast("Failed to verify token. Please log in again.");
             navigate("/login");
           });

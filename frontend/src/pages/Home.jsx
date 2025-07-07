@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/Dashboard.css";
+import "../styles/DashBoard.css";
 import api from "../api";
 import { showSuccessToast, showErrorToast } from '../utils/toastUtils';
 import { FaCheckCircle } from "react-icons/fa";

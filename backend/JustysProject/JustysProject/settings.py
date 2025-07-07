@@ -87,6 +87,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'JustysProject.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),
+#         'PORT': config('DB_PORT'),
+#     }
+# }
+
+# at prod
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -171,8 +183,21 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Media settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
+
+# prod
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = config('SUPABASE_S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = config('SUPABASE_S3_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = config('SUPABASE_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = config('SUPABASE_S3_ENDPOINT_URL')
+AWS_S3_REGION_NAME = 'ap-south-1'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_ADDRESSING_STYLE = "virtual"
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False  # Set to True if want private files
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

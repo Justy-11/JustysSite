@@ -39,6 +39,11 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://justyssite-production.up.railway.app",
+    "https://creatimate.vercel.app",
+]
+
 # custom user model
 AUTH_USER_MODEL = 'users.CustomUser'
 

@@ -29,7 +29,14 @@ SECRET_KEY = config('SECRET_KEY')
 # DEBUG = True
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+#  prod
+ALLOWED_HOSTS = [
+    "justyssite-production.up.railway.app",
+    "creatimate.vercel.app",
+    "localhost",
+    "127.0.0.1",
+]
 
 # custom user model
 AUTH_USER_MODEL = 'users.CustomUser'

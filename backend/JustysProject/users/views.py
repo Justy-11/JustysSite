@@ -34,7 +34,6 @@ import csv
 from io import TextIOWrapper
 import zipfile
 import os
-from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from rest_framework.exceptions import ValidationError
 from decimal import Decimal
@@ -462,6 +461,7 @@ class AddProductsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        from django.core.files.storage import default_storage
         collection_name = request.data.get('collection', None)
         user = request.user
 
@@ -553,6 +553,7 @@ class AddProductsCSVView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        from django.core.files.storage import default_storage
         collection_name = request.data.get('collection', None)
         csv_file = request.FILES.get('csv_file')
         zip_file = request.FILES.get('zip_file')
@@ -668,6 +669,7 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Product.objects.filter(user=self.request.user)
 
     def perform_destroy(self, instance):
+        from django.core.files.storage import default_storage
         if instance.image and default_storage.exists(instance.image.path):
             default_storage.delete(instance.image.path)
         instance.delete()

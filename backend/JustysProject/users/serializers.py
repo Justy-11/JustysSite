@@ -4,7 +4,6 @@ import re
 from django.core.mail import send_mail
 from decouple import config
 import os
-from django.core.files.storage import default_storage
 from decimal import Decimal
 
 
@@ -122,6 +121,7 @@ class PageSerializer(serializers.ModelSerializer):
         return page
 
     def update(self, instance, validated_data):
+        from django.core.files.storage import default_storage
         for field in ['profile_image', 'banner_image']:
             if field in validated_data:
                 old_image = getattr(instance, field)
@@ -222,6 +222,7 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Failed to create product: {str(e)}")
 
     def update(self, instance, validated_data):
+        from django.core.files.storage import default_storage
         old_image = instance.image
         new_image = validated_data.get('image')
         if new_image and old_image and old_image != new_image:

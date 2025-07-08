@@ -707,6 +707,7 @@ class PublicPagesListView(generics.ListAPIView):
 class PublicPageDetailView(generics.RetrieveAPIView):
     serializer_class = PublicPageSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
     lookup_field = 'id'
     
     def get_queryset(self):

@@ -717,6 +717,7 @@ class PublicPageDetailView(generics.RetrieveAPIView):
 class PublicProductsListView(generics.ListAPIView):
     serializer_class = PublicProductSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
     
     def get_queryset(self):
         page_id = self.kwargs.get('page_id')
@@ -730,6 +731,7 @@ class PublicProductsListView(generics.ListAPIView):
 class PublicCollectionsListView(generics.ListAPIView):
     serializer_class = PublicCollectionSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
     
     def get_queryset(self):
         page_id = self.kwargs.get('page_id')
@@ -743,6 +745,7 @@ class PublicCollectionsListView(generics.ListAPIView):
 class PublicProfileDetailView(generics.RetrieveAPIView):
     serializer_class = PublicProfileSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
     
     def get_object(self):
         page_id = self.kwargs.get('page_id')

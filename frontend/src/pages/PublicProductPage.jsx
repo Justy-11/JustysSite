@@ -102,7 +102,7 @@ function PublicProductPage() {
   };
 
   const getCollectionImages = (products) => {
-    const imageUrls = products.map((product) => product.image).filter((img) => img);
+    const imageUrls = products.map((product) => product.image_url).filter((img) => img);
     const placeholderCount = Math.max(0, 6 - imageUrls.length);
     return [
       ...imageUrls.slice(0, 6),
@@ -236,9 +236,9 @@ function PublicProductPage() {
               </button>
               <div className="public-product-detail">
                 <div className="public-product-image-container">
-                  {selectedProduct.image && (
+                  {selectedProduct.image_url && (
                     <img
-                      src={selectedProduct.image}
+                      src={selectedProduct.image_url}
                       alt={selectedProduct.title}
                       className="public-product-image-large"
                     />
@@ -268,9 +268,9 @@ function PublicProductPage() {
               <div className="public-products-grid">
                 {paginatedCollectionProducts.map((product) => (
                   <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
-                    {product.image && (
+                    {product.image_url && (
                       <img
-                        src={product.image}
+                        src={product.image_url}
                         alt={product.title}
                         className="public-product-image"
                       />
@@ -305,9 +305,9 @@ function PublicProductPage() {
                     {paginatedStandaloneProducts.length > 0 ? (
                       paginatedStandaloneProducts.map((product) => (
                         <div key={product.id} className="public-product-card" onClick={() => handleProductClick(product)}>
-                          {product.image && (
+                          {product.image_url && (
                             <img
-                              src={product.image}
+                              src={product.image_url}
                               alt={product.title}
                               className="public-product-image"
                             />

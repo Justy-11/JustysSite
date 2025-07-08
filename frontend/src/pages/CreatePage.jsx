@@ -63,10 +63,10 @@ function CreatePage() {
             removeProfileImage: false,
             removeBannerImage: false,
           });
-          setPreviewProfileImage(data.profile_image || null);
-          setPreviewBannerImage(data.banner_image || null);
-          setExistingProfileImage(data.profile_image || null);
-          setExistingBannerImage(data.banner_image || null);
+          setPreviewProfileImage(data.profile_image_url || null);
+          setPreviewBannerImage(data.banner_image_url || null);
+          setExistingProfileImage(data.profile_image_url || null);
+          setExistingBannerImage(data.banner_image_url || null);
           setCharCount(data.about ? data.about.length : 0);
           setIsCreated(true);
         } else {

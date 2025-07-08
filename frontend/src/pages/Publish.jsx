@@ -125,7 +125,7 @@ function Publish() {
   };
 
   const getCollectionImages = (products) => {
-    const imageUrls = products.map((product) => product.image).filter((img) => img);
+    const imageUrls = products.map((product) => product.image_url).filter((img) => img);
     const placeholderCount = Math.max(0, 6 - imageUrls.length);
     return [
       ...imageUrls.slice(0, 6),
@@ -248,9 +248,9 @@ function Publish() {
                 </button>
                 <div className="publish-product-detail">
                   <div className="publish-product-image-container">
-                    {selectedProduct.image && (
+                    {selectedProduct.image_url && (
                       <img
-                        src={selectedProduct.image}
+                        src={selectedProduct.image_url}
                         alt={selectedProduct.title}
                         className="publish-product-image-large"
                       />
@@ -275,9 +275,9 @@ function Publish() {
                 <div className="publish-products-grid">
                                   {paginatedCollectionProducts.map((product) => (
                   <div key={product.id} className="publish-product-card" onClick={() => handleProductClick(product)}>
-                    {product.image && (
+                    {product.image_url && (
                       <img
-                        src={product.image}
+                        src={product.image_url}
                         alt={product.title}
                         className="publish-product-image"
                       />
@@ -312,9 +312,9 @@ function Publish() {
                     {paginatedStandaloneProducts.length > 0 ? (
                       paginatedStandaloneProducts.map((product) => (
                         <div key={product.id} className="publish-product-card" onClick={() => handleProductClick(product)}>
-                          {product.image && (
+                          {product.image_url && (
                             <img
-                              src={product.image}
+                              src={product.image_url}
                               alt={product.title}
                               className="publish-product-image"
                             />

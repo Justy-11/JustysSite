@@ -335,7 +335,7 @@ function AddProducts() {
   };
 
   const getCollectionImages = (products) => {
-    const imageUrls = products.map((product) => product.image).filter((img) => img);
+    const imageUrls = products.map((product) => product.image_url).filter((img) => img);
     const placeholderCount = Math.max(0, 6 - imageUrls.length);
     return [
       ...imageUrls.slice(0, 6),
@@ -368,8 +368,8 @@ function AddProducts() {
             <div className="products-grid">
               {paginatedCollectionProducts.map((product) => (
                 <div key={product.id} className="preview-product-card">
-                  {product.image && (
-                    <img src={product.image} alt={product.title} className="product-image" />
+                  {product.image_url && (
+                    <img src={product.image_url} alt={product.title} className="product-image" />
                   )}
                   <h4 title={product.title}>{product.title}</h4>
                   {product.description && (
@@ -426,8 +426,8 @@ function AddProducts() {
             <div className="products-grid">
               {paginatedStandaloneProducts.map((product) => (
                 <div key={product.id} className="preview-product-card">
-                  {product.image && (
-                    <img src={product.image} alt={product.title} className="product-image" />
+                  {product.image_url && (
+                    <img src={product.image_url} alt={product.title} className="product-image" />
                   )}
                   <h4 title={product.title}>{product.title}</h4>
                   {product.description && (

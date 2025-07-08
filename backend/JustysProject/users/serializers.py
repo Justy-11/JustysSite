@@ -108,10 +108,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 class PageSerializer(serializers.ModelSerializer):
     profile_image = serializers.ImageField(required=False, allow_null=True)
     banner_image = serializers.ImageField(required=False, allow_null=True)
+    profile_image_url = serializers.SerializerMethodField()
+    banner_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
-        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'is_published', 'created_at', 'updated_at']
+        fields = ['id', 'profile_image', 'banner_image', 'profile_image_url', 'banner_image_url', 'product_name', 'tagline', 'about', 'email', 'phone', 'is_published', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def create(self, validated_data):
@@ -145,9 +147,20 @@ class PageSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         return representation
 
+    def get_profile_image_url(self, obj):
+        if obj.profile_image:
+            return f"{config('SUPABASE_PUBLIC_URL')}{obj.profile_image.name}"
+        return None
+
+    def get_banner_image_url(self, obj):
+        if obj.banner_image:
+            return f"{config('SUPABASE_PUBLIC_URL')}{obj.banner_image.name}"
+        return None
+
 
 class ProductSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False, allow_null=True)
+    image_url = serializers.SerializerMethodField()
     collection = serializers.PrimaryKeyRelatedField(
         queryset=Collection.objects.none(),
         allow_null=True,
@@ -157,7 +170,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'collection', 'collection_name', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'image_url', 'collection', 'collection_name', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at', 'collection_name']
         extra_kwargs = {
             'user': {'write_only': True},
@@ -233,6 +246,11 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    def get_image_url(self, obj):
+        if obj.image:
+            return f"{config('SUPABASE_PUBLIC_URL')}{obj.image.name}"
+        return None
+
 
 class CollectionSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
@@ -252,17 +270,32 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 
 class PublicPageSerializer(serializers.ModelSerializer):
+    profile_image_url = serializers.SerializerMethodField()
+    banner_image_url = serializers.SerializerMethodField()
     class Meta:
         model = Page
-        fields = ['id', 'profile_image', 'banner_image', 'product_name', 'tagline', 'about', 'email', 'phone', 'created_at']
+        fields = ['id', 'profile_image', 'banner_image', 'profile_image_url', 'banner_image_url', 'product_name', 'tagline', 'about', 'email', 'phone', 'created_at']
         read_only_fields = ['id', 'created_at']
+    def get_profile_image_url(self, obj):
+        if obj.profile_image:
+            return f"{config('SUPABASE_PUBLIC_URL')}{obj.profile_image.name}"
+        return None
+    def get_banner_image_url(self, obj):
+        if obj.banner_image:
+            return f"{config('SUPABASE_PUBLIC_URL')}{obj.banner_image.name}"
+        return None
 
 
 class PublicProductSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'created_at']
+        fields = ['id', 'title', 'description', 'price', 'stock', 'image', 'image_url', 'created_at']
         read_only_fields = ['id', 'created_at']
+    def get_image_url(self, obj):
+        if obj.image:
+            return f"{config('SUPABASE_PUBLIC_URL')}{obj.image.name}"
+        return None
 
 
 class PublicCollectionSerializer(serializers.ModelSerializer):

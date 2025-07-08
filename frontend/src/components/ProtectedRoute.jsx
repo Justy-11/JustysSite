@@ -13,6 +13,7 @@ function ProtectedRoute() {
 
     useEffect(() => {
         // If no access cookie, immediately redirect
+        console.log("Checking access cookie:", hasCookie("access"));
         if (!hasCookie("access")) {
             setIsAuthorized(false);
             return;

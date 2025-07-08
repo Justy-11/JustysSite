@@ -43,6 +43,14 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from django.utils.decorators import method_decorator
 
 
+def storage_debug_view(request):
+    from django.core.files.storage import default_storage
+    from django.conf import settings
+    return JsonResponse({
+        "default_storage_class": str(default_storage.__class__),
+        "DEFAULT_FILE_STORAGE": getattr(settings, "DEFAULT_FILE_STORAGE", None),
+    })
+
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         # Use refresh token from cookie if not in data

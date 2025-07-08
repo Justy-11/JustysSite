@@ -29,9 +29,16 @@ import ContactUs from './pages/ContactUs';
 
 function Logout() {
     useEffect(() => {
-        api.post("/api/logout/").finally(() => {
-            window.location.href = "/login";
-        });
+        const doLogout = async () => {
+            try {
+                await api.post("/api/logout/");
+            } catch (e) {
+                // Optionally handle error
+            } finally {
+                window.location.href = "/login";
+            }
+        };
+        doLogout();
     }, []);
     return null;
 }

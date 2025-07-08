@@ -14,6 +14,11 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 import os
+import pkg_resources
+
+print("LOADING SETTINGS FROM:", __file__)
+print("INSTALLED PACKAGES (storages):", [pkg.key for pkg in pkg_resources.working_set if "storages" in pkg.key])
+print("INSTALLED PACKAGES (boto3):", [pkg.key for pkg in pkg_resources.working_set if "boto3" in pkg.key])
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

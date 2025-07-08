@@ -15,8 +15,10 @@ from decouple import config
 from datetime import timedelta
 import os
 import subprocess
-from django.core.files.storage import default_storage
-from storages.backends.s3boto3 import S3Boto3Storage
+# from django.core.files.storage import default_storage
+# from storages.backends.s3boto3 import S3Boto3Storage
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 def print_installed_packages():
     try:
@@ -219,7 +221,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = "https://ibmvlempvrdvveaxzzmh.supabase.co/storage/v1/s3/media/"
 
 # prod
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 
 AWS_ACCESS_KEY_ID = config('SUPABASE_S3_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = config('SUPABASE_S3_SECRET_KEY')
@@ -278,5 +280,5 @@ SOCIALACCOUNT_STORE_TOKENS = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 
-default_storage._wrapped = S3Boto3Storage()
-print("Monkey-patched default_storage to S3Boto3Storage")
+# default_storage._wrapped = S3Boto3Storage()
+# print("Monkey-patched default_storage to S3Boto3Storage")

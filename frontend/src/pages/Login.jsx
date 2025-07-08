@@ -35,6 +35,7 @@ function Login() {
             } else {
                 showInfoToast('Logged in successfully!');
                 navigate("/");
+                window.location.reload();
             }
         } catch (error) {
             console.error('Login error:', error.response?.data || error.message);

@@ -4,20 +4,10 @@ import api from "../api";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-function hasCookie(name) {
-    return document.cookie.split(';').some((c) => c.trim().startsWith(name + '='));
-}
-
 function ProtectedRoute() {
     const [isAuthorized, setIsAuthorized] = useState(null);
 
     useEffect(() => {
-        // If no access cookie, immediately redirect
-        console.log("Checking access cookie:", hasCookie("access"));
-        if (!hasCookie("access")) {
-            setIsAuthorized(false);
-            return;
-        }
         api.get("/api/auth/user/")
             .then(() => setIsAuthorized(true))
             .catch(() => setIsAuthorized(false));

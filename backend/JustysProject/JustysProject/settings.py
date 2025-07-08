@@ -14,11 +14,19 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 import os
-import pkg_resources
+import subprocess
+
+def print_installed_packages():
+    try:
+        print("INSTALLED PACKAGES (storages):")
+        print(subprocess.check_output("pip freeze | grep storages", shell=True).decode())
+        print("INSTALLED PACKAGES (boto3):")
+        print(subprocess.check_output("pip freeze | grep boto3", shell=True).decode())
+    except Exception as e:
+        print("Could not print installed packages:", e)
 
 print("LOADING SETTINGS FROM:", __file__)
-print("INSTALLED PACKAGES (storages):", [pkg.key for pkg in pkg_resources.working_set if "storages" in pkg.key])
-print("INSTALLED PACKAGES (boto3):", [pkg.key for pkg in pkg_resources.working_set if "boto3" in pkg.key])
+print_installed_packages()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

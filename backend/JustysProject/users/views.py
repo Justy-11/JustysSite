@@ -399,11 +399,12 @@ class LogoutView(generics.GenericAPIView):
     def post(self, request):
         response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
 
-        response.delete_cookie('access', path='/')
-        response.delete_cookie('refresh', path='/')
-        response.delete_cookie('sessionid', path='/')
-        response.delete_cookie('csrftoken', path='/')
-        response.delete_cookie('messages', path='/')
+        domain = "justyssite-production.up.railway.app"
+        response.delete_cookie('access', path='/', domain=domain)
+        response.delete_cookie('refresh', path='/', domain=domain)
+        response.delete_cookie('sessionid', path='/', domain=domain)
+        response.delete_cookie('csrftoken', path='/', domain=domain)
+        response.delete_cookie('messages', path='/', domain=domain)
         
         return response
 

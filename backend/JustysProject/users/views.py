@@ -61,8 +61,8 @@ class CustomTokenRefreshView(TokenRefreshView):
         response = Response(serializer.validated_data, status=200)
         cookie_options = {
             'httponly': True,
-            'secure': False,  # Set to True in production
-            'samesite': 'Lax',
+            'secure': True,  # Set to True in production
+            'samesite': 'None',
             'path': '/',
         }
         response.set_cookie('access', access_token, **cookie_options)
@@ -249,8 +249,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         remember = request.data.get('remember', False)
         cookie_options = {
             'httponly': True, 
-            'secure': False,  # Set to True in production with HTTPS
-            'samesite': 'Lax',
+            'secure': True,  # Set to True in production with HTTPS
+            'samesite': 'None',
             'path': '/'
         }
         
@@ -344,8 +344,8 @@ def google_login_callback(request):
         
         cookie_options = {
             'httponly': True, 
-            'secure': False,  # Set to True in production with HTTPS
-            'samesite': 'Lax',
+            'secure': True,  # Set to True in production with HTTPS
+            'samesite': 'None',
             'path': '/'
         }
         

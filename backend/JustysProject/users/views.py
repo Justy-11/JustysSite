@@ -263,9 +263,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             pass
 
         # Clear any existing session cookies first
-        response.delete_cookie('sessionid')
-        response.delete_cookie('csrftoken')
-        response.delete_cookie('messages')
+        response.delete_cookie('sessionid', path='/')
+        response.delete_cookie('csrftoken', path='/')
+        response.delete_cookie('messages', path='/')
         
         response.set_cookie('access', access_token, **cookie_options)
         response.set_cookie('refresh', refresh_token, **cookie_options)
@@ -357,9 +357,9 @@ def google_login_callback(request):
         response = redirect(f'{frontend_url}/login/callback/')
         
         # Clear any existing session cookies first
-        response.delete_cookie('sessionid')
-        response.delete_cookie('csrftoken')
-        response.delete_cookie('messages')
+        response.delete_cookie('sessionid', path='/')
+        response.delete_cookie('csrftoken', path='/')
+        response.delete_cookie('messages', path='/')
         
         response.set_cookie('access', access_token, **cookie_options)
         response.set_cookie('refresh', refresh_token, **cookie_options)
@@ -398,13 +398,9 @@ def validate_google_token(request):
 class LogoutView(generics.GenericAPIView):
     def post(self, request):
         response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
-        cookie_options = {
-            'path': '/',
-            'samesite': 'None',
-            'secure': True,
-        }
-        response.delete_cookie('access', **cookie_options)
-        response.delete_cookie('refresh', **cookie_options)
+
+        response.delete_cookie('access', path='/')
+        response.delete_cookie('refresh', path='/')
         response.delete_cookie('sessionid', path='/')
         response.delete_cookie('csrftoken', path='/')
         response.delete_cookie('messages', path='/')
@@ -419,11 +415,11 @@ class ClearCookiesView(APIView):
         response = Response({"message": "Cookies cleared"}, status=status.HTTP_200_OK)
         
         # Clear all authentication cookies
-        response.delete_cookie('access')
-        response.delete_cookie('refresh')
-        response.delete_cookie('sessionid')
-        response.delete_cookie('csrftoken')
-        response.delete_cookie('messages')
+        response.delete_cookie('access', path='/')
+        response.delete_cookie('refresh', path='/')
+        response.delete_cookie('sessionid', path='/')
+        response.delete_cookie('csrftoken', path='/')
+        response.delete_cookie('messages', path='/')
         
         return response
 

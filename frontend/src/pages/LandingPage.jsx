@@ -18,18 +18,18 @@ const LandingPage = () => {
   const paginatedPages = publishedPages.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   useEffect(() => {
-    // const fetchPublishedPages = async () => {
-    //   try {
-    //     const response = await api.get("/api/pages/public/");
-    //     setPublishedPages(response.data || []);
-    //   } catch (error) {
-    //     console.error("Error fetching published pages:", error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchPublishedPages();
-    setLoading(false);
+    const fetchPublishedPages = async () => {
+      try {
+        const response = await api.get("/api/pages/public/");
+        setPublishedPages(response.data || []);
+      } catch (error) {
+        console.error("Error fetching published pages:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPublishedPages();
+    // setLoading(false);
   }, []);
 
   const navLinks = [

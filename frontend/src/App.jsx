@@ -39,7 +39,7 @@ function Logout() {
             } finally {
                 setTimeout(() => {
                     window.location.href = "/login";
-                }, 1000);
+                }, 10000);
             }
         };
         doLogout();

@@ -30,12 +30,16 @@ import ContactUs from './pages/ContactUs';
 function Logout() {
     useEffect(() => {
         const doLogout = async () => {
+            console.log("Logging out...");
             try {
                 await api.post("/api/logout/");
+                console.log("Logout API call finished");
             } catch (e) {
-                // Optionally handle error
+                console.error("Logout error:", e);
             } finally {
-                window.location.href = "/login";
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1000);
             }
         };
         doLogout();

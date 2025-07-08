@@ -41,6 +41,7 @@ from decimal import Decimal
 from django.http import Http404
 from datetime import timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.utils.decorators import method_decorator
 
 
 class CustomTokenRefreshView(TokenRefreshView):
@@ -693,9 +694,11 @@ class CollectionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # Public API Views (No authentication required)
+@method_decorator(csrf_exempt, name='dispatch')
 class PublicPagesListView(generics.ListAPIView):
     serializer_class = PublicPageSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []  # No authentication
     
     def get_queryset(self):
         return Page.objects.filter(is_published=True).select_related('user')

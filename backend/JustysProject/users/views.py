@@ -456,11 +456,19 @@ class PageDetailView(generics.RetrieveUpdateAPIView):
         if page is None:
             serializer = self.get_serializer(data=mutable_data)
             serializer.is_valid(raise_exception=True)
+            # Debug print for storage backend
+            from django.core.files.storage import default_storage
+            print("default_storage.bucket.name:", getattr(getattr(default_storage, 'bucket', None), 'name', None))
+            print("default_storage.endpoint_url:", getattr(default_storage, 'endpoint_url', None))
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             serializer = self.get_serializer(page, data=mutable_data, partial=True)
             serializer.is_valid(raise_exception=True)
+            # Debug print for storage backend
+            from django.core.files.storage import default_storage
+            print("default_storage.bucket.name:", getattr(getattr(default_storage, 'bucket', None), 'name', None))
+            print("default_storage.endpoint_url:", getattr(default_storage, 'endpoint_url', None))
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
 

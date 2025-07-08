@@ -51,7 +51,12 @@ function Home() {
         } catch (err) {
           pageRes = null;
         }
-        if (pageRes && pageRes.data) {
+        if (
+          pageRes &&
+          pageRes.data &&
+          Object.keys(pageRes.data).length > 0 &&
+          pageRes.data.id
+        ) {
           setHasPage(true);
           setIsPublished(!!pageRes.data.is_published);
         } else {

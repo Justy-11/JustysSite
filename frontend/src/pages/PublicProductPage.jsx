@@ -179,12 +179,12 @@ function PublicProductPage() {
       <div className="public-page-container">
         <div className="public-page-content">
           <div className="public-top-section">
-            <div className="public-banner-section" style={{ backgroundImage: pageData.banner_image ? `url(${pageData.banner_image})` : 'none' }}>
-              {!pageData.banner_image && <div className="banner-placeholder">No banner image set</div>}
+            <div className="public-banner-section" style={{ backgroundImage: pageData.banner_image_url ? `url(${pageData.banner_image_url})` : 'none' }}>
+              {!pageData.banner_image_url && <div className="banner-placeholder">No banner image set</div>}
             </div>
             <div className="public-profile-section">
-              {pageData.profile_image ? (
-                <img src={pageData.profile_image} alt="Profile" className="public-profile-image" />
+              {pageData.profile_image_url ? (
+                <img src={pageData.profile_image_url} alt="Profile" className="public-profile-image" />
               ) : (
                 <div className="profile-placeholder">No profile image set</div>
               )}

@@ -398,12 +398,16 @@ def validate_google_token(request):
 class LogoutView(generics.GenericAPIView):
     def post(self, request):
         response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
-        
-        response.delete_cookie('access')
-        response.delete_cookie('refresh')
-        response.delete_cookie('sessionid')
-        response.delete_cookie('csrftoken')
-        response.delete_cookie('messages')
+        cookie_options = {
+            'path': '/',
+            'samesite': 'None',
+            'secure': True,
+        }
+        response.delete_cookie('access', **cookie_options)
+        response.delete_cookie('refresh', **cookie_options)
+        response.delete_cookie('sessionid', path='/')
+        response.delete_cookie('csrftoken', path='/')
+        response.delete_cookie('messages', path='/')
         
         return response
 

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -27,9 +28,11 @@ import ContactUs from './pages/ContactUs';
 
 
 function Logout() {
-    api.post("/api/logout/").finally(() => {
-        window.location.href = "/login";
-    });
+    useEffect(() => {
+        api.post("/api/logout/").finally(() => {
+            window.location.href = "/login";
+        });
+    }, []);
     return null;
 }
 

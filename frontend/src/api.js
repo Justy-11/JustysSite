@@ -41,6 +41,12 @@ api.interceptors.response.use(
 
     // If 401 and not already trying to refresh
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      // Only attempt refresh if refresh cookie is present
+      const hasRefresh = document.cookie.split(';').some((c) => c.trim().startsWith('refresh='));
+      if (!hasRefresh) {
+        // No refresh token, just reject
+        return Promise.reject(error);
+      }
       if (isRefreshing) {
         // Queue the request until refresh is done
         return new Promise(function(resolve, reject) {
@@ -64,7 +70,7 @@ api.interceptors.response.use(
         processQueue(refreshError, null);
         isRefreshing = false;
         
-        // Clear cookies when refresh token expires
+        // Only try to clear cookies if refresh cookie was present
         try {
           await api.post("/api/clear-cookies/");
           console.log("Cookies cleared successfully");
@@ -73,7 +79,6 @@ api.interceptors.response.use(
           // Fallback: clear cookies from frontend
           clearCookies();
         }
-        
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }

@@ -200,6 +200,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Media settings
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "https://ibmvlempvrdvveaxzzmh.supabase.co/storage/v1/s3/media/"
 
 # prod
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

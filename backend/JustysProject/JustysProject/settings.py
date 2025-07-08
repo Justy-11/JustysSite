@@ -15,6 +15,8 @@ from decouple import config
 from datetime import timedelta
 import os
 import subprocess
+from django.core.files.storage import default_storage
+from storages.backends.s3boto3 import S3Boto3Storage
 
 def print_installed_packages():
     try:
@@ -275,3 +277,6 @@ SOCIALACCOUNT_STORE_TOKENS = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
+
+default_storage._wrapped = S3Boto3Storage()
+print("Monkey-patched default_storage to S3Boto3Storage")

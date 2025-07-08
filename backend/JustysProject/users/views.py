@@ -678,8 +678,8 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_destroy(self, instance):
         from django.core.files.storage import default_storage
-        if instance.image and default_storage.exists(instance.image.path):
-            default_storage.delete(instance.image.path)
+        if instance.image and default_storage.exists(instance.image.name):
+            default_storage.delete(instance.image.name)
         instance.delete()
 
 

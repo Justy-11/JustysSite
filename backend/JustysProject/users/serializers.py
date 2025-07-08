@@ -127,12 +127,12 @@ class PageSerializer(serializers.ModelSerializer):
                 old_image = getattr(instance, field)
                 new_image_value = validated_data[field]
                 if new_image_value and hasattr(new_image_value, 'file'):
-                    if old_image and default_storage.exists(old_image.path) and old_image != new_image_value:
-                        default_storage.delete(old_image.path)
+                    if old_image and default_storage.exists(old_image.name) and old_image != new_image_value:
+                        default_storage.delete(old_image.name)
                     setattr(instance, field, new_image_value)
                 elif new_image_value is None or new_image_value == '':
-                    if old_image and default_storage.exists(old_image.path):
-                        default_storage.delete(old_image.path)
+                    if old_image and default_storage.exists(old_image.name):
+                        default_storage.delete(old_image.name)
                     setattr(instance, field, None)
 
         for attr, value in validated_data.items():
@@ -226,8 +226,8 @@ class ProductSerializer(serializers.ModelSerializer):
         old_image = instance.image
         new_image = validated_data.get('image')
         if new_image and old_image and old_image != new_image:
-            if default_storage.exists(old_image.path):
-                default_storage.delete(old_image.path)
+            if default_storage.exists(old_image.name):
+                default_storage.delete(old_image.name)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()

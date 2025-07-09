@@ -22,6 +22,7 @@ import 'react-social-icons/whatsapp';
 import 'react-social-icons/telegram';
 import 'react-social-icons/reddit';
 import 'react-social-icons/pinterest';
+import Skeleton from '@mui/material/Skeleton';
 
 function PublicProductPage() {
   const { pageId } = useParams();
@@ -143,21 +144,48 @@ function PublicProductPage() {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100vw",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <div className="public-page-container">
+        <div className="public-page-content">
+          <div className="public-top-section">
+            <div className="public-banner-section">
+              <Skeleton variant="rectangular" width={400} height={180} />
+            </div>
+            <div className="public-profile-section">
+              <Skeleton variant="circular" width={120} height={120} />
+            </div>
+            <div className="public-about-details-container">
+              <Skeleton variant="text" width={200} />
+              <Skeleton variant="text" width={150} />
+              <Skeleton variant="rectangular" width={350} height={60} />
+            </div>
+          </div>
+          <hr className="public-divider" />
+          <div className="public-products-section">
+            <Skeleton variant="text" width={150} />
+            <div className="public-products-grid">
+              {[...Array(4)].map((_, i) => (
+                <div className="public-product-card" key={i}>
+                  <Skeleton variant="rectangular" width={120} height={120} />
+                  <Skeleton variant="text" width={100} />
+                  <Skeleton variant="text" width={80} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="public-collections-section">
+            <Skeleton variant="text" width={150} />
+            <div className="public-collections-grid">
+              {[...Array(2)].map((_, i) => (
+                <div className="public-collection-card" key={i}>
+                  <Skeleton variant="rectangular" width={120} height={120} />
+                  <Skeleton variant="text" width={100} />
+                  <Skeleton variant="text" width={80} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 

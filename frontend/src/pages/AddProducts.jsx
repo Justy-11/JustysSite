@@ -5,8 +5,10 @@ import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 import DOMPurify from 'dompurify';
 import { BiPencil, BiTrash } from 'react-icons/bi';
 import SimpleRichEditor from '../components/SimpleRichEditor';
+import Skeleton from '@mui/material/Skeleton';
 
 function AddProducts() {
+  const [loading, setLoading] = useState(true);
   const [createCollection, setCreateCollection] = useState(false);
   const [collectionName, setCollectionName] = useState("");
   const [bulkImages, setBulkImages] = useState([]);
@@ -48,6 +50,8 @@ function AddProducts() {
       } catch (error) {
         console.error("Error fetching data:", error);
         showErrorToast("Failed to load products and collections.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -353,6 +357,29 @@ function AddProducts() {
 
   const paginatedCollectionProducts = selectedCollection ? (selectedCollection.products || []).slice((collectionDetailPage - 1) * collectionDetailPageSize, collectionDetailPage * collectionDetailPageSize) : [];
   const totalCollectionDetailPages = selectedCollection ? Math.ceil((selectedCollection.products || []).length / collectionDetailPageSize) : 1;
+
+  if (loading) {
+    return (
+      <div className="add-products-container">
+        <h2><Skeleton variant="text" width={200} /></h2>
+        <div className="preview-card-container">
+          <div className="products-grid">
+            {[...Array(4)].map((_, i) => (
+              <div className="preview-product-card" key={i}>
+                <Skeleton variant="rectangular" width={120} height={120} />
+                <Skeleton variant="text" width={100} />
+                <Skeleton variant="text" width={80} />
+                <Skeleton variant="text" width={60} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="form-group">
+          <Skeleton variant="rectangular" width={300} height={40} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="add-products-container">

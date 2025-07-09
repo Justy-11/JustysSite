@@ -242,78 +242,41 @@ function CreatePage() {
   if (loading) {
     return (
       <div className="create-page-container">
-        <div className="preview-card-container" style={{ maxWidth: 600, margin: '0 auto' }}>
-          {/* Banner Skeleton */}
-          <div className="banner-section" style={{ width: '100%', height: 180, borderRadius: 12, overflow: 'hidden', marginBottom: -60 }}>
-            <Skeleton variant="rectangular" width="100%" height={180} style={{ borderRadius: 12 }} />
+        <div className="preview-card-container">
+          <div className="banner-section">
+            <Skeleton variant="rectangular" width={400} height={180} />
           </div>
-          {/* Profile Skeleton - overlaps banner */}
-          <div className="profile-section" style={{ display: 'flex', justifyContent: 'center', marginTop: -60, marginBottom: 16 }}>
+          <div className="profile-section">
             <Skeleton variant="circular" width={120} height={120} />
           </div>
-          <div className="about-section" style={{ padding: 16, textAlign: 'center' }}>
-            <Skeleton variant="text" width={220} height={36} style={{ margin: '0 auto 8px' }} />
-            <Skeleton variant="text" width={160} height={28} style={{ margin: '0 auto 12px' }} />
-            <Skeleton variant="rectangular" width={320} height={60} style={{ margin: '0 auto 12px', borderRadius: 8 }} />
-          </div>
-          <div className="contact-section" style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 12 }}>
-            <Skeleton variant="text" width={120} height={24} />
-            <Skeleton variant="text" width={100} height={24} />
-          </div>
-          <div className="social-links" style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} variant="circular" width={32} height={32} />
-            ))}
+          <div className="about-section">
+            <Skeleton variant="text" width={300} height={40} />
+            <Skeleton variant="text" width={200} height={30} />
+            <Skeleton variant="rectangular" width={350} height={60} />
           </div>
         </div>
-        <div className="create-form" style={{ maxWidth: 600, margin: '32px auto 0' }}>
+        <div className="create-form">
           <h2>
-            <Skeleton variant="text" width={220} height={32} />
+            <Skeleton variant="text" width={200} />
           </h2>
           <form>
-            <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-              {/* Banner and Profile Image Inputs */}
-              <div className="form-group">
-                <Skeleton variant="rectangular" width={180} height={40} style={{ marginBottom: 8 }} />
-                <Skeleton variant="rectangular" width={180} height={24} />
-              </div>
-              <div className="form-group">
-                <Skeleton variant="rectangular" width={180} height={40} style={{ marginBottom: 8 }} />
-                <Skeleton variant="rectangular" width={180} height={24} />
-              </div>
-              {/* Product Name */}
-              <div className="form-group">
-                <Skeleton variant="rectangular" width={220} height={40} />
-              </div>
-              {/* Tagline */}
-              <div className="form-group">
-                <Skeleton variant="rectangular" width={220} height={40} />
-              </div>
-              {/* About */}
-              <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
-                <Skeleton variant="rectangular" width={480} height={80} />
-              </div>
-              {/* Email */}
-              <div className="form-group">
-                <Skeleton variant="rectangular" width={220} height={40} />
-              </div>
-              {/* Phone */}
-              <div className="form-group">
-                <Skeleton variant="rectangular" width={220} height={40} />
-              </div>
+            <div className="form-grid">
+              {[...Array(7)].map((_, i) => (
+                <div className="form-group" key={i}>
+                  <Skeleton variant="rectangular" width={250} height={40} />
+                </div>
+              ))}
             </div>
-            <div className="image-preview-area" style={{ display: 'flex', gap: 32, marginTop: 24 }}>
+            <div className="image-preview-area">
               <div className="image-preview-container">
-                <h4><Skeleton variant="text" width={120} /></h4>
-                <Skeleton variant="rectangular" width={180} height={120} style={{ borderRadius: 8 }} />
+                <Skeleton variant="rectangular" width={180} height={120} />
               </div>
               <div className="image-preview-container">
-                <h4><Skeleton variant="text" width={120} /></h4>
-                <Skeleton variant="rectangular" width={120} height={120} style={{ borderRadius: '50%' }} />
+                <Skeleton variant="rectangular" width={120} height={120} />
               </div>
             </div>
-            <div className="form-buttons" style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
-              <Skeleton variant="rectangular" width={160} height={48} style={{ borderRadius: 24 }} />
+            <div className="form-buttons">
+              <Skeleton variant="rectangular" width={120} height={40} />
             </div>
           </form>
         </div>

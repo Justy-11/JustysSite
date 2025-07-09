@@ -14,21 +14,21 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 import os
-import subprocess
+# import subprocess
 from django.core.files.storage import default_storage
 from storages.backends.s3boto3 import S3Boto3Storage
 
-def print_installed_packages():
-    try:
-        print("INSTALLED PACKAGES (storages):")
-        print(subprocess.check_output("pip freeze | grep storages", shell=True).decode())
-        print("INSTALLED PACKAGES (boto3):")
-        print(subprocess.check_output("pip freeze | grep boto3", shell=True).decode())
-    except Exception as e:
-        print("Could not print installed packages:", e)
+# def print_installed_packages():
+#     try:
+#         print("INSTALLED PACKAGES (storages):")
+#         print(subprocess.check_output("pip freeze | grep storages", shell=True).decode())
+#         print("INSTALLED PACKAGES (boto3):")
+#         print(subprocess.check_output("pip freeze | grep boto3", shell=True).decode())
+#     except Exception as e:
+#         print("Could not print installed packages:", e)
 
-print("LOADING SETTINGS FROM:", __file__)
-print_installed_packages()
+# print("LOADING SETTINGS FROM:", __file__)
+# print_installed_packages()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

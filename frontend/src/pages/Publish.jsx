@@ -18,8 +18,10 @@ import 'react-social-icons/whatsapp';
 import 'react-social-icons/telegram';
 import 'react-social-icons/reddit';
 import 'react-social-icons/pinterest';
+import Skeleton from '@mui/material/Skeleton';
 
 function Publish() {
+  const [loading, setLoading] = useState(true);
   const [pageData, setPageData] = useState(null);
   const [products, setProducts] = useState([]);
   const [collections, setCollections] = useState([]);
@@ -69,6 +71,8 @@ function Publish() {
       } catch (error) {
         console.error("Error fetching data:", error.response?.data || error.message);
         showErrorToast("Failed to load page data. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -160,6 +164,56 @@ function Publish() {
     if (url.includes("pinterest.com")) return <BiLogoPinterest />;
     return null;
   };
+
+  if (loading) {
+    return (
+      <div className="publish-container">
+        <div className="publish-header">
+          <Skeleton variant="text" width={300} height={40} />
+        </div>
+        <div className="publish-preview-container">
+          <div className="publish-top-section">
+            <div className="publish-banner-section">
+              <Skeleton variant="rectangular" width={400} height={180} />
+            </div>
+            <div className="publish-profile-section">
+              <Skeleton variant="circular" width={120} height={120} />
+            </div>
+            <div className="publish-about-details-container">
+              <Skeleton variant="text" width={200} />
+              <Skeleton variant="text" width={150} />
+              <Skeleton variant="rectangular" width={350} height={60} />
+            </div>
+          </div>
+          <hr className="publish-divider" />
+          <div className="publish-products-section">
+            <Skeleton variant="text" width={150} />
+            <div className="publish-products-grid">
+              {[...Array(4)].map((_, i) => (
+                <div className="publish-product-card" key={i}>
+                  <Skeleton variant="rectangular" width={120} height={120} />
+                  <Skeleton variant="text" width={100} />
+                  <Skeleton variant="text" width={80} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="publish-collections-section">
+            <Skeleton variant="text" width={150} />
+            <div className="publish-collections-grid">
+              {[...Array(2)].map((_, i) => (
+                <div className="publish-collection-card" key={i}>
+                  <Skeleton variant="rectangular" width={120} height={120} />
+                  <Skeleton variant="text" width={100} />
+                  <Skeleton variant="text" width={80} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="publish-container">

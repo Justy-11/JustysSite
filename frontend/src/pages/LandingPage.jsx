@@ -90,16 +90,16 @@ const LandingPage = () => {
                 {paginatedPages.map((page) => (
                   <div key={page.id} className="page-card" onClick={() => navigate(`/landingpage/${page.id}`)}>
                     <div className="page-card-image">
-                      {page.banner_image ? (
-                        <img src={page.banner_image} alt={page.product_name} />
+                      {page.banner_image_url ? (
+                        <img src={page.banner_image_url} alt={page.product_name} />
                       ) : (
                         <div className="page-card-placeholder">No Banner Image</div>
                       )}
                     </div>
                     <div className="page-card-content">
                       <div className="page-card-profile">
-                        {page.profile_image ? (
-                          <img src={page.profile_image} alt="Profile" className="page-profile-image" />
+                        {page.profile_image_url ? (
+                          <img src={page.profile_image_url} alt="Profile" className="page-profile-image" />
                         ) : (
                           <div className="page-profile-placeholder"></div>
                         )}

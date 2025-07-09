@@ -13,8 +13,10 @@ import 'react-social-icons/whatsapp';
 import 'react-social-icons/telegram';
 import 'react-social-icons/reddit';
 import 'react-social-icons/pinterest';
+import Skeleton from '@mui/material/Skeleton';
 
 function CreatePage() {
+  const [loading, setLoading] = useState(true);
   const [isCreated, setIsCreated] = useState(false);
   const [formData, setFormData] = useState({
     profileImage: null,
@@ -93,6 +95,8 @@ function CreatePage() {
       } catch (error) {
         console.error("Error fetching page data:", error.response?.data || error.message);
         alert("Failed to load page data. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchPageData();
@@ -234,6 +238,51 @@ function CreatePage() {
       formRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="create-page-container">
+        <div className="preview-card-container">
+          <div className="banner-section">
+            <Skeleton variant="rectangular" width={400} height={180} />
+          </div>
+          <div className="profile-section">
+            <Skeleton variant="circular" width={120} height={120} />
+          </div>
+          <div className="about-section">
+            <Skeleton variant="text" width={300} height={40} />
+            <Skeleton variant="text" width={200} height={30} />
+            <Skeleton variant="rectangular" width={350} height={60} />
+          </div>
+        </div>
+        <div className="create-form">
+          <h2>
+            <Skeleton variant="text" width={200} />
+          </h2>
+          <form>
+            <div className="form-grid">
+              {[...Array(7)].map((_, i) => (
+                <div className="form-group" key={i}>
+                  <Skeleton variant="rectangular" width={250} height={40} />
+                </div>
+              ))}
+            </div>
+            <div className="image-preview-area">
+              <div className="image-preview-container">
+                <Skeleton variant="rectangular" width={180} height={120} />
+              </div>
+              <div className="image-preview-container">
+                <Skeleton variant="rectangular" width={120} height={120} />
+              </div>
+            </div>
+            <div className="form-buttons">
+              <Skeleton variant="rectangular" width={120} height={40} />
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="create-page-container">

@@ -76,13 +76,13 @@ const Terms = () => (
         <div className="footer-column">
           <h4>Follow Us</h4>
           <div className="footer-social-links">
-            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href="https://instagram.com/justy__11" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <FaInstagram size={24} color="#E1306C" />
             </a>
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <a href="https://github.com/Justy-11" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <FaGithub size={24} color="#fff" />
             </a>
-            <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X">
+            <a href="https://x.com/justy0011" target="_blank" rel="noopener noreferrer" aria-label="X">
               <FaXTwitter size={24} color="#1da1f2" />
             </a>
           </div>

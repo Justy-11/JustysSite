@@ -14,6 +14,7 @@ import 'react-social-icons/telegram';
 import 'react-social-icons/reddit';
 import 'react-social-icons/pinterest';
 import Skeleton from '@mui/material/Skeleton';
+import { showSuccessToast } from "../utils/toastUtils";
 
 function CreatePage() {
   const [loading, setLoading] = useState(true);
@@ -213,6 +214,7 @@ function CreatePage() {
       setExistingProfileImage(response.data.profile_image || null);
       setExistingBannerImage(response.data.banner_image || null);
       setIsCreated(true);
+      showSuccessToast("Page updated successfully!");
       setTimeout(() => {
         if (previewCardRef.current) {
           previewCardRef.current.scrollIntoView({ behavior: "smooth" });

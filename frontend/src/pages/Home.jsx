@@ -4,6 +4,7 @@ import api from "../api";
 import { showSuccessToast, showErrorToast } from '../utils/toastUtils';
 import { FaCheckCircle } from "react-icons/fa";
 import GreetingCardBg from "../assets/greeting card.png";
+import Skeleton from '@mui/material/Skeleton';
 
 function Home() {
   const [username, setUsername] = useState("");
@@ -19,6 +20,7 @@ function Home() {
     socialLinks: "",
     currency: "LKR",
   });
+  const [loading, setLoading] = useState(true);
 
   // Status booleans
   const [hasPage, setHasPage] = useState(false);
@@ -75,6 +77,8 @@ function Home() {
       } catch (error) {
         console.error("Error fetching dashboard data:", error.response?.data || error.message);
         showErrorToast("Failed to load dashboard data. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchProfileAndStatus();
@@ -122,6 +126,66 @@ function Home() {
   // Colors
   const green = "#22c55e";
   const gray = "#a0a0a0";
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <div className="cards-container new-cards-layout">
+          <div className="greeting-card">
+            <Skeleton variant="rectangular" width={340} height={120} style={{ borderRadius: 16 }} />
+          </div>
+          <div className="status-cards-row" style={{ display: 'flex', gap: 16, margin: '24px 0' }}>
+            {[...Array(3)].map((_, i) => (
+              <div className="status-card single-status-card" key={i}>
+                <Skeleton variant="circular" width={32} height={32} />
+                <Skeleton variant="text" width={80} height={24} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="wizard-form">
+          <div className="wizard-steps" style={{ display: 'flex', gap: 24, marginBottom: 24 }}>
+            {[1, 2].map((s) => (
+              <div key={s} className="step-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Skeleton variant="circular" width={36} height={36} />
+                <Skeleton variant="text" width={90} height={18} />
+                {s < 2 && <Skeleton variant="rectangular" width={40} height={4} style={{ margin: '8px 0' }} />}
+              </div>
+            ))}
+          </div>
+          <form>
+            <div className="form-section">
+              <Skeleton variant="text" width={200} height={32} style={{ marginBottom: 16 }} />
+              <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                {[...Array(4)].map((_, i) => (
+                  <div className="form-group" key={i}>
+                    <Skeleton variant="rectangular" width={220} height={40} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="form-section">
+              <Skeleton variant="text" width={220} height={32} style={{ marginBottom: 16, marginTop: 32 }} />
+              <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                {[...Array(4)].map((_, i) => (
+                  <div className="form-group" key={i}>
+                    <Skeleton variant="rectangular" width={220} height={40} />
+                  </div>
+                ))}
+                <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                  <Skeleton variant="rectangular" width={480} height={80} />
+                </div>
+              </div>
+            </div>
+            <div className="form-buttons" style={{ marginTop: 32, display: 'flex', gap: 16 }}>
+              <Skeleton variant="rectangular" width={120} height={40} />
+              <Skeleton variant="rectangular" width={120} height={40} />
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container">

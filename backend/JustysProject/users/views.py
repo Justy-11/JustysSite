@@ -64,8 +64,9 @@ class CustomTokenRefreshView(TokenRefreshView):
         except Exception as e:
             return Response({'detail': 'Invalid refresh token.'}, status=400)
 
-        # Set new access token in cookie
+        # Set new access token and refresh token in cookie
         access_token = serializer.validated_data['access']
+        new_refresh_token = serializer.validated_data.get('refresh')
         response = Response(serializer.validated_data, status=200)
         cookie_options = {
             'httponly': True,
@@ -74,6 +75,8 @@ class CustomTokenRefreshView(TokenRefreshView):
             'path': '/',
         }
         response.set_cookie('access', access_token, **cookie_options)
+        if new_refresh_token:
+            response.set_cookie('refresh', new_refresh_token, **cookie_options)
         return response
 
 

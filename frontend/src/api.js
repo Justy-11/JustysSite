@@ -41,12 +41,6 @@ api.interceptors.response.use(
 
     // If 401 and not already trying to refresh
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      // Only attempt refresh if refresh cookie is present
-      const hasRefresh = document.cookie.split(';').some((c) => c.trim().startsWith('refresh='));
-      if (!hasRefresh) {
-        // No refresh token, just reject
-        return Promise.reject(error);
-      }
       if (isRefreshing) {
         // Queue the request until refresh is done
         return new Promise(function(resolve, reject) {

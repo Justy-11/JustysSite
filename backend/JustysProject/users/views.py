@@ -596,7 +596,7 @@ class AddProductsCSVView(APIView):
                         with zip_ref.open(file_name) as file:
                             content = file.read()
                             filename = os.path.basename(file_name)
-                            path = f'product_images/{filename}'
+                            path = f'product_images/{user.username}/{filename}'
                             if not default_storage.exists(path):
                                 default_storage.save(path, ContentFile(content))
                             image_files[filename] = path

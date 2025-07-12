@@ -53,8 +53,15 @@ class Profile(models.Model):
 
 class Page(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='page')
-    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
-    banner_image = models.ImageField(upload_to='banner_images/', blank=True, null=True)
+    
+    def upload_to_profile_image(instance, filename):
+        return f'profile_images/{instance.user.username}/{filename}'
+    
+    def upload_to_banner_image(instance, filename):
+        return f'banner_images/{instance.user.username}/{filename}'
+    
+    profile_image = models.ImageField(upload_to=upload_to_profile_image, blank=True, null=True)
+    banner_image = models.ImageField(upload_to=upload_to_banner_image, blank=True, null=True)
     product_name = models.CharField(max_length=255, blank=True)
     tagline = models.CharField(max_length=255, blank=True)
     about = models.TextField(max_length=500, blank=True)
@@ -89,10 +96,10 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     stock = models.IntegerField(blank=True, null=True)
     
-    def upload_to_original(instance, filename):
-        return f'product_images/{filename}'
+    def upload_to_product_image(instance, filename):
+        return f'product_images/{instance.user.username}/{filename}'
     
-    image = models.ImageField(upload_to=upload_to_original, blank=True, null=True)
+    image = models.ImageField(upload_to=upload_to_product_image, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

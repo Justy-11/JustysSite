@@ -51,6 +51,109 @@ def storage_debug_view(request):
         "DEFAULT_FILE_STORAGE": getattr(settings, "DEFAULT_FILE_STORAGE", None),
     })
 
+
+class ContactFormView(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        try:
+            name = request.data.get('name')
+            email = request.data.get('email')
+            subject = request.data.get('subject')
+            inquiry_type = request.data.get('inquiryType')
+            message = request.data.get('message')
+            
+            # Validate required fields
+            if not all([name, email, subject, inquiry_type, message]):
+                return Response({
+                    'error': 'All fields are required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Validate email format
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                return Response({
+                    'error': 'Invalid email format'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Validate inquiry type
+            valid_inquiry_types = ['general', 'technical', 'feature', 'business', 'bug', 'feedback']
+            if inquiry_type not in valid_inquiry_types:
+                return Response({
+                    'error': 'Invalid inquiry type'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Prepare email content
+            email_subject = f"Contact Form: {subject} - {inquiry_type}"
+            
+            email_body = f"""
+New contact form submission from CreatiMate website:
+
+Name: {name}
+Email: {email}
+Subject: {subject}
+Inquiry Type: {inquiry_type}
+
+Message:
+{message}
+
+---
+This message was sent from the CreatiMate contact form.
+            """.strip()
+            
+            # Send email to admin
+            send_mail(
+                subject=email_subject,
+                message=email_body,
+                from_email=config('EMAIL_HOST_USER'),
+                recipient_list=[config('EMAIL_HOST_USER')],  # Send to admin email
+                fail_silently=False,
+            )
+            
+            # Send confirmation email to user
+            confirmation_subject = "Thank you for contacting CreatiMate"
+            confirmation_message = f"""
+Dear {name},
+
+Thank you for reaching out to us! We have received your message and will get back to you as soon as possible.
+
+Your inquiry details:
+- Subject: {subject}
+- Inquiry Type: {inquiry_type}
+
+We typically respond within:
+- General inquiries: 24-48 hours
+- Technical support: 12-24 hours
+- Business inquiries: 2-3 business days
+- Bug reports: 6-12 hours
+
+If you have any urgent questions, please don't hesitate to reach out again.
+
+Best regards,
+The CreatiMate Team
+
+---
+This is an automated confirmation. Please do not reply to this email.
+            """.strip()
+            
+            send_mail(
+                subject=confirmation_subject,
+                message=confirmation_message,
+                from_email=config('EMAIL_HOST_USER'),
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            
+            return Response({
+                'message': 'Message sent successfully! We will get back to you soon.'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Contact form error: {str(e)}")
+            return Response({
+                'error': 'Failed to send message. Please try again later.'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         # Use refresh token from cookie if not in data

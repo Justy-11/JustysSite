@@ -5,6 +5,8 @@ import { FaEnvelope, FaPhone, FaQuestionCircle, FaClock, FaCheckCircle, FaChevro
 import { MdSubject } from 'react-icons/md';
 import { FaInstagram, FaGithub } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import api from "../api";
+import { showSuccessToast, showErrorToast } from "../utils/toastUtils";
 
 const navLinks = [
   { href: "/landingpage", label: "Home" },
@@ -59,14 +61,35 @@ const ContactUs = () => {
     setFaqOpen(faqOpen => faqOpen.map((open, i) => i === idx ? !open : open));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    
+    // Validate inquiry type
+    if (!form.inquiryType || form.inquiryType === '') {
+      showErrorToast("Please select an inquiry type");
+      return;
+    }
+    
     setLoading(true);
-    setTimeout(() => {
+    
+    try {
+      const response = await api.post("/api/contact/", {
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        inquiryType: form.inquiryType,
+        message: form.message
+      });
+      
+      showSuccessToast(response.data.message || "Message sent successfully!");
       setSuccess(true);
-      setLoading(false);
       setForm({ name: "", email: "", subject: "", inquiryType: "", message: "" });
-    }, 1200);
+    } catch (error) {
+      console.error("Contact form error:", error.response?.data || error.message);
+      showErrorToast(error.response?.data?.error || "Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

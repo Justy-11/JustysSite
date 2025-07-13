@@ -7,7 +7,7 @@ from .views import (
     CollectionListView, CollectionDetailView, PublishPageView,
     PublicPagesListView, PublicPageDetailView, PublicProductsListView,
     PublicCollectionsListView, PublicProfileDetailView, CustomTokenRefreshView,
-    UnpublishPageView, ClearCookiesView, storage_debug_view,
+    UnpublishPageView, ClearCookiesView, storage_debug_view, ContactFormView,
 )
 
 urlpatterns = [
@@ -36,4 +36,5 @@ urlpatterns = [
     path('profile/public/<int:page_id>/', PublicProfileDetailView.as_view(), name='public_profile_detail'),
     path('clear-cookies/', ClearCookiesView.as_view(), name='clear_cookies'),
     path('storage-debug/', storage_debug_view),
+    path('contact/', ContactFormView.as_view(), name='contact_form'),
 ]

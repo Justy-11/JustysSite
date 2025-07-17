@@ -164,3 +164,60 @@ Add a Social Application:
 5. **Visit the registration page:**
    http://localhost:5173/register
 
+---
+
+## 🏭 Production Settings
+
+### Key Differences from Local Development
+
+- **Image URLs:**  
+  All image fields returned by the backend now provide public URLs (e.g., `profile_image_url`, `banner_image_url`, `image_url`).  
+  Update your frontend to use these fields in all relevant components and pages.
+
+- **S3 Storage:**  
+  The backend is configured (monkey-patched) to use S3 as the default storage for media files in production.
+
+- **Token Refresh:**  
+  On every token refresh, a new refresh token is issued (with the same expiration time). This is because refresh tokens are blacklisted after use for enhanced security.
+
+---
+
+### Example Production Environment Variables (`.env.prod`)
+
+```env
+# Django Settings
+SECRET_KEY=your-production-secret-key
+DEBUG=False
+ALLOWED_HOSTS=your-production-domain.com,www.your-production-domain.com
+
+# Database Settings
+DB_NAME=your_prod_db_name
+DB_USER=your_prod_db_user
+DB_PASSWORD=your_prod_db_password
+DB_HOST=your_prod_db_host
+DB_PORT=5432
+
+# Frontend URL
+FRONTEND_URL=https://your-production-frontend.com
+
+# Email Settings
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-production-email@gmail.com
+EMAIL_HOST_PASSWORD=your-production-app-password
+DEFAULT_FROM_EMAIL=your-production-email@gmail.com
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# S3 Storage (example, add your actual keys and bucket)
+SUPABASE_S3_ACCESS_KEY=your-s3-access-key
+SUPABASE_S3_SECRET_KEY=your-s3-secret-key
+SUPABASE_BUCKET_NAME=media
+SUPABASE_S3_ENDPOINT_URL=your-s3-endpoint-url
+SUPABASE_PUBLIC_URL=your-public-url
+```
+

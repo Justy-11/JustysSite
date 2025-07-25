@@ -50,9 +50,13 @@ function Login() {
     };
 
     const googleLogin = () => {
-        const state = rememberMe ? 'remember:true' : 'remember:false';
+        // const state = rememberMe ? 'remember:true' : 'remember:false';
+        // short-lived cookie (expires in 5 minutes)
+        document.cookie = `remember_me=${rememberMe ? "true" : "false"}; path=/; max-age=300; samesite=None; secure`;
         const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-        window.location.href = `${backendUrl}/accounts/google/login/?state=${encodeURIComponent(state)}`;
+        // window.location.href = `${backendUrl}/accounts/google/login/?state=${encodeURIComponent(state)}`;
+        window.location.href = `${backendUrl}/accounts/google/login/`;
+
     };
 
     return (

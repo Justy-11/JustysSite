@@ -456,6 +456,7 @@ def google_login_callback(request):
         # if 'remember:true' in state or request.GET.get('remember') == 'true':
         #     remember = True
         remember_cookie = request.COOKIES.get('remember_me', 'false')
+        print("remember_me cookie value:", remember_cookie)
         remember = remember_cookie.lower() == 'true'
         
         cookie_options = {
@@ -480,7 +481,7 @@ def google_login_callback(request):
         response.set_cookie('refresh', refresh_token, **cookie_options)
 
         response.delete_cookie('remember_me', path='/')
-        
+
         return response
     else:
         return redirect(f'{frontend_url}/login/callback/?error=NoGoogleToken')

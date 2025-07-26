@@ -435,6 +435,7 @@ class ResetPasswordView(APIView):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def set_remember_me(request):
     remember = request.data.get('remember', False)
     request.session['remember_me'] = remember

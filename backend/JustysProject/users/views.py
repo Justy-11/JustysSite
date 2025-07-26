@@ -41,7 +41,7 @@ from django.http import Http404
 from datetime import timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.utils.decorators import method_decorator
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 
 def storage_debug_view(request):

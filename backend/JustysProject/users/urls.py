@@ -8,6 +8,7 @@ from .views import (
     PublicPagesListView, PublicPageDetailView, PublicProductsListView,
     PublicCollectionsListView, PublicProfileDetailView, CustomTokenRefreshView,
     UnpublishPageView, ClearCookiesView, storage_debug_view, ContactFormView,
+    set_remember_me,
 )
 
 urlpatterns = [
@@ -37,4 +38,5 @@ urlpatterns = [
     path('clear-cookies/', ClearCookiesView.as_view(), name='clear_cookies'),
     path('storage-debug/', storage_debug_view),
     path('contact/', ContactFormView.as_view(), name='contact_form'),
+    path('set-remember-me/', set_remember_me, name='set_remember_me'),
 ]

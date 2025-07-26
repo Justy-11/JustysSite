@@ -41,6 +41,7 @@ from django.http import Http404
 from datetime import timedelta
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.utils.decorators import method_decorator
+from rest_framework.decorators import api_view
 
 
 def storage_debug_view(request):
@@ -433,6 +434,12 @@ class ResetPasswordView(APIView):
             return Response({"error": "Invalid request."}, status=400)
 
 
+@api_view(['POST'])
+def set_remember_me(request):
+    remember = request.data.get('remember', False)
+    request.session['remember_me'] = remember
+    return Response({'success': True})
+
 @login_required
 def google_login_callback(request):
     user = request.user
@@ -451,13 +458,11 @@ def google_login_callback(request):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        # remember = False
-        # state = request.GET.get('state', '')
-        # if 'remember:true' in state or request.GET.get('remember') == 'true':
-        #     remember = True
-        remember_cookie = request.COOKIES.get('remember_me', 'false')
-        print("remember_me cookie value:", remember_cookie)
-        remember = remember_cookie.lower() == 'true'
+        # --- Use session for remember_me ---
+        remember = request.session.get('remember_me', False)
+        print("remember_me session value:", remember)
+        # Optionally clear it after use
+        request.session['remember_me'] = False
         
         cookie_options = {
             'httponly': True, 
@@ -466,7 +471,7 @@ def google_login_callback(request):
             'path': '/'
         }
         
-        if remember:
+        if remember in [True, 'true', 'True', 1, '1']:
             # persistant cookie
             cookie_options['max_age'] = 60 * 60 * 24 * 7  # 7 days
 
@@ -479,8 +484,6 @@ def google_login_callback(request):
         
         response.set_cookie('access', access_token, **cookie_options)
         response.set_cookie('refresh', refresh_token, **cookie_options)
-
-        response.delete_cookie('remember_me', path='/')
 
         return response
     else:
